@@ -123,7 +123,11 @@ signUpSubmitBtn.addEventListener("click", (e) => {
 
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
-    showAlert("Success", `Welcome ${firstName} ${lastName}`, "success");
+    showAlert(
+      "Success",
+      `${firstName} ${lastName} account created successfully.`,
+      "success"
+    );
     signUpDiv.classList.add("hidden");
     document.getElementById("signUpImg").classList.add("hidden");
     document.getElementById("signInImg").classList.remove("hidden");
