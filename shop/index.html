@@ -4,6 +4,114 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MeShop</title>
+    <link
+      rel="shortcut icon"
+      href="https://cdn-icons-png.flaticon.com/128/14654/14654310.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="../style.css" />
   </head>
-  <body></body>
+  <body
+    class="bg-gradient-to-r from-gray-200 to-gray-400 text-gray-900 h-screen flex flex-col"
+  >
+    <header
+      id="header"
+      class="bg-gray-800 text-white md:px-4 py-5 md:flex md:justify-between md:items-center rounded-b-2xl z-20"
+    >
+      <div class="flex items-center justify-between">
+        <div class="cursor-pointer px-4 md:px-0">
+          <p
+            id="nav-logo"
+            class="text-xl font-bold text-blue-400 hover:scale-105 transition-all duration-150 ease-in-out hover:text-blue-300"
+          >
+            Souvik's Shop
+          </p>
+        </div>
+        <div class="md:hidden px-4 md:px-0">
+          <button
+            id="toggleButton"
+            class="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
+            type="button"
+          >
+            <svg id="icon" class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+              <path
+                id="iconPath"
+                fill-rule="evenodd"
+                d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <nav
+        id="rspn-nav"
+        class="absolute bg-gray-800 w-full md:w-max md:relative px-4 md:mt-0 md:px-2 md:flex transition-all duration-500 ease-in-out hidden py-4 md:py-0 space-y-2 md:space-y-0 rounded-b-2xl"
+      >
+        <p
+          id="nav-home"
+          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
+        >
+          Home
+        </p>
+        <p
+          id="nav-signin"
+          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
+        >
+          Sign in
+        </p>
+        <p
+          id="nav-signup"
+          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
+        >
+          Sign up
+        </p>
+        <p
+          id="nav-my-cart"
+          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
+        >
+          My Cart
+        </p>
+        <p
+          id="nav-profile"
+          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
+        >
+          Profile
+        </p>
+      </nav>
+    </header>
+
+    <main class="flex-grow"></main>
+
+    <script src="script-shop.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const toggleButton = document.getElementById("toggleButton");
+        const iconPath = document.getElementById("iconPath");
+        const nav = document.getElementById("rspn-nav");
+        const header = document.getElementById("header");
+        let isOpen = false;
+
+        toggleButton.addEventListener("click", function () {
+          if (isOpen) {
+            // Change to hamburger menu icon
+            iconPath.setAttribute(
+              "d",
+              "M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2z"
+            );
+            nav.classList.toggle("hidden");
+            header.classList.toggle("rounded-b-2xl");
+          } else {
+            // Change to close icon
+            iconPath.setAttribute(
+              "d",
+              "M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z"
+            );
+            nav.classList.toggle("hidden");
+            header.classList.toggle("rounded-b-2xl");
+          }
+          isOpen = !isOpen;
+        });
+      });
+    </script>
+  </body>
 </html>
