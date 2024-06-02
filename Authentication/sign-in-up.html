@@ -10,6 +10,7 @@
       type="image/x-icon"
     />
     <link rel="stylesheet" href="../style.css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   </head>
 
   <body
@@ -48,35 +49,38 @@
         class="absolute bg-gray-500 w-full md:w-max md:relative px-4 md:mt-0 md:px-2 md:flex transition-all duration-500 ease-in-out hidden py-4 md:py-0 space-y-2 md:space-y-0 rounded-b-2xl"
       >
         <p
+          id="nav-home"
           class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
         >
           Home
         </p>
         <p
+          id="nav-signin"
           class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
         >
-          Signin
+          Sign in
         </p>
         <p
+          id="nav-signup"
           class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
         >
-          Signup
+          Sign up
         </p>
         <p
+          id="nav-my-cart"
           class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
         >
           My Cart
         </p>
         <p
+          id="nav-profile"
           class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
         >
           Profile
         </p>
       </nav>
     </header>
-    <!-- <div class="relative flex-grow flex items-center justify-center">
-      
-    </div> -->
+
     <div class="flex-grow w-full flex flex-col items-center justify-center">
       <img
         src="../Assets/signIn.svg"
@@ -90,37 +94,32 @@
         <div class="w-full max-w-3xl px-4 md:px-10">
           <div class="shadow-lg border border-gray-200 rounded-lg p-4 sm:p-6">
             <form class="space-y-4" action="#">
-              <!-- <h3 class="text-xl font-medium text-gray-900 text-center">
-                Sign In
-              </h3> -->
               <div>
                 <label
-                  for="email"
+                  for="signin-email"
                   class="text-sm font-medium text-gray-900 block mb-2"
                   >Your email</label
                 >
                 <input
                   type="email"
                   name="email"
-                  id="email"
-                  class="bg-transparent border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  id="signin-email"
+                  class="bg-transparent placeholder-gray-600 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="name@company.com"
-                  required
                 />
               </div>
               <div>
                 <label
-                  for="password"
+                  for="signin-password"
                   class="text-sm font-medium text-gray-900 block mb-2"
                   >Your password</label
                 >
                 <input
                   type="password"
                   name="password"
-                  id="password"
+                  id="signin-password"
                   placeholder="********"
-                  class="bg-transparent border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  required
+                  class="bg-transparent placeholder-gray-600 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 />
               </div>
               <div class="flex items-end justify-center">
@@ -129,6 +128,7 @@
                 >
               </div>
               <button
+                id="signin-submit"
                 type="submit"
                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
@@ -155,10 +155,10 @@
           <div
             class="shadow-lg border border-gray-200 rounded-lg px-6 py-3 sm:px-8 sm:py-2"
           >
-            <form class="space-y-2" action="#">
-              <!-- <h3 class="text-xl font-medium text-gray-900 text-center">
+            <form class="space-y-1 sm:space-y-4" action="#">
+              <h3 class="text-xl font-medium text-gray-900 text-center">
                 Sign Up
-              </h3> -->
+              </h3>
               <div>
                 <label
                   for="first-name"
@@ -169,9 +169,8 @@
                   type="text"
                   name="first-name"
                   id="first-name"
-                  class="bg-transparent border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  class="bg-transparent placeholder-gray-600 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="John"
-                  required
                 />
               </div>
               <div>
@@ -184,14 +183,13 @@
                   type="text"
                   name="last-name"
                   id="last-name"
-                  class="bg-transparent border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  class="bg-transparent placeholder-gray-600 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="Doe"
-                  required
                 />
               </div>
               <div>
                 <label
-                  for="email"
+                  for="signup-email"
                   class="text-sm font-medium text-gray-900 block mb-1"
                   >Your email</label
                 >
@@ -199,14 +197,13 @@
                   type="email"
                   name="email"
                   id="signup-email"
-                  class="bg-transparent border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  class="bg-transparent placeholder-gray-600 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="name@company.com"
-                  required
                 />
               </div>
               <div>
                 <label
-                  for="password"
+                  for="signup-password"
                   class="text-sm font-medium text-gray-900 block mb-1"
                   >Your password</label
                 >
@@ -215,8 +212,7 @@
                   name="password"
                   id="signup-password"
                   placeholder="********"
-                  class="bg-transparent border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  required
+                  class="bg-transparent placeholder-gray-600 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 />
               </div>
               <div>
@@ -230,11 +226,11 @@
                   name="confirm-password"
                   id="confirm-password"
                   placeholder="********"
-                  class="bg-transparent mb-2 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  required
+                  class="bg-transparent placeholder-gray-600 mb-2 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 />
               </div>
               <button
+                id="signup-submit"
                 type="submit"
                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               >
@@ -258,6 +254,7 @@
       class="min-w-24 max-w-[400px] right-0 bottom-1 hidden object-fill fixed"
       id="signUpImg"
     />
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const toggleButton = document.getElementById("toggleButton");
@@ -288,6 +285,7 @@
         });
       });
     </script>
-    <script src="auth.js"></script>
+    <script src="auth-dom.js"></script>
+    <script type="module" src="auth-functional.js"></script>
   </body>
 </html>
