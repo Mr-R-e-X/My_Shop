@@ -60,5 +60,9 @@ input[type="checkbox"]:checked {
   accent-color: black !important;
 }
 #white:checked {
-  accent-color: white !important;
+  accent-color: rgb(230, 230, 230) !important;
+}
+
+.mix-blande-prop {
+  mix-blend-mode: multiply !important;
 }
