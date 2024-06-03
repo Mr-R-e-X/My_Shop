@@ -10,13 +10,15 @@
       type="image/x-icon"
     />
     <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="custom-style.css" />
   </head>
+
   <body
     class="bg-gradient-to-r from-gray-200 to-gray-400 text-gray-900 h-screen flex flex-col"
   >
     <header
       id="header"
-      class="bg-gray-800 text-white md:px-4 py-5 md:flex md:justify-between md:items-center rounded-b-2xl z-20"
+      class="bg-gray-800 text-white md:px-4 py-5 md:flex md:justify-between md:items-center z-20"
     >
       <div class="flex items-center justify-between">
         <div class="cursor-pointer px-4 md:px-0">
@@ -45,7 +47,7 @@
       </div>
       <nav
         id="rspn-nav"
-        class="absolute bg-gray-800 w-full md:w-max md:relative px-4 md:mt-0 md:px-2 md:flex transition-all duration-500 ease-in-out hidden py-4 md:py-0 space-y-2 md:space-y-0 rounded-b-2xl"
+        class="absolute bg-gray-800 w-full md:w-max md:relative px-4 md:mt-0 md:px-2 md:flex transition-all duration-500 ease-in-out hidden py-4 md:py-0 space-y-2 md:space-y-0"
       >
         <p
           id="nav-home"
@@ -80,7 +82,220 @@
       </nav>
     </header>
 
-    <main class="flex-grow"></main>
+    <main class="flex-grow flex flex-row">
+      <div id="sidebar" class="min-w-max w-[15%] bg-gray-800 text-white">
+        <form action="#" method="post" class="space-y-1 w-full">
+          <div class="px-6">
+            <h2 class="text-base font-semibold mb-1">Colors</h2>
+            <div class="space-y-1">
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="colors[]"
+                  id="red"
+                  value="red"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="red" class="text-gray-50">Red</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="colors[]"
+                  id="blue"
+                  value="blue"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="blue" class="text-gray-50">Blue</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="colors[]"
+                  id="green"
+                  value="green"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="green" class="text-gray-50">Green</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="colors[]"
+                  id="black"
+                  value="black"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="black" class="text-gray-50">Black</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="colors[]"
+                  id="white"
+                  value="white"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="white" class="text-gray-50">White</label>
+              </div>
+            </div>
+          </div>
+          <hr class="border-gray-200" />
+          <div class="px-6">
+            <h2 class="text-base font-semibold mb-1">Sizes</h2>
+            <div class="space-y-1">
+              <div class="flex items-center text-sm">
+                <input
+                  type="radio"
+                  name="sizes"
+                  id="s"
+                  value="s"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="s" class="text-gray-50">S</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="radio"
+                  name="sizes"
+                  id="m"
+                  value="m"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="m" class="text-gray-50">M</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="radio"
+                  name="sizes"
+                  id="l"
+                  value="l"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="l" class="text-gray-50">L</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="radio"
+                  name="sizes"
+                  id="xl"
+                  value="xl"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="xl" class="text-gray-50">XL</label>
+              </div>
+            </div>
+          </div>
+          <hr class="border-gray-200" />
+          <div class="px-6">
+            <h2 class="text-base font-semibold mb-1">Rating</h2>
+            <div class="flex items-center flex-col space-x-2">
+              <input
+                type="range"
+                name="rating"
+                id="rating"
+                min="0"
+                max="5"
+                value="0"
+                step="1"
+                class="custom-range my-2"
+              />
+              <div class="flex flex-row justify-between space-x-2 w-full pr-2">
+                <span class="text-gray-50 text-sm">0</span>
+                <span class="text-gray-50 text-sm">5</span>
+              </div>
+            </div>
+          </div>
+          <hr class="border-gray-200" />
+          <div class="px-6">
+            <h2 class="text-lg font-semibold mb-1">Price Range</h2>
+            <div class="space-y-1">
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="price-range"
+                  id="firstQuatar"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="firstQuatar" class="text-gray-50">0$ - 25$</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="price-range"
+                  id="secondQuatar"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="secondQuatar" class="text-gray-50">26$ - 50$</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="price-range"
+                  id="thirdQuatar"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="thirdQuatar" class="text-gray-50">51$ - 75$</label>
+              </div>
+              <div class="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="price-range"
+                  id="fourthQuatar"
+                  class="mr-2 rounded scale-105"
+                />
+                <label for="fourthQuatar" class="text-gray-50"
+                  >76$ - 100$</label
+                >
+              </div>
+            </div>
+          </div>
+          <hr class="border-gray-200" />
+          <div class="w-full px-6 py-2">
+            <button
+              type="submit"
+              class="mx-auto text-base px-6 py-3 w-max border border-gray-700 shadow-md shadow-black font-semibold"
+            >
+              Apply Filter
+            </button>
+          </div>
+        </form>
+      </div>
+      <div id="main-content" class="w-[85%] px-6 py-3">
+        <div id="searchbar" class="w-full mb-3">
+          <form class="w-full">
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-500"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Search ..."
+              />
+            </div>
+          </form>
+        </div>
+        <!-- Add main content here -->
+      </div>
+    </main>
 
     <script src="script-shop.js"></script>
     <script>
