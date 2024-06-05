@@ -63,20 +63,32 @@ input[type="checkbox"]:checked {
   accent-color: rgb(230, 230, 230) !important;
 }
 
+#filter {
+  top: 50%;
+  margin: 0px auto !important;
+  transform: translateY(-50%);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 16px;
+  height: 16px;
+}
+
 .product {
-  height: 384px !important;
+  height: 400px !important;
   width: 284px !important;
   margin: 15px;
-  /* transition: all 300ms ease-in-out; */
 }
 .product > div {
-  height: 60% !important;
-  width: 60% !important;
+  height: 200px !important;
+  width: 100% !important;
   margin: auto;
 }
-.product > div > img {
+.product > .prod-img > img {
   width: 100% !important;
   height: 100% !important;
+  padding: 0 5px;
   object-fit: contain;
   background-color: transparent !important;
   mix-blend-mode: darken !important;
@@ -84,7 +96,7 @@ input[type="checkbox"]:checked {
 .prod-img:hover {
   mix-blend-mode: darken !important;
 }
-.product-price {
+.prod-curr-price {
   color: rgb(34 197 94) !important;
 }
 .prev-price {
