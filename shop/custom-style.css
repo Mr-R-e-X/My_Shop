@@ -91,11 +91,9 @@ input[type="radio"] {
   padding: 0 5px;
   object-fit: contain;
   background-color: transparent !important;
-  mix-blend-mode: darken !important;
+  mix-blend-mode: multiply !important;
 }
-.prod-img:hover {
-  mix-blend-mode: darken !important;
-}
+
 .prod-curr-price {
   color: rgb(34 197 94) !important;
 }

@@ -74,7 +74,7 @@ function updateUi(data, divDtls, cat) {
   <div class="prod-img">
     <img src="${product.image}" class="" />
   </div>
-  <div class="px-2 flex-1">
+  <div class="w-full px-3 flex-1">
     <p class="text-base font-medium text-black text-justify tracking-tighter capitalize my-1 leading-none">
       ${product?.title}
     </p>
