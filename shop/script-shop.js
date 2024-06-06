@@ -4,26 +4,33 @@ let manClothDiv = document.querySelector("#man-cloth");
 let womenClothDiv = document.querySelector("#women-cloth");
 let jewelleryDiv = document.querySelector("#jewellery");
 let electronicDiv = document.querySelector("#electronics");
+let selectedColor = [];
+let selectedSize = [];
+let cart = []
+
+// Data Fetcher Function in will return a data in JSON object format
 async function fetchData(url) {
   let response = await fetch(url);
   let data = await response.json();
   return data;
 }
 
+// Get Data for Page, Document onload it will initially render the page with the data
 async function getData(url, cat, divDtls) {
   let data = await fetchData(url);
   if (cat === "men's clothing" || cat === "women's clothing") {
     let restructuredData = restructureData(data);
     console.log("Restruce", restructuredData);
     let shuffledData = shuffleArray(restructuredData);
-    updateUi(shuffledData, divDtls, cat);
+    updateShopUi(shuffledData, divDtls, cat);
   } else {
     console.log("Nm", data);
     let shuffledData = shuffleArray(data);
-    updateUi(shuffledData, divDtls, cat);
+    updateShopUi(shuffledData, divDtls, cat);
   }
 }
 
+// Resture Data for adding Colors and Sizes to the Men and Woman Clothings
 function restructureData(data) {
   let colors = ["red", "green", "blue", "black", "white"];
   let sizes = ["S", "M", "L", "XL", "XXL"];
@@ -34,18 +41,7 @@ function restructureData(data) {
   return data;
 }
 
-function chooseCategoryBg(cat) {
-  cat.classList.remove("bg-white");
-  cat.classList.remove("text-black");
-  cat.classList.add("bg-black");
-  cat.classList.add("text-white");
-}
-function resetCategoryBg(cat) {
-  cat.classList.remove("bg-black");
-  cat.classList.remove("text-white");
-  cat.classList.add("bg-white");
-  cat.classList.add("text-black");
-}
+// Suffle Array to suffle the product on every time dom loads
 function shuffleArray(arr) {
   let currIndex = arr.length;
   while (currIndex !== 0) {
@@ -58,7 +54,8 @@ function shuffleArray(arr) {
   return arr;
 }
 
-function updateUi(data, divDtls, cat) {
+// Update UI with the data
+function updateShopUi(data, divDtls, cat) {
   let title = cat
     .split(" ")
     .map((num) => num.charAt(0).toUpperCase() + num.slice(1))
@@ -70,59 +67,142 @@ function updateUi(data, divDtls, cat) {
   let productDiv = document.getElementById(title);
   data.map((product) => {
     productDiv.innerHTML += `
-    <div class="bg-gray-300 py-2 shadow-md hover:shadow-lg hover:shadow-black duration-300 product cursor-pointer relative flex flex-col">
+    <div class="product" id="product-${product?.id}" onclick="detailProduct(${product?.id})">
   <div class="prod-img">
     <img src="${product.image}" class="" />
   </div>
-  <div class="w-full px-3 flex-1">
-    <p class="text-base font-medium text-black text-justify tracking-tighter capitalize my-1 leading-none">
+  <div class="product-details">
+    <p class="product-title">
       ${product?.title}
     </p>
-    <div class="w-full flex items-center justify-between">
+    <div class="product-info">
       <div>
-        <p class="text-base font-semibold my-1">
+        <p class="product-price">
           <span class="prod-curr-price"> $${product?.price} </span>
           <del class="text-sm text-gray-600 ">
             <span class="prev-price"> $${Math.floor(product?.price + product?.price * 0.01)} </span>
           </del>
         </p>
-       
       </div>
-      <div class="flex items-center">
-        <p class="mr-1 text-sm text-gray-700">${product?.rating?.rate}</p>
-        <img src="https://cdn-icons-png.flaticon.com/128/477/477406.png" alt="stars" class="h-4 w-4" />
+      <div class="product-center">
+        <p class="product-rate">${product?.rating?.rate}</p>
+        <img src="https://cdn-icons-png.flaticon.com/128/477/477406.png" alt="stars" class="rate-img" />
       </div>
     </div>
     ${product?.Colors ? `
-    <div class="my-1 flex">
-      <p class="text-sm font-medium text-gray-700 mr-2">Colors:</p>
-      <div class="flex items-center">
+    <div class="product-colors">
+      <p class="prod-info-txt">Colors:</p>
+      <div class="product-center">
         ${product.Colors.map(color => `
-          <span class="w-4 h-4 rounded-full border mr-2" style="background-color: ${color};"></span>
+          <div class="prod-cloth-color" style="background-color: ${color};" data-val-color="${color}"></div>
         `).join('')}
       </div>
     </div>
   ` : ""}
   ${product?.Sizes ? `
     <div class="my-2 flex justify-start items-center">
-      <p class="text-sm font-medium text-gray-700 mr-2">Sizes:</p>
-      <div class="flex items-center">
+      <p class="prod-info-txt">Sizes:</p>
+      <div class="product-center">
         ${product.Sizes.map(size => `
-          <span class="px-2 text-sm bg-gray-400 rounded-md border border-gray-500 mr-2">${size}</span>
+          <span class="prod-cloth-size" data-val-size="${size}" >${size}</span>
         `).join('')}
       </div>
     </div>
   ` : ""}
   </div>
-  <button class="mt-4 w-full bg-blue-500 text-white py-2 shadow hover:bg-blue-600 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-300 absolute bottom-0">
+  <button id="addToCartBtn" data-cat="${cat}" onclick="addProductToCart(this, ${product?.id})">
     Add to Cart
   </button>
 </div>
-
     `;
   });
+  data.map((product) => {
+    if (product?.Colors !== undefined) {
+      const productElem = document.getElementById(`product-${product.id}`);
+      const colors = productElem.querySelectorAll('.prod-cloth-color')
+      colors.forEach(color => {
+        color.addEventListener("click", (event) => {
+          event.stopPropagation();
+          selectColor(color, productElem)
+        })
+      })
+    }
+    if (product?.Sizes) {
+      const productElem = document.getElementById(`product-${product.id}`);
+      const sizes = productElem.querySelectorAll('.prod-cloth-size')
+      sizes.forEach(size => {
+        size.addEventListener("click", (event) => {
+          event.stopPropagation();
+          selectSize(size, productElem)
+        })
+      })
+    }
+  })
+
+}
+function selectColor(element, prodElem) {
+  if (element.classList.contains('selected')) {
+    element.classList.remove('selected');
+    selectedColor = selectedColor.filter(item => item.productId !== prodElem.id.split("-")[1])
+  }
+  else {
+    let colors = prodElem.querySelectorAll('.prod-cloth-color')
+    colors.forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    const color = element.getAttribute('data-val-color');
+    let sel_color = { "productId": prodElem.id.split("-")[1], "color": color }
+    selectedColor.push(sel_color);
+  }
 }
 
+function selectSize(element, prodElem) {
+  if (element.classList.contains('selected-size')) {
+    element.classList.remove('selected-size');
+    selectedSize = selectedSize.filter(item => item.productId !== prodElem.id.split("-")[1])
+  }
+  else {
+    let sizes = prodElem.querySelectorAll('.prod-cloth-size')
+    sizes.forEach(el => el.classList.remove('selected-size'));
+    element.classList.add('selected-size');
+    const dataSize = element.getAttribute('data-val-size');
+    console.log(`Selected size for ${prodElem.id} : ${dataSize}`);
+    let size = { "productId": prodElem.id.split("-")[1], "size": dataSize }
+    selectedSize.push(size)
+  }
+}
+
+async function addProductToCart(element, prodId) {
+  console.log(prodId)
+  let cat = element.getAttribute("data-cat");
+  if (cat === "men's clothing" || cat === "women's clothing") {
+    if (checkChooseProdSizeAndColor(prodId)) {
+
+      console.log(true);
+    }
+    else {
+      console.log("Please select color and size")
+    }
+  }
+  // let data = await fetchData(`https://fakestoreapi.com/products/${prodId}`)
+  // console.log(data);
+}
+
+function checkChooseProdSizeAndColor(prodId) {
+  let isColoeSelected = selectedColor.find(color => color.productId == prodId);
+  let isSizeSelected = selectedSize.find(size => size.productId == prodId);
+  if (isColoeSelected === undefined) {
+    return false;
+  }
+  if (isSizeSelected === undefined) {
+    return false;
+  }
+  return true;
+}
+async function detailProduct(id) {
+  // let data = await fetchData(`https://fakestoreapi.com/products/${id}`)
+  // console.log(data);
+}
+//Calling required initial functions on DOM load
 document.addEventListener("DOMContentLoaded", () => {
   getData(
     `https://fakestoreapi.com/products/category/men's%20clothing`,

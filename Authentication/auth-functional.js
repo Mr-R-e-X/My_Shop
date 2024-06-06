@@ -121,13 +121,14 @@ signUpSubmitBtn.addEventListener("click", (e) => {
       lastName: lastName.toUpperCase(),
       email: email,
       password: password,
+      cart: []
     };
 
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
     showAlert(
       "Success",
-      `${firstName} ${lastName} account created successfully.`,
+      `Hi ${firstName}. Your account created successfully.`,
       "success"
     );
     signUpDiv.classList.add("hidden");
