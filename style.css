@@ -761,6 +761,10 @@ video {
   width: max-content !important;
 }
 
+.w-screen {
+  width: 100vw !important;
+}
+
 .min-w-24 {
   min-width: 6rem !important;
 }
@@ -813,6 +817,10 @@ video {
 
 .flex-wrap {
   flex-wrap: wrap !important;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap !important;
 }
 
 .items-end {

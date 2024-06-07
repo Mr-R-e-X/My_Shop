@@ -165,7 +165,6 @@ function selectColor(element, prodElem) {
     selectedColor = selectedColor.filter(
       (item) => item.productId !== prodElem.id.split("-")[1]
     );
-    // console.log(selectedColor);
   } else {
     let colors = prodElem.querySelectorAll(".prod-cloth-color");
     colors.forEach((el) => el.classList.remove("selected"));
