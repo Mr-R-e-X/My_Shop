@@ -69,7 +69,7 @@ signInSubmitBtn.addEventListener("click", (e) => {
     let auth = authUser({ email: email, password: password });
     if (auth) {
       // console.log(auth);
-      let currentUser = auth;
+      let currentUser = { username: `${auth.firstName} ${auth.lastName}`, email: auth.email };
       sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
       authSuccessAlert(
         "Success",

@@ -1,18 +1,27 @@
+let myCartNav = document.querySelector("#my-cart")
 let categories = document.querySelector("#categories");
 let categoyBtns = document.querySelectorAll("#category");
 let manClothDiv = document.querySelector("#man-cloth");
 let womenClothDiv = document.querySelector("#women-cloth");
 let jewelleryDiv = document.querySelector("#jewellery");
 let electronicDiv = document.querySelector("#electronics");
+let categoryBtns = document.querySelectorAll(".category-btns");
 let selectedColor = [];
 let selectedSize = [];
-let cart = []
+let users = JSON.parse(localStorage.getItem("users"));
+let currUserEmai = JSON.parse(sessionStorage.getItem("currentUser")).email;
+let currUser = users.find((user) => user.email === currUserEmai);
 
 // Data Fetcher Function in will return a data in JSON object format
 async function fetchData(url) {
-  let response = await fetch(url);
-  let data = await response.json();
-  return data;
+  try {
+    let response = await fetch(url);
+    let data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 // Get Data for Page, Document onload it will initially render the page with the data
@@ -20,11 +29,9 @@ async function getData(url, cat, divDtls) {
   let data = await fetchData(url);
   if (cat === "men's clothing" || cat === "women's clothing") {
     let restructuredData = restructureData(data);
-    console.log("Restruce", restructuredData);
     let shuffledData = shuffleArray(restructuredData);
     updateShopUi(shuffledData, divDtls, cat);
   } else {
-    console.log("Nm", data);
     let shuffledData = shuffleArray(data);
     updateShopUi(shuffledData, divDtls, cat);
   }
@@ -67,7 +74,8 @@ function updateShopUi(data, divDtls, cat) {
   let productDiv = document.getElementById(title);
   data.map((product) => {
     productDiv.innerHTML += `
-    <div class="product" id="product-${product?.id}" onclick="detailProduct(${product?.id})">
+    <div class="product" id="product-${product?.id}" onclick="detailProduct(${product?.id
+      })">
   <div class="prod-img">
     <img src="${product.image}" class="" />
   </div>
@@ -80,7 +88,9 @@ function updateShopUi(data, divDtls, cat) {
         <p class="product-price">
           <span class="prod-curr-price"> $${product?.price} </span>
           <del class="text-sm text-gray-600 ">
-            <span class="prev-price"> $${Math.floor(product?.price + product?.price * 0.01)} </span>
+            <span class="prev-price"> $${Math.floor(
+        product?.price + product?.price * 0.01
+      )} </span>
           </del>
         </p>
       </div>
@@ -89,28 +99,37 @@ function updateShopUi(data, divDtls, cat) {
         <img src="https://cdn-icons-png.flaticon.com/128/477/477406.png" alt="stars" class="rate-img" />
       </div>
     </div>
-    ${product?.Colors ? `
+    ${product?.Colors
+        ? `
     <div class="product-colors">
-      <p class="prod-info-txt">Colors:</p>
       <div class="product-center">
-        ${product.Colors.map(color => `
+        ${product.Colors.map(
+          (color) => `
           <div class="prod-cloth-color" style="background-color: ${color};" data-val-color="${color}"></div>
-        `).join('')}
+        `
+        ).join("")}
       </div>
     </div>
-  ` : ""}
-  ${product?.Sizes ? `
-    <div class="my-2 flex justify-start items-center">
-      <p class="prod-info-txt">Sizes:</p>
+  `
+        : ""
+      }
+  ${product?.Sizes
+        ? `
+    <div class="product-colors">
       <div class="product-center">
-        ${product.Sizes.map(size => `
+        ${product.Sizes.map(
+          (size) => `
           <span class="prod-cloth-size" data-val-size="${size}" >${size}</span>
-        `).join('')}
+        `
+        ).join("")}
       </div>
     </div>
-  ` : ""}
+  `
+        : ""
+      }
   </div>
-  <button id="addToCartBtn" data-cat="${cat}" onclick="addProductToCart(this, ${product?.id})">
+  <button id="addToCartBtn" data-cat="${cat}" onclick="addProductToCart(this, ${product?.id
+      })">
     Add to Cart
   </button>
 </div>
@@ -119,89 +138,215 @@ function updateShopUi(data, divDtls, cat) {
   data.map((product) => {
     if (product?.Colors !== undefined) {
       const productElem = document.getElementById(`product-${product.id}`);
-      const colors = productElem.querySelectorAll('.prod-cloth-color')
-      colors.forEach(color => {
+      const colors = productElem.querySelectorAll(".prod-cloth-color");
+      colors.forEach((color) => {
         color.addEventListener("click", (event) => {
           event.stopPropagation();
-          selectColor(color, productElem)
-        })
-      })
+          selectColor(color, productElem);
+        });
+      });
     }
     if (product?.Sizes) {
       const productElem = document.getElementById(`product-${product.id}`);
-      const sizes = productElem.querySelectorAll('.prod-cloth-size')
-      sizes.forEach(size => {
+      const sizes = productElem.querySelectorAll(".prod-cloth-size");
+      sizes.forEach((size) => {
         size.addEventListener("click", (event) => {
           event.stopPropagation();
-          selectSize(size, productElem)
-        })
-      })
+          selectSize(size, productElem);
+        });
+      });
     }
-  })
-
+  });
 }
+
 function selectColor(element, prodElem) {
-  if (element.classList.contains('selected')) {
-    element.classList.remove('selected');
-    selectedColor = selectedColor.filter(item => item.productId !== prodElem.id.split("-")[1])
-  }
-  else {
-    let colors = prodElem.querySelectorAll('.prod-cloth-color')
-    colors.forEach(el => el.classList.remove('selected'));
-    element.classList.add('selected');
-    const color = element.getAttribute('data-val-color');
-    let sel_color = { "productId": prodElem.id.split("-")[1], "color": color }
-    selectedColor.push(sel_color);
+  if (element.classList.contains("selected")) {
+    element.classList.remove("selected");
+    selectedColor = selectedColor.filter(
+      (item) => item.productId !== prodElem.id.split("-")[1]
+    );
+    // console.log(selectedColor);
+  } else {
+    let colors = prodElem.querySelectorAll(".prod-cloth-color");
+    colors.forEach((el) => el.classList.remove("selected"));
+    element.classList.add("selected");
+    const color = element.getAttribute("data-val-color");
+    let sel_color = { productId: prodElem.id.split("-")[1], color: color };
+    let idx = selectedColor.findIndex(
+      (item) => item.productId === sel_color.productId
+    );
+
+    if (idx === -1) {
+      selectedColor.push(sel_color);
+    } else {
+      selectedColor[idx].color = sel_color.color;
+    }
   }
 }
 
 function selectSize(element, prodElem) {
-  if (element.classList.contains('selected-size')) {
-    element.classList.remove('selected-size');
-    selectedSize = selectedSize.filter(item => item.productId !== prodElem.id.split("-")[1])
-  }
-  else {
-    let sizes = prodElem.querySelectorAll('.prod-cloth-size')
-    sizes.forEach(el => el.classList.remove('selected-size'));
-    element.classList.add('selected-size');
-    const dataSize = element.getAttribute('data-val-size');
-    console.log(`Selected size for ${prodElem.id} : ${dataSize}`);
-    let size = { "productId": prodElem.id.split("-")[1], "size": dataSize }
-    selectedSize.push(size)
+  if (element.classList.contains("selected-size")) {
+    element.classList.remove("selected-size");
+    selectedSize = selectedSize.filter(
+      (item) => item.productId !== prodElem.id.split("-")[1]
+    );
+  } else {
+    let sizes = prodElem.querySelectorAll(".prod-cloth-size");
+    sizes.forEach((el) => el.classList.remove("selected-size"));
+    element.classList.add("selected-size");
+    const dataSize = element.getAttribute("data-val-size");
+    let sel_size = { productId: prodElem.id.split("-")[1], size: dataSize };
+    let idx = selectedSize.findIndex(
+      (item) => item.productId === sel_size.productId
+    );
+    if (idx === -1) {
+      selectedSize.push(sel_size);
+    } else {
+      selectedSize[idx].size = sel_size.size;
+    }
   }
 }
 
 async function addProductToCart(element, prodId) {
-  console.log(prodId)
+  // console.log(typeof prodId);
   let cat = element.getAttribute("data-cat");
   if (cat === "men's clothing" || cat === "women's clothing") {
-    if (checkChooseProdSizeAndColor(prodId)) {
-
-      console.log(true);
+    let colorAndSize = checkChooseProdSizeAndColor(prodId);
+    if (colorAndSize !== false) {
+      let index = currUser.cart.findIndex(
+        (product) =>
+          product.id === prodId &&
+          product.color === colorAndSize.color &&
+          product.size === colorAndSize.size
+      );
+      if (index !== -1) {
+        let existingProd = currUser.cart[index];
+        existingProd.count += 1;
+        console.log("curr user car", currUser.cart);
+        showAlert("Success!", `"${currUser.cart[index].title}" added to the cart successfully.`, "success");
+      } else {
+        let product = await fetchData(
+          `https://fakestoreapi.com/products/${prodId}`
+        );
+        product["color"] = colorAndSize.color;
+        product["size"] = colorAndSize.size;
+        product["count"] = 1;
+        currUser.cart.push(product);
+        console.log("curr user cart", currUser.cart);
+        showAlert("Success!", `${product.title} added to the cart successfully.`, "success");
+      }
+    } else {
+      showAlert("Error", "Please select a specific color and size !", "error");
     }
-    else {
-      console.log("Please select color and size")
+  } else {
+    let index = currUser.cart.findIndex(
+      (product) =>
+        product.id === prodId);
+    if (index !== -1) {
+      let existingProd = currUser.cart[index];
+      existingProd.count += 1;
+      console.log("curr user car", currUser.cart);
+      showAlert("Success!", `"${currUser.cart[index].title}" added to the cart successfully.`, "success");
+    } else {
+      let product = await fetchData(
+        `https://fakestoreapi.com/products/${prodId}`
+      );
+      product["count"] = 1;
+      currUser.cart.push(product);
+      console.log("curr user cart", currUser.cart);
+      showAlert("Success!", `${product.title} added to the cart successfully.`, "success");
     }
   }
-  // let data = await fetchData(`https://fakestoreapi.com/products/${prodId}`)
-  // console.log(data);
+  let userIndex = users.findIndex(user => user.email === currUser.email);
+  users[userIndex] = currUser;
+  localStorage.setItem("users", JSON.stringify(users));
+  updateMyCartNavbarUi(currUser.cart)
 }
 
 function checkChooseProdSizeAndColor(prodId) {
-  let isColoeSelected = selectedColor.find(color => color.productId == prodId);
-  let isSizeSelected = selectedSize.find(size => size.productId == prodId);
-  if (isColoeSelected === undefined) {
+  let isColorSelected = selectedColor.find(
+    (color) => color.productId == prodId
+  );
+  let isSizeSelected = selectedSize.find((size) => size.productId == prodId);
+  if (isColorSelected === undefined) {
     return false;
   }
   if (isSizeSelected === undefined) {
     return false;
   }
-  return true;
+  return { color: isColorSelected.color, size: isSizeSelected.size };
 }
+
+
 async function detailProduct(id) {
   // let data = await fetchData(`https://fakestoreapi.com/products/${id}`)
   // console.log(data);
 }
+
+function updateMyCartNavbarUi(cart) {
+  let count = 0;
+  cart.map((item) => {
+    count += item.count;
+  })
+  myCartNav.innerText = count
+}
+
+function showAlert(title, msg, icon) {
+  swal({
+    title: title,
+    text: msg,
+    icon: icon,
+    button: "Okay",
+  });
+}
+
+function categoryButtonUIHandler(element) {
+  let parent = document.querySelector("#categories").children;
+  Array.from(parent).forEach(catBtn => {
+    catBtn.classList.remove("bg-black", "text-white");
+    catBtn.classList.add("bg-white", "text-black");
+  });
+  element.classList.add("bg-black", "text-white");
+  element.classList.remove("bg-white", "text-black");
+}
+
+categoryBtns.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    categoryButtonUIHandler(btn)
+    let btn_text = btn.textContent.toLowerCase().trim()
+    if (btn_text === "all") {
+      manClothDiv.classList.remove("hidden");
+      womenClothDiv.classList.remove("hidden");
+      jewelleryDiv.classList.remove("hidden");
+      electronicDiv.classList.remove("hidden");
+    }
+    if (btn_text === "mens") {
+      manClothDiv.classList.remove("hidden");
+      womenClothDiv.classList.add("hidden");
+      jewelleryDiv.classList.add("hidden");
+      electronicDiv.classList.add("hidden");
+    }
+    if (btn_text === "womens") {
+      manClothDiv.classList.add("hidden");
+      womenClothDiv.classList.remove("hidden");
+      jewelleryDiv.classList.add("hidden");
+      electronicDiv.classList.add("hidden");
+    }
+    if (btn_text === "jewellery") {
+      manClothDiv.classList.add("hidden");
+      womenClothDiv.classList.add("hidden");
+      jewelleryDiv.classList.remove("hidden");
+      electronicDiv.classList.add("hidden");
+    }
+    if (btn_text === "electronics") {
+      manClothDiv.classList.add("hidden");
+      womenClothDiv.classList.add("hidden");
+      jewelleryDiv.classList.add("hidden");
+      electronicDiv.classList.remove("hidden");
+    }
+  })
+})
+
 //Calling required initial functions on DOM load
 document.addEventListener("DOMContentLoaded", () => {
   getData(
@@ -224,4 +369,5 @@ document.addEventListener("DOMContentLoaded", () => {
     "electronics",
     electronicDiv
   );
+  updateMyCartNavbarUi(currUser.cart)
 });

@@ -161,16 +161,13 @@ input[type="radio"] {
 }
 .product-colors {
   display: flex;
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
+  margin-top: 5px;
+  margin-bottom: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 }
-.prod-info-txt {
-  margin-right: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
-  color: #374151;
-}
+
 .prod-cloth-size {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -199,11 +196,9 @@ input[type="radio"] {
   margin-right: 0.25rem;
   margin-left: 0.25rem;
   border-radius: 9999px;
-  /* border-width: 1px; */
   width: 1rem;
   height: 1rem;
   padding: 5px;
-  /* border: 1px solid black; */
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
@@ -211,6 +206,7 @@ input[type="radio"] {
   border-color: black;
   border-radius: 0;
   transform: scale(1.4);
+  transition: all 0.2s ease-in-out;
 }
 .prod-cloth-color:hover {
   transform: scale(1.3);
