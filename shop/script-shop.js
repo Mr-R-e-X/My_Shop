@@ -39,15 +39,23 @@ async function getData(url, cat, divDtls) {
 
 // Resture Data for adding Colors and Sizes to the Men and Woman Clothings
 function restructureData(data) {
-  let colors = ["red", "green", "blue", "black", "white"];
-  let sizes = ["S", "M", "L", "XL", "XXL"];
+  let add_colors = ["red", "green", "blue", "black", "white"];
+  let add_sizes = ["S", "M", "L", "XL", "XXL"];
   data.map((data) => {
-    data["Colors"] = colors;
-    data["Sizes"] = sizes;
+    data["colors"] = add_colors;
+    data["sizes"] = add_sizes;
   });
   return data;
 }
+function restructureSingleData(data) {
+  let add_colors = ["red", "green", "blue", "black", "white"];
+  let add_sizes = ["S", "M", "L", "XL", "XXL"];
 
+  data.colors = add_colors;
+  data.sizes = add_sizes;
+
+  return data;
+}
 // Suffle Array to suffle the product on every time dom loads
 function shuffleArray(arr) {
   let currIndex = arr.length;
@@ -99,11 +107,11 @@ function updateShopUi(data, divDtls, cat) {
         <img src="https://cdn-icons-png.flaticon.com/128/477/477406.png" alt="stars" class="rate-img" />
       </div>
     </div>
-    ${product?.Colors
+    ${product?.colors
         ? `
     <div class="product-colors">
       <div class="product-center">
-        ${product.Colors.map(
+        ${product.colors.map(
           (color) => `
           <div class="prod-cloth-color" style="background-color: ${color};" data-val-color="${color}"></div>
         `
@@ -113,11 +121,11 @@ function updateShopUi(data, divDtls, cat) {
   `
         : ""
       }
-  ${product?.Sizes
+  ${product?.sizes
         ? `
     <div class="product-colors">
       <div class="product-center">
-        ${product.Sizes.map(
+        ${product.sizes.map(
           (size) => `
           <span class="prod-cloth-size" data-val-size="${size}" >${size}</span>
         `
@@ -136,7 +144,7 @@ function updateShopUi(data, divDtls, cat) {
     `;
   });
   data.map((product) => {
-    if (product?.Colors !== undefined) {
+    if (product?.colors !== undefined) {
       const productElem = document.getElementById(`product-${product.id}`);
       const colors = productElem.querySelectorAll(".prod-cloth-color");
       colors.forEach((color) => {
@@ -146,7 +154,7 @@ function updateShopUi(data, divDtls, cat) {
         });
       });
     }
-    if (product?.Sizes) {
+    if (product?.sizes) {
       const productElem = document.getElementById(`product-${product.id}`);
       const sizes = productElem.querySelectorAll(".prod-cloth-size");
       sizes.forEach((size) => {
@@ -278,8 +286,17 @@ function checkChooseProdSizeAndColor(prodId) {
 
 
 async function detailProduct(id) {
-  // let data = await fetchData(`https://fakestoreapi.com/products/${id}`)
-  // console.log(data);
+  try {
+    let data = await fetchData(`https://fakestoreapi.com/products/${id}`);
+    if (data.category === "men's clothing" || data.category === "women's clothing") {
+      data = restructureSingleData(data);
+    }
+    localStorage.setItem("product-data", JSON.stringify(data));
+    window.location.href = "./product-detail.html";
+  } catch (error) {
+    console.error('Error fetching product data:', error);
+    // Handle the error appropriately, e.g., show an error message to the user
+  }
 }
 
 function updateMyCartNavbarUi(cart) {
