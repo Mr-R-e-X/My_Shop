@@ -2,6 +2,10 @@ let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
 let orderSummery = document.querySelector("#order-summery");
 let orderProduct = document.querySelector("#order-product");
 
+let allusers = JSON.parse(localStorage.getItem("users"));
+let currUserEmai = JSON.parse(sessionStorage.getItem("currentUser")).email;
+let currUser = allusers.find((user) => user.email === currUserEmai);
+
 function orderDetails(products) {
   console.log(products);
   let totalPrice = products.reduce(
@@ -27,9 +31,9 @@ function orderDetails(products) {
                   <p class="font-normal text-base text-gray-400 transition-all duration-500 group-hover:text-gray-700 text-nowrap overflow-hidden text-ellipsis w-[50%]">
                       ${product.title}
                   </p>
-                  <p class="font-medium text-base text-gray-900"> <span class="bg-white text-center px-2 pb-1 mr-1 rounded-full cursor-pointer">&plus;</span>&nbsp;${
+                  <p class="font-medium text-base text-gray-900"> <span class="text-xs text-gray-400 font-semibold">X</span>${
                     product.count
-                  } <span class="bg-white px-2 pb-1 rounded-full ml-1 cursor-pointer">&minus;</span> </p>
+                  }
                   <p class="font-medium text-base text-gray-900">$${(
                     product?.price +
                     product?.price * 0.01
@@ -84,7 +88,7 @@ function orderDetails(products) {
             (product) =>
               `
           <div
-                class="rounded-xl p-2 bg-gray-100 border border-gray-100 flex flex-col sm:flex-row items-center gap-1 transition-all duration-500 hover:border-gray-400"
+                class="rounded-xl p-2 bg-gray-100 border border-gray-100 flex flex-col md:flex-row items-center gap-1 transition-all duration-500 hover:border-gray-400"
               >
                 <div class="">
                   <img
@@ -92,23 +96,29 @@ function orderDetails(products) {
                     alt="${product.title}"
                     height="150px"
                     width="200px"
-                    class="object-contain sm:w-[122px] mix-blend-multiply"
+                    class="object-contain md:w-[122px] mix-blend-multiply"
                   />
                 </div>
                 <div
                   class="grid grid-cols-1 sm:grid-cols-2 w-full gap-1 md:gap-8"
                 >
                   <div
-                    class="flex items-center sm:items-start flex-col justify-between"
+                    class="flex items-center md:items-start flex-col justify-between"
                   >
                     <h2 class="font-medium text-base text-center sm:text-start text-black mb-1">
                       ${product.title}
                     </h2>
                   </div>
                   <div
-                    class="flex items-center justify-evenly sm:justify-between gap-8"
+                    class="flex items-center justify-evenly md:justify-between gap-8"
                   >
-                    <div class="flex items-center gap-3"><p class="font-medium text-base text-gray-900"> <span class="bg-white text-center px-2 pb-1 mr-1 rounded-full cursor-pointer">&plus;</span>${product.count} <span class="bg-white px-2 pb-1 rounded-full ml-1 cursor-pointer">&minus;</span> </p></div>
+                    <div class="flex items-center gap-3">
+                      <input
+                        type="number"
+                        class="w-14 h-10 px-2 py-1 text-base border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        value="${product.count}"
+                      />
+                    </div>
                     <h6 class="font-medium text-xl text-indigo-600">$${product.price}</h6>
                   </div>
                 </div>
@@ -123,25 +133,25 @@ function orderDetails(products) {
 
 orderDetails(productToPay);
 
-document.getElementById("rzp-button1").onclick = function (e) {
-  var options = {
-    key: "rzp_test_PV1oQ0oMtgXOsq", // Enter the Key ID generated from the Dashboard
-    amount: 300 * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    currency: "USD",
-    name: "MyShop Checkout",
-    description: "This is your order", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    theme: {
-      color: "#0000FF",
-    },
-    image:
-      "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
-  };
+// document.getElementById("rzp-button1").onclick = function (e) {
+//   var options = {
+//     key: "rzp_test_PV1oQ0oMtgXOsq", // Enter the Key ID generated from the Dashboard
+//     amount: 300 * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+//     currency: "USD",
+//     name: "MyShop Checkout",
+//     description: "This is your order", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+//     theme: {
+//       color: "#0000FF",
+//     },
+//     image:
+//       "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
+//   };
 
-  var rzpy1 = new Razorpay(options);
-  rzpy1.open();
-  // clear mycart - localStorage
-  e.preventDefault();
-};
+//   var rzpy1 = new Razorpay(options);
+//   rzpy1.open();
+//   // clear mycart - localStorage
+//   e.preventDefault();
+// };
 
 function proceedToPay(event, price) {
   if (price < 50) {
@@ -163,3 +173,150 @@ function proceedToPay(event, price) {
   rzpy.open();
   // event.preventDefault();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const shippingInfoBtn = document.getElementById("shipping-info-btn");
+  const orderSumBtn = document.getElementById("order-sum-btn");
+  const addressDiv = document.getElementById("address-div");
+  const orderDetails = document.getElementById("Order-details");
+  let addressForm = document.getElementById("address-form");
+  const name = document.getElementById("name");
+  const address = document.getElementById("address");
+  const city = document.getElementById("city");
+  const state = document.getElementById("state");
+  const zip = document.getElementById("zip_postal");
+  const mobile = document.getElementById("mobile");
+  const delivaryInfo = document.getElementById("delivary-info");
+  const submitBtn = document.getElementById("submit");
+
+  shippingInfoBtn.addEventListener("click", () => {
+    addressDiv.classList.remove("hidden");
+    addressDiv.classList.add("w-full");
+    orderDetails.classList.remove("w-full");
+    orderDetails.classList.add("hidden");
+    shippingInfoBtn.classList.add(
+      "bg-gray-600",
+      "text-white",
+      "transition",
+      "duration-300",
+      "transform",
+      "hover:scale-105",
+      "hover:shadow-lg",
+      "focus:outline-none",
+      "focus:ring-4",
+      "focus:ring-gray-300",
+      "animate-pulse"
+    );
+    orderSumBtn.classList.remove(
+      "bg-gray-600",
+      "text-white",
+      "transition",
+      "duration-300",
+      "transform",
+      "hover:scale-105",
+      "hover:shadow-lg",
+      "focus:outline-none",
+      "focus:ring-4",
+      "focus:ring-gray-300",
+      "animate-pulse"
+    );
+    orderSumBtn.classList.add("bg-white", "text-gray-400");
+  });
+
+  orderSumBtn.addEventListener("click", () => {
+    orderDetails.classList.remove("hidden");
+    orderDetails.classList.add("w-full");
+    addressDiv.classList.remove("w-full");
+    addressDiv.classList.add("hidden");
+    orderSumBtn.classList.add(
+      "bg-gray-600",
+      "text-white",
+      "transition",
+      "duration-300",
+      "transform",
+      "hover:scale-105",
+      "hover:shadow-lg",
+      "focus:outline-none",
+      "focus:ring-4",
+      "focus:ring-gray-300",
+      "animate-pulse"
+    );
+    shippingInfoBtn.classList.remove(
+      "bg-gray-600",
+      "text-white",
+      "transition",
+      "duration-300",
+      "transform",
+      "hover:scale-105",
+      "hover:shadow-lg",
+      "focus:outline-none",
+      "focus:ring-4",
+      "focus:ring-gray-300",
+      "animate-pulse"
+    );
+    shippingInfoBtn.classList.add("bg-white", "text-gray-400");
+  });
+
+  function handleResize() {
+    if (window.innerWidth >= 768) {
+      addressDiv.classList.remove("hidden");
+      orderDetails.classList.remove("hidden");
+    } else {
+      addressDiv.classList.remove("hidden");
+      addressDiv.classList.add("w-full");
+      orderDetails.classList.remove("w-full");
+      orderDetails.classList.add("hidden");
+      shippingInfoBtn.classList.add(
+        "bg-gray-600",
+        "text-white",
+        "transition",
+        "duration-300",
+        "transform",
+        "hover:scale-105",
+        "hover:shadow-lg",
+        "focus:outline-none",
+        "focus:ring-4",
+        "focus:ring-gray-300",
+        "animate-pulse"
+      );
+      orderSumBtn.classList.remove(
+        "bg-gray-600",
+        "text-white",
+        "transition",
+        "duration-300",
+        "transform",
+        "hover:scale-105",
+        "hover:shadow-lg",
+        "focus:outline-none",
+        "focus:ring-4",
+        "focus:ring-gray-300",
+        "animate-pulse"
+      );
+      orderSumBtn.classList.add("bg-white", "text-gray-400");
+    }
+  }
+  handleResize();
+  window.addEventListener("resize", handleResize);
+  console.log(currUser);
+  if (!currUser?.address) {
+    console.log("please enter address");
+    name.value = `${currUser.firstName} ${currUser.lastName}`;
+    console.log(name);
+  } else {
+    name.value = `${currUser.firstName} ${currUser.lastName}`;
+  }
+
+  // addressForm.addEventListener("submit", (e) => {
+  //   e.preventDefault();
+  //   let address = {
+  //     name: name.value,
+  //     address: address.value,
+  //     city: city.value,
+  //     state: state.value,
+  //     zip: zip.value,
+  //     mobile: mobile.value,
+  //   };
+  //   console.log(address);
+
+  // });
+});

@@ -1,0 +1,17 @@
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+}

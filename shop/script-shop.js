@@ -1,4 +1,4 @@
-let myCartNav = document.querySelector("#my-cart")
+let myCartNav = document.querySelector("#my-cart");
 let categories = document.querySelector("#categories");
 let categoyBtns = document.querySelectorAll("#category");
 let manClothDiv = document.querySelector("#man-cloth");
@@ -18,7 +18,6 @@ async function fetchData(url) {
     let response = await fetch(url);
     let data = await response.json();
     return data;
-
   } catch (error) {
     console.log(error);
   }
@@ -82,8 +81,9 @@ function updateShopUi(data, divDtls, cat) {
   let productDiv = document.getElementById(title);
   data.map((product) => {
     productDiv.innerHTML += `
-    <div class="product" id="product-${product?.id}" onclick="detailProduct(${product?.id
-      })">
+    <div class="product" id="product-${product?.id}" onclick="detailProduct(${
+      product?.id
+    })">
   <div class="prod-img">
     <img src="${product.image}" class="" />
   </div>
@@ -97,8 +97,8 @@ function updateShopUi(data, divDtls, cat) {
           <span class="prod-curr-price"> $${product?.price} </span>
           <del class="text-sm text-gray-600 ">
             <span class="prev-price"> $${Math.floor(
-        product?.price + product?.price * 0.01
-      )} </span>
+              product?.price + product?.price * 0.01
+            )} </span>
           </del>
         </p>
       </div>
@@ -107,37 +107,44 @@ function updateShopUi(data, divDtls, cat) {
         <img src="https://cdn-icons-png.flaticon.com/128/477/477406.png" alt="stars" class="rate-img" />
       </div>
     </div>
-    ${product?.colors
+    ${
+      product?.colors
         ? `
     <div class="product-colors">
       <div class="product-center">
-        ${product.colors.map(
-          (color) => `
+        ${product.colors
+          .map(
+            (color) => `
           <div class="prod-cloth-color" style="background-color: ${color};" data-val-color="${color}"></div>
         `
-        ).join("")}
+          )
+          .join("")}
       </div>
     </div>
   `
         : ""
-      }
-  ${product?.sizes
-        ? `
+    }
+  ${
+    product?.sizes
+      ? `
     <div class="product-colors">
       <div class="product-center">
-        ${product.sizes.map(
-          (size) => `
+        ${product.sizes
+          .map(
+            (size) => `
           <span class="prod-cloth-size" data-val-size="${size}" >${size}</span>
         `
-        ).join("")}
+          )
+          .join("")}
       </div>
     </div>
   `
-        : ""
-      }
+      : ""
+  }
   </div>
-  <button id="addToCartBtn" data-cat="${cat}" onclick="addProductToCart(this, ${product?.id
-      })">
+  <button id="addToCartBtn" data-cat="${cat}" onclick="addProductToCart(this, ${
+      product?.id
+    })">
     Add to Cart
   </button>
 </div>
@@ -230,7 +237,11 @@ async function addProductToCart(element, prodId) {
         let existingProd = currUser.cart[index];
         existingProd.count += 1;
         console.log("curr user car", currUser.cart);
-        showAlert("Success!", `"${currUser.cart[index].title}" added to the cart successfully.`, "success");
+        showAlert(
+          "Success!",
+          `"${currUser.cart[index].title}" added to the cart successfully.`,
+          "success"
+        );
       } else {
         let product = await fetchData(
           `https://fakestoreapi.com/products/${prodId}`
@@ -240,20 +251,26 @@ async function addProductToCart(element, prodId) {
         product["count"] = 1;
         currUser.cart.push(product);
         console.log("curr user cart", currUser.cart);
-        showAlert("Success!", `${product.title} added to the cart successfully.`, "success");
+        showAlert(
+          "Success!",
+          `${product.title} added to the cart successfully.`,
+          "success"
+        );
       }
     } else {
       showAlert("Error", "Please select a specific color and size !", "error");
     }
   } else {
-    let index = currUser.cart.findIndex(
-      (product) =>
-        product.id === prodId);
+    let index = currUser.cart.findIndex((product) => product.id === prodId);
     if (index !== -1) {
       let existingProd = currUser.cart[index];
       existingProd.count += 1;
       console.log("curr user car", currUser.cart);
-      showAlert("Success!", `"${currUser.cart[index].title}" added to the cart successfully.`, "success");
+      showAlert(
+        "Success!",
+        `"${currUser.cart[index].title}" added to the cart successfully.`,
+        "success"
+      );
     } else {
       let product = await fetchData(
         `https://fakestoreapi.com/products/${prodId}`
@@ -261,13 +278,17 @@ async function addProductToCart(element, prodId) {
       product["count"] = 1;
       currUser.cart.push(product);
       console.log("curr user cart", currUser.cart);
-      showAlert("Success!", `${product.title} added to the cart successfully.`, "success");
+      showAlert(
+        "Success!",
+        `${product.title} added to the cart successfully.`,
+        "success"
+      );
     }
   }
-  let userIndex = users.findIndex(user => user.email === currUser.email);
+  let userIndex = users.findIndex((user) => user.email === currUser.email);
   users[userIndex] = currUser;
   localStorage.setItem("users", JSON.stringify(users));
-  updateMyCartNavbarUi(currUser.cart)
+  updateMyCartNavbarUi(currUser.cart);
 }
 
 function checkChooseProdSizeAndColor(prodId) {
@@ -284,17 +305,19 @@ function checkChooseProdSizeAndColor(prodId) {
   return { color: isColorSelected.color, size: isSizeSelected.size };
 }
 
-
 async function detailProduct(id) {
   try {
     let data = await fetchData(`https://fakestoreapi.com/products/${id}`);
-    if (data.category === "men's clothing" || data.category === "women's clothing") {
+    if (
+      data.category === "men's clothing" ||
+      data.category === "women's clothing"
+    ) {
       data = restructureSingleData(data);
     }
     localStorage.setItem("product-data", JSON.stringify(data));
     window.location.href = "./product-detail.html";
   } catch (error) {
-    console.error('Error fetching product data:', error);
+    console.error("Error fetching product data:", error);
     // Handle the error appropriately, e.g., show an error message to the user
   }
 }
@@ -303,8 +326,8 @@ function updateMyCartNavbarUi(cart) {
   let count = 0;
   cart.map((item) => {
     count += item.count;
-  })
-  myCartNav.innerText = count
+  });
+  myCartNav.innerText = count;
 }
 
 function showAlert(title, msg, icon) {
@@ -318,7 +341,7 @@ function showAlert(title, msg, icon) {
 
 function categoryButtonUIHandler(element) {
   let parent = document.querySelector("#categories").children;
-  Array.from(parent).forEach(catBtn => {
+  Array.from(parent).forEach((catBtn) => {
     catBtn.classList.remove("bg-black", "text-white");
     catBtn.classList.add("bg-white", "text-black");
   });
@@ -328,8 +351,8 @@ function categoryButtonUIHandler(element) {
 
 categoryBtns.forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    categoryButtonUIHandler(btn)
-    let btn_text = btn.textContent.toLowerCase().trim()
+    categoryButtonUIHandler(btn);
+    let btn_text = btn.textContent.toLowerCase().trim();
     if (btn_text === "all") {
       manClothDiv.classList.remove("hidden");
       womenClothDiv.classList.remove("hidden");
@@ -360,8 +383,8 @@ categoryBtns.forEach((btn) => {
       jewelleryDiv.classList.add("hidden");
       electronicDiv.classList.remove("hidden");
     }
-  })
-})
+  });
+});
 
 //Calling required initial functions on DOM load
 document.addEventListener("DOMContentLoaded", () => {
@@ -385,5 +408,5 @@ document.addEventListener("DOMContentLoaded", () => {
     "electronics",
     electronicDiv
   );
-  updateMyCartNavbarUi(currUser.cart)
+  updateMyCartNavbarUi(currUser.cart);
 });
