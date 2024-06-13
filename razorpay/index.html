@@ -12,6 +12,7 @@
     />
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="custom.css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   </head>
   <body
     class="bg-gradient-to-r from-gray-200 to-gray-50 text-gray-900 overflow-hidden h-screen flex flex-col scrollbar"
@@ -104,6 +105,179 @@
       </div>
 
       <section class="w-full flex flex-row">
+
+        <section
+        id="address-div"
+        class="mx-2 px-4 py-5 border border-gray-100 bg-gray-100 hover:border-gray-400 transition-all duration-500 ease-in-out rounded-xl w-full md:w-[45%] my-3 shadow-lg"
+      >
+        <h3
+          id="address-title"
+          class="text-lg text-center font-bold text-gray-700 mb-2"
+        >
+          Enter your address
+        </h3>
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          class="space-y-4"
+          id="address-form"
+        >
+          <div class="grid gap-2 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+              <label
+                for="name"
+                class="block text-gray-700 text-sm font-medium"
+              >
+                Your name
+                <input
+                  name="name"
+                  type="text"
+                  id="name"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                  placeholder="Joe Bloggs"
+                  required
+                />
+              </label>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label
+                for="address"
+                class="block text-gray-700 text-sm font-medium"
+              >
+                Address
+                <input
+                  name="address"
+                  type="text"
+                  id="address"
+                  required
+                  class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </label>
+            </div>
+
+            <div>
+              <label
+                for="city"
+                class="block text-gray-700 text-sm font-medium"
+              >
+                City
+                <input
+                  name="city"
+                  type="text"
+                  id="city"
+                  required
+                  class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </label>
+            </div>
+
+            <div>
+              <label
+                for="state"
+                class="block text-gray-700 text-sm font-medium"
+              >
+                State/Province
+                <input
+                  name="state"
+                  type="text"
+                  id="state"
+                  required
+                  class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </label>
+            </div>
+
+            <div>
+              <label
+                for="zip_postal"
+                class="block text-gray-700 text-sm font-medium"
+              >
+                Zip/Postal code
+                <input
+                  name="zip"
+                  type="text"
+                  id="zip_postal"
+                  required
+                  class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </label>
+            </div>
+
+            <div>
+              <label
+                for="country"
+                class="block text-gray-700 text-sm font-medium"
+              >
+                Country
+                <input
+                  name="country"
+                  type="text"
+                  id="country"
+                  required
+                  class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </label>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label
+                for="mobile"
+                class="block text-gray-700 text-sm font-medium"
+              >
+                Mobile
+                <input
+                  name="telephone"
+                  type="text"
+                  id="mobile"
+                  required
+                  class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </label>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label
+                for="delivery-info"
+                class="block text-gray-700 text-sm font-medium"
+              >
+                Delivery information
+                <textarea
+                  name="message"
+                  id="delivery-info"
+                  class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                  rows="2"
+                  placeholder="floor/door lock code/etc."
+                ></textarea>
+              </label>
+            </div>
+
+            <div class="sm:col-span-2">
+              <div class="checkbox-container">
+                <label for="setDefault" class="checkbox-label block text-gray-700 text-sm font-medium">
+                  Set as default address?
+                </label>
+                <input
+                  name="setDefault"
+                  id="setDefault"
+                  type="checkbox"
+                  class="mx-2 p-2 focus:ring-indigo-400 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <button
+              type="submit"
+              id="submit"
+              class="w-full h-10 px-5 text-indigo-100 bg-indigo-600 rounded-lg transition-colors duration-150 focus:shadow-outline hover:bg-indigo-700"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+        <div id="full-address"></div>
+      </section>
         <section
           id="Order-details"
           class="py-5 relative px-1 hidden md:w-[55%]"
@@ -116,170 +290,7 @@
             <div id="order-product" class="w-full"></div>
           </div>
         </section>
-        <section
-          id="address-div"
-          class="mx-2 px-4 py-5 border border-gray-100 bg-gray-100 hover:border-gray-400 transition-all duration-500 ease-in-out rounded-xl w-full md:w-[45%] my-3 shadow-lg"
-        >
-          <h3
-            id="address-title"
-            class="text-lg text-center font-bold text-gray-700 mb-2"
-          >
-            Enter your address
-          </h3>
-          <form
-            method="POST"
-            enctype="multipart/form-data"
-            class="space-y-4"
-            id="adress-form"
-          >
-            <div class="grid gap-2 sm:grid-cols-2">
-              <div class="sm:col-span-2">
-                <label
-                  for="name"
-                  class="block text-gray-700 text-sm font-medium"
-                >
-                  Your name
-                  <input
-                    name="name"
-                    type="text"
-                    id="name"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                    placeholder="Joe Bloggs"
-                  />
-                </label>
-              </div>
 
-              <div class="sm:col-span-2">
-                <label
-                  id="address"
-                  class="block text-gray-700 text-sm font-medium"
-                >
-                  Address
-                  <input
-                    name="address"
-                    type="text"
-                    id="address"
-                    class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                  />
-                </label>
-              </div>
-
-              <div>
-                <label
-                  id="city"
-                  class="block text-gray-700 text-sm font-medium"
-                >
-                  City
-                  <input
-                    name="city"
-                    type="text"
-                    id="city"
-                    class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                  />
-                </label>
-              </div>
-
-              <div>
-                <label
-                  id="state"
-                  class="block text-gray-700 text-sm font-medium"
-                >
-                  State/Province
-                  <input
-                    name="state"
-                    type="text"
-                    id="state"
-                    class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                  />
-                </label>
-              </div>
-
-              <div>
-                <label
-                  for="zip_postal"
-                  class="block text-gray-700 text-sm font-medium"
-                >
-                  Zip/Postal code
-                  <input
-                    name="zip"
-                    type="text"
-                    id="zip_postal"
-                    class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                  />
-                </label>
-              </div>
-
-              <div>
-                <label
-                  for="country"
-                  class="block text-gray-700 text-sm font-medium"
-                >
-                  Country
-                  <input
-                    name="country"
-                    type="text"
-                    id="country"
-                    class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                  />
-                </label>
-              </div>
-
-              <div class="sm:col-span-2">
-                <label
-                  for="mobile"
-                  class="block text-gray-700 text-sm font-medium"
-                >
-                  Mobile
-                  <input
-                    name="telephone"
-                    type="text"
-                    id="mobile"
-                    class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                  />
-                </label>
-              </div>
-
-              <div class="sm:col-span-2">
-                <label
-                  for="delivery-info"
-                  class="block text-gray-700 text-sm font-medium"
-                >
-                  Delivery information
-                  <textarea
-                    name="message"
-                    id="delivery-info"
-                    class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                    rows="2"
-                    placeholder="floor/door lock code/etc."
-                  ></textarea>
-                </label>
-              </div>
-
-              <div class="sm:col-span-2">
-                <div class="checkbox-container">
-                  <label class="checkbox-label block text-gray-700 text-sm font-medium">
-                    Set as default address?
-                  </label>
-                  <input
-                    name="setDefault"
-                    type="checkbox"
-                    class="mx-2 p-2 focus:ring-indigo-400 focus:ring-opacity-50 transition duration-150 ease-in-out"
-                  />
-                </div>
-            </div>
-
-            <div class="sm:col-span-2">
-              <button
-                type="submit"
-                id="submit"
-                class="w-full h-10 px-5 text-indigo-100 bg-indigo-600 rounded-lg transition-colors duration-150 focus:shadow-outline hover:bg-indigo-700"
-              >
-                Save
-              </button>
-            </div>
-          </form>
-          <div id="full-address"></div>
-        </section>
       </section>
     </main>
     <script src="script.js"></script>

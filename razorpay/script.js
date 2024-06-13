@@ -1,12 +1,26 @@
 let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
 let orderSummery = document.querySelector("#order-summery");
 let orderProduct = document.querySelector("#order-product");
+const shippingInfoBtn = document.getElementById("shipping-info-btn");
+const orderSumBtn = document.getElementById("order-sum-btn");
+const addressDiv = document.getElementById("address-div");
+const orderDetails = document.getElementById("Order-details");
+const addressForm = document.getElementById("address-form");
+const nameIp = document.getElementById("name");
+const address = document.getElementById("address");
+const city = document.getElementById("city");
+const state = document.getElementById("state");
+const zip = document.getElementById("zip_postal");
+const mobile = document.getElementById("mobile");
+const deliveryInfo = document.getElementById("delivery-info");
+const checkDefault = document.getElementById("setDefault");
+const submitBtn = document.getElementById("submit");
 
 let allusers = JSON.parse(localStorage.getItem("users"));
 let currUserEmai = JSON.parse(sessionStorage.getItem("currentUser")).email;
 let currUser = allusers.find((user) => user.email === currUserEmai);
 
-function orderDetails(products) {
+function orderDetailsUi(products) {
   console.log(products);
   let totalPrice = products.reduce(
     (sum, product) => sum + product.price * product.count,
@@ -94,9 +108,7 @@ function orderDetails(products) {
                   <img
                     src="${product.image}"
                     alt="${product.title}"
-                    height="150px"
-                    width="200px"
-                    class="object-contain md:w-[122px] mix-blend-multiply"
+                    class="order-detail-img mix-blend-multiply"
                   />
                 </div>
                 <div
@@ -131,7 +143,7 @@ function orderDetails(products) {
             `;
 }
 
-orderDetails(productToPay);
+orderDetailsUi(productToPay);
 
 // document.getElementById("rzp-button1").onclick = function (e) {
 //   var options = {
@@ -154,73 +166,85 @@ orderDetails(productToPay);
 // };
 
 function proceedToPay(event, price) {
-  if (price < 50) {
-    price = price + 20;
+  if (
+    nameIp.value !== "" &&
+    address.value !== "" &&
+    city.value !== "" &&
+    state.value !== "" &&
+    zip.value !== "" &&
+    mobile.value !== ""
+  ) {
+    console.log("here");
+    if (price < 50) {
+      price = price + 20;
+    }
+    let options = {
+      key: "rzp_test_PV1oQ0oMtgXOsq",
+      amount: price * 100,
+      currency: "USD",
+      name: "MyShop Checkout",
+      description: "This is your order",
+      theme: {
+        color: "#0000FF",
+      },
+      image:
+        "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
+    };
+    let rzpy = new Razorpay(options);
+    rzpy.open();
+  } else {
+    showAlert(
+      "Error",
+      "Please fill the Shipping Information before payment!",
+      "error"
+    );
   }
-  let options = {
-    key: "rzp_test_PV1oQ0oMtgXOsq",
-    amount: price * 100,
-    currency: "USD",
-    name: "MyShop Checkout",
-    description: "This is your order",
-    theme: {
-      color: "#0000FF",
-    },
-    image:
-      "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
-  };
-  let rzpy = new Razorpay(options);
-  rzpy.open();
+
   // event.preventDefault();
 }
 
+function showAlert(title, msg, icon) {
+  swal({
+    title: title,
+    text: msg,
+    icon: icon,
+    button: "Okay",
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  const shippingInfoBtn = document.getElementById("shipping-info-btn");
-  const orderSumBtn = document.getElementById("order-sum-btn");
-  const addressDiv = document.getElementById("address-div");
-  const orderDetails = document.getElementById("Order-details");
-  let addressForm = document.getElementById("address-form");
-  const name = document.getElementById("name");
-  const address = document.getElementById("address");
-  const city = document.getElementById("city");
-  const state = document.getElementById("state");
-  const zip = document.getElementById("zip_postal");
-  const mobile = document.getElementById("mobile");
-  const delivaryInfo = document.getElementById("delivary-info");
-  const submitBtn = document.getElementById("submit");
+  const activeBtnClasses = [
+    "bg-gray-600",
+    "text-white",
+    "transition",
+    "duration-300",
+    "transform",
+    "hover:scale-105",
+    "hover:shadow-lg",
+    "focus:outline-none",
+    "focus:ring-4",
+    "focus:ring-gray-300",
+    "animate-pulse",
+  ];
+  const inactiveBtnClasses = ["bg-white", "text-gray-400"];
+
+  function setActiveButton(btn) {
+    btn.classList.add(...activeBtnClasses);
+    btn.classList.remove(...inactiveBtnClasses);
+  }
+
+  function setInactiveButton(btn) {
+    btn.classList.remove(...activeBtnClasses);
+    btn.classList.add(...inactiveBtnClasses);
+  }
 
   shippingInfoBtn.addEventListener("click", () => {
     addressDiv.classList.remove("hidden");
     addressDiv.classList.add("w-full");
     orderDetails.classList.remove("w-full");
     orderDetails.classList.add("hidden");
-    shippingInfoBtn.classList.add(
-      "bg-gray-600",
-      "text-white",
-      "transition",
-      "duration-300",
-      "transform",
-      "hover:scale-105",
-      "hover:shadow-lg",
-      "focus:outline-none",
-      "focus:ring-4",
-      "focus:ring-gray-300",
-      "animate-pulse"
-    );
-    orderSumBtn.classList.remove(
-      "bg-gray-600",
-      "text-white",
-      "transition",
-      "duration-300",
-      "transform",
-      "hover:scale-105",
-      "hover:shadow-lg",
-      "focus:outline-none",
-      "focus:ring-4",
-      "focus:ring-gray-300",
-      "animate-pulse"
-    );
-    orderSumBtn.classList.add("bg-white", "text-gray-400");
+    setActiveButton(shippingInfoBtn);
+    setInactiveButton(orderSumBtn);
   });
 
   orderSumBtn.addEventListener("click", () => {
@@ -228,95 +252,51 @@ document.addEventListener("DOMContentLoaded", () => {
     orderDetails.classList.add("w-full");
     addressDiv.classList.remove("w-full");
     addressDiv.classList.add("hidden");
-    orderSumBtn.classList.add(
-      "bg-gray-600",
-      "text-white",
-      "transition",
-      "duration-300",
-      "transform",
-      "hover:scale-105",
-      "hover:shadow-lg",
-      "focus:outline-none",
-      "focus:ring-4",
-      "focus:ring-gray-300",
-      "animate-pulse"
-    );
-    shippingInfoBtn.classList.remove(
-      "bg-gray-600",
-      "text-white",
-      "transition",
-      "duration-300",
-      "transform",
-      "hover:scale-105",
-      "hover:shadow-lg",
-      "focus:outline-none",
-      "focus:ring-4",
-      "focus:ring-gray-300",
-      "animate-pulse"
-    );
-    shippingInfoBtn.classList.add("bg-white", "text-gray-400");
+    setActiveButton(orderSumBtn);
+    setInactiveButton(shippingInfoBtn);
   });
 
   function handleResize() {
     if (window.innerWidth >= 768) {
       addressDiv.classList.remove("hidden");
+      addressDiv.classList.add("w-full");
       orderDetails.classList.remove("hidden");
+      orderDetails.classList.add("w-full");
+      setInactiveButton(shippingInfoBtn);
+      setInactiveButton(orderSumBtn);
     } else {
       addressDiv.classList.remove("hidden");
       addressDiv.classList.add("w-full");
-      orderDetails.classList.remove("w-full");
       orderDetails.classList.add("hidden");
-      shippingInfoBtn.classList.add(
-        "bg-gray-600",
-        "text-white",
-        "transition",
-        "duration-300",
-        "transform",
-        "hover:scale-105",
-        "hover:shadow-lg",
-        "focus:outline-none",
-        "focus:ring-4",
-        "focus:ring-gray-300",
-        "animate-pulse"
-      );
-      orderSumBtn.classList.remove(
-        "bg-gray-600",
-        "text-white",
-        "transition",
-        "duration-300",
-        "transform",
-        "hover:scale-105",
-        "hover:shadow-lg",
-        "focus:outline-none",
-        "focus:ring-4",
-        "focus:ring-gray-300",
-        "animate-pulse"
-      );
-      orderSumBtn.classList.add("bg-white", "text-gray-400");
+      setActiveButton(shippingInfoBtn); // Set the initial active button on small screens
+      setInactiveButton(orderSumBtn);
     }
   }
+
   handleResize();
   window.addEventListener("resize", handleResize);
-  console.log(currUser);
+
+  // Assuming currUser is defined globally somewhere in your code
   if (!currUser?.address) {
-    console.log("please enter address");
+    console.log("Please enter address");
     name.value = `${currUser.firstName} ${currUser.lastName}`;
-    console.log(name);
   } else {
     name.value = `${currUser.firstName} ${currUser.lastName}`;
   }
 
-  // addressForm.addEventListener("submit", (e) => {
-  //   e.preventDefault();
-  //   let address = {
-  //     name: name.value,
-  //     address: address.value,
-  //     city: city.value,
-  //     state: state.value,
-  //     zip: zip.value,
-  //     mobile: mobile.value,
-  //   };
-  //   console.log(address);
+  addressForm.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  // });
+    const addressData = {
+      name: nameIp.value,
+      address: address.value,
+      city: city.value,
+      state: state.value,
+      zip: zip.value,
+      mobile: mobile.value,
+      deliveryInfo: deliveryInfo.value,
+      setDefault: checkDefault.checked,
+    };
+    console.log(addressData);
+  });
 });

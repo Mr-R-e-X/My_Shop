@@ -1,5 +1,5 @@
-const productCardDiv = document.querySelector("#product-card")
-let myCartNav = document.querySelector("#my-cart")
+const productCardDiv = document.querySelector("#product-card");
+let myCartNav = document.querySelector("#my-cart");
 let productData = JSON.parse(localStorage.getItem("product-data"));
 let selectedColor = null;
 let selectedSize = null;
@@ -8,7 +8,7 @@ let currUserEmai = JSON.parse(sessionStorage.getItem("currentUser")).email;
 let currUser = users.find((user) => user.email === currUserEmai);
 function updateProductUi(productData) {
   let { id, category, description, image, price, title } = productData;
-  let { rate } = productData.rating
+  let { rate } = productData.rating;
   productCardDiv.innerHTML = `
     <div class="bg-gray-100 py-8" id="product-${id}">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,24 +44,40 @@ function updateProductUi(productData) {
                         <span class="text-green-500">In Stock</span>
                     </div>
                 </div>
-                ${productData?.colors ? `
+                ${
+                  productData?.colors
+                    ? `
                 <div class="mb-4">
                     <span class="font-bold text-gray-700">Select Color:</span>
                     <div class="flex items-center mt-2">
-                        ${productData.colors.map((color) => `
+                        ${productData.colors
+                          .map(
+                            (color) => `
                             <button class="w-6 h-6 border border-gray-800 rounded-full mx-2 mr-2 clr-btns transition-all duration-300" style="background-color: ${color};" data-val-color="${color}"></button>
-                        `).join("")}
+                        `
+                          )
+                          .join("")}
                     </div>
-                </div>` : ""}
-                ${productData?.sizes ? `
+                </div>`
+                    : ""
+                }
+                ${
+                  productData?.sizes
+                    ? `
                 <div class="mb-4">
                     <span class="font-bold text-gray-700">Select Size:</span>
                     <div class="flex items-center mt-2">
-                        ${productData.sizes.map((size) => `
+                        ${productData.sizes
+                          .map(
+                            (size) => `
                             <button class="bg-gray-300 text-gray-700 py-2 px-3 rounded-full font-semibold mr-2 mx-2 hover:bg-gray-400 transition-all duration-300 size-btns">${size}</button>
-                        `).join("")}
+                        `
+                          )
+                          .join("")}
                     </div>
-                </div>` : ""}
+                </div>`
+                    : ""
+                }
                 <div>
                     <span class="font-bold text-gray-700">Product Description:</span>
                     <p class="text-gray-600 text-sm mt-2">
@@ -72,64 +88,64 @@ function updateProductUi(productData) {
         </div>
     </div>
 </div>
-    `
+    `;
 
   if (productData?.colors !== undefined) {
     const product = document.getElementById(`product-${id}`);
-    const colors = document.querySelectorAll(".clr-btns")
+    const colors = document.querySelectorAll(".clr-btns");
     colors.forEach((color) => {
       color.addEventListener("click", (event) => {
         event.stopPropagation();
-        selectColor(color, product)
-      })
-    })
+        selectColor(color, product);
+      });
+    });
   }
   if (productData?.sizes !== undefined) {
     const product = document.getElementById(`product-${id}`);
-    const sizes = document.querySelectorAll(".size-btns")
+    const sizes = document.querySelectorAll(".size-btns");
     sizes.forEach((size) => {
       size.addEventListener("click", (event) => {
         event.stopPropagation();
-        selectSize(size, product)
-      })
-    })
+        selectSize(size, product);
+      });
+    });
   }
 }
 
 function selectColor(color, product) {
   if (color.classList.contains("single-color-selected")) {
-    color.classList.remove("single-color-selected")
+    color.classList.remove("single-color-selected");
     selectedColor = null;
-    console.log(selectedColor)
+    console.log(selectedColor);
   } else {
-    let colors = product.querySelectorAll(".clr-btns")
+    let colors = product.querySelectorAll(".clr-btns");
     colors.forEach((el) => el.classList.remove("single-color-selected"));
     const newColor = color.getAttribute("data-val-color");
-    color.classList.add("single-color-selected")
+    color.classList.add("single-color-selected");
     selectedColor = { productId: product.id.split("-")[1], color: newColor };
-    console.log(selectedColor)
+    console.log(selectedColor);
   }
 }
 
 function selectSize(size, product) {
   if (size.classList.contains("single-size-selected")) {
-    size.classList.remove("single-size-selected")
-    selectedSize = null
-    console.log(selectedSize)
+    size.classList.remove("single-size-selected");
+    selectedSize = null;
+    console.log(selectedSize);
   } else {
-    let sizes = product.querySelectorAll(".size-btns")
+    let sizes = product.querySelectorAll(".size-btns");
     // console.log(sizes)
     sizes.forEach((el) => el.classList.remove("single-size-selected"));
     const newSize = size.innerText;
-    size.classList.add("single-size-selected")
+    size.classList.add("single-size-selected");
     selectedSize = { productId: product.id.split("-")[1], size: newSize };
-    console.log(selectedSize)
+    console.log(selectedSize);
   }
 }
 
 async function addProductToCart(element) {
   let cat = element.getAttribute("data-cat");
-  console.log(cat)
+  // console.log(cat)
   if (cat === "men's" || cat === "women's") {
     if (selectedColor !== null && selectedSize !== null) {
       let index = currUser.cart.findIndex(
@@ -138,40 +154,56 @@ async function addProductToCart(element) {
           product.color === selectedColor.color &&
           product.size === selectedColor.size
       );
-      console.log(index)
+      console.log(index);
       if (index !== -1) {
         let existingProd = currUser.cart[index];
         existingProd.count += 1;
-        showAlert("Success!", `"${currUser.cart[index].title}" added to the cart successfully.`, "success");
+        showAlert(
+          "Success!",
+          `"${currUser.cart[index].title}" added to the cart successfully.`,
+          "success"
+        );
       } else {
         productData["color"] = selectedColor.color;
         productData["size"] = selectedColor.size;
         productData["count"] = 1;
         currUser.cart.push(productData);
-        showAlert("Success!", `${productData.title} added to the cart successfully.`, "success");
+        showAlert(
+          "Success!",
+          `${productData.title} added to the cart successfully.`,
+          "success"
+        );
       }
     } else {
       showAlert("Error", "Please select a specific color and size !", "error");
     }
   } else {
     let index = currUser.cart.findIndex(
-      (product) =>
-        product.id === productData.id);
+      (product) => product.id === productData.id
+    );
     if (index !== -1) {
       let existingProd = currUser.cart[index];
       existingProd.count += 1;
       console.log("curr user car", currUser.cart);
-      showAlert("Success!", `"${currUser.cart[index].title}" added to the cart successfully.`, "success");
+      showAlert(
+        "Success!",
+        `"${currUser.cart[index].title}" added to the cart successfully.`,
+        "success"
+      );
     } else {
       productData["count"] = 1;
       currUser.cart.push(productData);
-      showAlert("Success!", `${productData.title} added to the cart successfully.`, "success");
+      showAlert(
+        "Success!",
+        `${productData.title} added to the cart successfully.`,
+        "success"
+      );
     }
   }
-  let userIndex = users.findIndex(user => user.email === currUser.email);
+  let userIndex = users.findIndex((user) => user.email === currUser.email);
   users[userIndex] = currUser;
   localStorage.setItem("users", JSON.stringify(users));
-  updateMyCartNavbarUi(currUser.cart)
+  updateMyCartNavbarUi(currUser.cart);
 }
 
 function buyNow(elem, id) {
@@ -184,16 +216,22 @@ function buyNow(elem, id) {
       productData["count"] = 1;
       productForPayment.push(productData);
       console.log(productForPayment);
-      sessionStorage.setItem("productForPayment", JSON.stringify(productForPayment));
+      sessionStorage.setItem(
+        "productForPayment",
+        JSON.stringify(productForPayment)
+      );
       window.location.href = "../razorpay/index.html";
     } else {
       showAlert("Error", "Please select a specific color and size!", "error");
     }
   } else {
     productData["count"] = 1;
-    productForPayment.push(productData)
+    productForPayment.push(productData);
     console.log(productForPayment);
-    sessionStorage.setItem("productForPayment", JSON.stringify(productForPayment))
+    sessionStorage.setItem(
+      "productForPayment",
+      JSON.stringify(productForPayment)
+    );
     window.location.href = "../razorpay/index.html";
   }
 }
@@ -202,12 +240,12 @@ function updateMyCartNavbarUi(cart) {
   let count = 0;
   cart.map((item) => {
     count += item.count;
-  })
+  });
   if (count === 0) {
-    myCartNav.classList.add("hidden")
+    myCartNav.classList.add("hidden");
   } else {
-    myCartNav.classList.remove("hidden")
-    myCartNav.innerText = count
+    myCartNav.classList.remove("hidden");
+    myCartNav.innerText = count;
   }
 }
 
@@ -220,6 +258,6 @@ function showAlert(title, msg, icon) {
   });
 }
 document.addEventListener("DOMContentLoaded", () => {
-  updateProductUi(productData)
-  updateMyCartNavbarUi(currUser.cart)
-})
+  updateProductUi(productData);
+  updateMyCartNavbarUi(currUser.cart);
+});

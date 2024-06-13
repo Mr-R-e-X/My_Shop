@@ -15,3 +15,11 @@ input[type="checkbox"] {
   width: 24px;
   height: 24px;
 }
+@media screen and (min-width: 768px) {
+  .order-detail-img {
+    height: 100px !important;
+    width: 122px !important;
+    object-fit: contain;
+    object-position: center !important;
+  }
+}
