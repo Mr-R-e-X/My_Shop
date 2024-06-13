@@ -17,13 +17,36 @@ const checkDefault = document.getElementById("setDefault");
 const submitBtn = document.getElementById("submit");
 
 let allusers = JSON.parse(localStorage.getItem("users"));
-let currUserEmai = JSON.parse(sessionStorage.getItem("currentUser")).email;
-let currUser = allusers.find((user) => user.email === currUserEmai);
+
+let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+if (currUser === null) window.location.href = "../index.html";
+let currUserFound = allusers.find((user) => user.email === currUser.email);
 
 function orderDetailsUi(products) {
-  console.log(products);
-  let totalPrice = products.reduce(
-    (sum, product) => sum + product.price * product.count,
+  // console.log(products);
+  const filteredProducts = products.filter((product) => product.count > 0);
+
+  if (filteredProducts.length === 0) {
+    // Hide the order summary section or display a message if there are no products
+    orderSummery.innerHTML = `
+      <div class="p-4 border border-gray-200 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
+        <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200">
+          Order Summary
+        </h2>
+        <p class="font-normal text-base text-gray-400">No products in the order.</p>
+      </div>
+    `;
+    orderProduct.innerHTML = `
+      <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200">
+        Order Details
+      </h2>
+      <p class="font-normal text-base text-gray-400">No products to display.</p>
+    `;
+    return;
+  }
+
+  let totalPrice = filteredProducts.reduce(
+    (sum, product) => sum + Math.floor(product.price * product.count * 80),
     0
   );
   console.log(totalPrice);
@@ -36,7 +59,7 @@ function orderDetailsUi(products) {
               >
                 Order Summary
               </h2>
-              ${productToPay
+              ${filteredProducts
                 .map(
                   (product) =>
                     `
@@ -48,9 +71,9 @@ function orderDetailsUi(products) {
                   <p class="font-medium text-base text-gray-900"> <span class="text-xs text-gray-400 font-semibold">X</span>${
                     product.count
                   }
-                  <p class="font-medium text-base text-gray-900">$${(
-                    product?.price +
-                    product?.price * 0.01
+                  <p class="font-medium text-base text-gray-900">&#8377;${(
+                    product?.price * 80 +
+                    product?.price * 80 * 0.01
                   ).toFixed(2)} </p>
                 </div>
                 `
@@ -63,7 +86,7 @@ function orderDetailsUi(products) {
                     Shipping
                   </p>
                   <p class="font-medium text-base text-gray-600">${
-                    totalPrice >= 50 ? "Free" : "$20"
+                    totalPrice >= 300 ? "Free" : `&#8377; 51`
                   }</p>
                 </div>
                 <div class="flex items-center justify-between gap-4">
@@ -78,7 +101,11 @@ function orderDetailsUi(products) {
               <div class="total flex items-center justify-between pt-1">
                 <p class="font-normal text-lg text-black">Subtotal</p>
                 <h5 class="font-manrope font-bold text-base text-indigo-600">
-                  $${totalPrice >= 50 ? `${totalPrice}` : `${totalPrice + 20}`}
+                 &#8377;${
+                   totalPrice >= 300
+                     ? `${totalPrice}`
+                     : `${totalPrice === 0 ? "0" : `${totalPrice + 51}`}`
+                 }
                 </h5>
               </div>
                <div class="mt-4" onclick="proceedToPay(event,${totalPrice})">
@@ -97,7 +124,7 @@ function orderDetailsUi(products) {
                 Order Details
               </h2>
         <div class="grid grid-cols-1 gap-2">
-        ${products
+        ${filteredProducts
           .map(
             (product) =>
               `
@@ -128,10 +155,16 @@ function orderDetailsUi(products) {
                       <input
                         type="number"
                         class="w-14 h-10 px-2 py-1 text-base border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        value="${product.count}"
+                        value="${
+                          product.count
+                        }" max="10" min="0" onchange="updateProductCount(this, ${
+                product.id
+              })"
                       />
                     </div>
-                    <h6 class="font-medium text-xl text-indigo-600">$${product.price}</h6>
+                    <h6 class="font-medium text-xl text-indigo-600">&#8377;${Math.floor(
+                      product.price * product.count * 80
+                    )}</h6>
                   </div>
                 </div>
               </div>
@@ -144,6 +177,16 @@ function orderDetailsUi(products) {
 }
 
 orderDetailsUi(productToPay);
+
+function updateProductCount(elem, id) {
+  console.log(elem);
+  console.log(id);
+  let newCount = parseInt(elem.value);
+  let index = productToPay.findIndex((product) => product.id === id);
+  productToPay[index].count = newCount;
+  console.log(productToPay[index]);
+  orderDetailsUi(productToPay);
+}
 
 // document.getElementById("rzp-button1").onclick = function (e) {
 //   var options = {
@@ -181,16 +224,25 @@ function proceedToPay(event, price) {
     let options = {
       key: "rzp_test_PV1oQ0oMtgXOsq",
       amount: price * 100,
-      currency: "USD",
+      currency: "INR",
       name: "MyShop Checkout",
       description: "This is your order",
+      image:
+        "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
+      prefill: {
+        email: "souvikhazra151@gmail.com",
+        contact: +918001624449,
+      },
+      handler: function (response) {
+        alert(response.razorpay_payment_id);
+      },
+
       theme: {
         color: "#0000FF",
       },
-      image:
-        "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
     };
     let rzpy = new Razorpay(options);
+    // console.log(rzpy.open());
     rzpy.open();
   } else {
     showAlert(
@@ -276,13 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
   handleResize();
   window.addEventListener("resize", handleResize);
 
-  // Assuming currUser is defined globally somewhere in your code
-  if (!currUser?.address) {
-    console.log("Please enter address");
-    name.value = `${currUser.firstName} ${currUser.lastName}`;
-  } else {
-    name.value = `${currUser.firstName} ${currUser.lastName}`;
-  }
+  nameIp.value = `${currUserFound.firstName} ${currUserFound.lastName}`;
 
   addressForm.addEventListener("submit", (e) => {
     e.preventDefault();

@@ -15,6 +15,10 @@ input[type="checkbox"] {
   width: 24px;
   height: 24px;
 }
+.order-detail-img {
+  height: 200px !important;
+  width: auto;
+}
 @media screen and (min-width: 768px) {
   .order-detail-img {
     height: 100px !important;

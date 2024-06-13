@@ -4,8 +4,10 @@ let productData = JSON.parse(localStorage.getItem("product-data"));
 let selectedColor = null;
 let selectedSize = null;
 let users = JSON.parse(localStorage.getItem("users"));
-let currUserEmai = JSON.parse(sessionStorage.getItem("currentUser")).email;
-let currUser = users.find((user) => user.email === currUserEmai);
+let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+if (currUser === null) window.location.href = "../index.html";
+let currUserFound = users.find((user) => user.email === currUser.email);
+
 function updateProductUi(productData) {
   let { id, category, description, image, price, title } = productData;
   let { rate } = productData.rating;
@@ -37,7 +39,9 @@ function updateProductUi(productData) {
                 <div class="flex mb-4">
                     <div class="mr-4">
                         <span class="font-bold text-gray-700">Price:</span>
-                        <span class="text-green-600">$${price}</span>
+                        <span class="text-green-600">&#8377;${Math.floor(
+                          price * 80
+                        )}</span>
                     </div>
                     <div>
                         <span class="font-bold text-gray-700">Availability:</span>
@@ -148,7 +152,7 @@ async function addProductToCart(element) {
   // console.log(cat)
   if (cat === "men's" || cat === "women's") {
     if (selectedColor !== null && selectedSize !== null) {
-      let index = currUser.cart.findIndex(
+      let index = currUserFound.cart.findIndex(
         (product) =>
           product.id === productData.id &&
           product.color === selectedColor.color &&
@@ -156,18 +160,18 @@ async function addProductToCart(element) {
       );
       console.log(index);
       if (index !== -1) {
-        let existingProd = currUser.cart[index];
+        let existingProd = currUserFound.cart[index];
         existingProd.count += 1;
         showAlert(
           "Success!",
-          `"${currUser.cart[index].title}" added to the cart successfully.`,
+          `"${currUserFound.cart[index].title}" added to the cart successfully.`,
           "success"
         );
       } else {
         productData["color"] = selectedColor.color;
         productData["size"] = selectedColor.size;
         productData["count"] = 1;
-        currUser.cart.push(productData);
+        currUserFound.cart.push(productData);
         showAlert(
           "Success!",
           `${productData.title} added to the cart successfully.`,
@@ -178,21 +182,21 @@ async function addProductToCart(element) {
       showAlert("Error", "Please select a specific color and size !", "error");
     }
   } else {
-    let index = currUser.cart.findIndex(
+    let index = currUserFound.cart.findIndex(
       (product) => product.id === productData.id
     );
     if (index !== -1) {
-      let existingProd = currUser.cart[index];
+      let existingProd = currUserFound.cart[index];
       existingProd.count += 1;
-      console.log("curr user car", currUser.cart);
+      console.log("curr user car", currUserFound.cart);
       showAlert(
         "Success!",
-        `"${currUser.cart[index].title}" added to the cart successfully.`,
+        `"${currUserFound.cart[index].title}" added to the cart successfully.`,
         "success"
       );
     } else {
       productData["count"] = 1;
-      currUser.cart.push(productData);
+      currUserFound.cart.push(productData);
       showAlert(
         "Success!",
         `${productData.title} added to the cart successfully.`,
@@ -200,10 +204,10 @@ async function addProductToCart(element) {
       );
     }
   }
-  let userIndex = users.findIndex((user) => user.email === currUser.email);
-  users[userIndex] = currUser;
+  let userIndex = users.findIndex((user) => user.email === currUserFound.email);
+  users[userIndex] = currUserFound;
   localStorage.setItem("users", JSON.stringify(users));
-  updateMyCartNavbarUi(currUser.cart);
+  updateMyCartNavbarUi(currUserFound.cart);
 }
 
 function buyNow(elem, id) {
@@ -259,5 +263,5 @@ function showAlert(title, msg, icon) {
 }
 document.addEventListener("DOMContentLoaded", () => {
   updateProductUi(productData);
-  updateMyCartNavbarUi(currUser.cart);
+  updateMyCartNavbarUi(currUserFound.cart);
 });

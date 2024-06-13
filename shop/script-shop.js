@@ -9,18 +9,14 @@ let categoryBtns = document.querySelectorAll(".category-btns");
 let selectedColor = [];
 let selectedSize = [];
 let users = JSON.parse(localStorage.getItem("users"));
-let currUserEmai = JSON.parse(sessionStorage.getItem("currentUser")).email;
-let currUser = users.find((user) => user.email === currUserEmai);
+let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUserFound = users.find((user) => user.email === currUser.email);
 
 // Data Fetcher Function in will return a data in JSON object format
 async function fetchData(url) {
-  try {
-    let response = await fetch(url);
-    let data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
+  let response = await fetch(url);
+  let data = await response.json();
+  return data;
 }
 
 // Get Data for Page, Document onload it will initially render the page with the data
@@ -83,7 +79,7 @@ function updateShopUi(data, divDtls, cat) {
     productDiv.innerHTML += `
     <div class="product" id="product-${product?.id}" onclick="detailProduct(${
       product?.id
-    })">
+    }, event)">
   <div class="prod-img">
     <img src="${product.image}" class="" />
   </div>
@@ -94,11 +90,13 @@ function updateShopUi(data, divDtls, cat) {
     <div class="product-info">
       <div>
         <p class="product-price">
-          <span class="prod-curr-price"> $${product?.price} </span>
+          <span class="prod-curr-price"> &#8377;${Math.floor(
+            product?.price * 80
+          ).toFixed(0)} </span>
           <del class="text-sm text-gray-600 ">
             <span class="prev-price"> $${Math.floor(
-              product?.price + product?.price * 0.01
-            )} </span>
+              product?.price * 80 + product?.price * 80 * 0.01
+            ).toFixed(0)} </span>
           </del>
         </p>
       </div>
@@ -144,7 +142,7 @@ function updateShopUi(data, divDtls, cat) {
   </div>
   <button id="addToCartBtn" data-cat="${cat}" onclick="addProductToCart(this, ${
       product?.id
-    })">
+    }, event)">
     Add to Cart
   </button>
 </div>
@@ -221,25 +219,26 @@ function selectSize(element, prodElem) {
   }
 }
 
-async function addProductToCart(element, prodId) {
-  // console.log(typeof prodId);
+async function addProductToCart(element, prodId, event) {
+  event.preventDefault(); // Prevent default behavior
+  event.stopPropagation(); // Stop event propagation
   let cat = element.getAttribute("data-cat");
   if (cat === "men's clothing" || cat === "women's clothing") {
     let colorAndSize = checkChooseProdSizeAndColor(prodId);
     if (colorAndSize !== false) {
-      let index = currUser.cart.findIndex(
+      let index = currUserFound.cart.findIndex(
         (product) =>
           product.id === prodId &&
           product.color === colorAndSize.color &&
           product.size === colorAndSize.size
       );
       if (index !== -1) {
-        let existingProd = currUser.cart[index];
+        let existingProd = currUserFound.cart[index];
         existingProd.count += 1;
-        console.log("curr user car", currUser.cart);
+        console.log("curr user car", currUserFound.cart);
         showAlert(
           "Success!",
-          `"${currUser.cart[index].title}" added to the cart successfully.`,
+          `"${currUserFound.cart[index].title}" added to the cart successfully.`,
           "success"
         );
       } else {
@@ -249,8 +248,8 @@ async function addProductToCart(element, prodId) {
         product["color"] = colorAndSize.color;
         product["size"] = colorAndSize.size;
         product["count"] = 1;
-        currUser.cart.push(product);
-        console.log("curr user cart", currUser.cart);
+        currUserFound.cart.push(product);
+        console.log("curr user cart", currUserFound.cart);
         showAlert(
           "Success!",
           `${product.title} added to the cart successfully.`,
@@ -261,14 +260,16 @@ async function addProductToCart(element, prodId) {
       showAlert("Error", "Please select a specific color and size !", "error");
     }
   } else {
-    let index = currUser.cart.findIndex((product) => product.id === prodId);
+    let index = currUserFound.cart.findIndex(
+      (product) => product.id === prodId
+    );
     if (index !== -1) {
-      let existingProd = currUser.cart[index];
+      let existingProd = currUserFound.cart[index];
       existingProd.count += 1;
-      console.log("curr user car", currUser.cart);
+      console.log("curr user car", currUserFound.cart);
       showAlert(
         "Success!",
-        `"${currUser.cart[index].title}" added to the cart successfully.`,
+        `"${currUserFound.cart[index].title}" added to the cart successfully.`,
         "success"
       );
     } else {
@@ -276,8 +277,8 @@ async function addProductToCart(element, prodId) {
         `https://fakestoreapi.com/products/${prodId}`
       );
       product["count"] = 1;
-      currUser.cart.push(product);
-      console.log("curr user cart", currUser.cart);
+      currUserFound.cart.push(product);
+      console.log("curr user cart", currUserFound.cart);
       showAlert(
         "Success!",
         `${product.title} added to the cart successfully.`,
@@ -285,10 +286,10 @@ async function addProductToCart(element, prodId) {
       );
     }
   }
-  let userIndex = users.findIndex((user) => user.email === currUser.email);
-  users[userIndex] = currUser;
+  let userIndex = users.findIndex((user) => user.email === currUserFound.email);
+  users[userIndex] = currUserFound;
   localStorage.setItem("users", JSON.stringify(users));
-  updateMyCartNavbarUi(currUser.cart);
+  updateMyCartNavbarUi(currUserFound.cart);
 }
 
 function checkChooseProdSizeAndColor(prodId) {
@@ -305,21 +306,18 @@ function checkChooseProdSizeAndColor(prodId) {
   return { color: isColorSelected.color, size: isSizeSelected.size };
 }
 
-async function detailProduct(id) {
-  try {
-    let data = await fetchData(`https://fakestoreapi.com/products/${id}`);
-    if (
-      data.category === "men's clothing" ||
-      data.category === "women's clothing"
-    ) {
-      data = restructureSingleData(data);
-    }
-    localStorage.setItem("product-data", JSON.stringify(data));
-    window.location.href = "./product-detail.html";
-  } catch (error) {
-    console.error("Error fetching product data:", error);
-    // Handle the error appropriately, e.g., show an error message to the user
+async function detailProduct(id, event) {
+  event.preventDefault(); // Prevent default behavior
+  event.stopPropagation(); // Stop event propagation
+  let data = await fetchData(`https://fakestoreapi.com/products/${id}`);
+  if (
+    data.category === "men's clothing" ||
+    data.category === "women's clothing"
+  ) {
+    data = restructureSingleData(data);
   }
+  localStorage.setItem("product-data", JSON.stringify(data));
+  window.location.href = "./product-detail.html";
 }
 
 function updateMyCartNavbarUi(cart) {
@@ -408,5 +406,5 @@ document.addEventListener("DOMContentLoaded", () => {
     "electronics",
     electronicDiv
   );
-  updateMyCartNavbarUi(currUser.cart);
+  updateMyCartNavbarUi(currUserFound.cart);
 });
