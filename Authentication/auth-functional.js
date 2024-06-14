@@ -69,7 +69,10 @@ signInSubmitBtn.addEventListener("click", (e) => {
     let auth = authUser({ email: email, password: password });
     if (auth) {
       // console.log(auth);
-      let currentUser = { username: `${auth.firstName} ${auth.lastName}`, email: auth.email };
+      let currentUser = {
+        username: `${auth.firstName} ${auth.lastName}`,
+        email: auth.email,
+      };
       sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
       authSuccessAlert(
         "Success",
@@ -121,7 +124,8 @@ signUpSubmitBtn.addEventListener("click", (e) => {
       lastName: lastName.toUpperCase(),
       email: email,
       password: password,
-      cart: []
+      cart: [],
+      address: [],
     };
 
     users.push(newUser);

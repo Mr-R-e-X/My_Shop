@@ -14,6 +14,7 @@ const zip = document.getElementById("zip_postal");
 const mobile = document.getElementById("mobile");
 const deliveryInfo = document.getElementById("delivery-info");
 const checkDefault = document.getElementById("setDefault");
+const saveAddress = document.getElementById("saveAddress");
 const submitBtn = document.getElementById("submit");
 
 let allusers = JSON.parse(localStorage.getItem("users"));
@@ -329,6 +330,20 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", handleResize);
 
   nameIp.value = `${currUserFound.firstName} ${currUserFound.lastName}`;
+  if (currUserFound.address) {
+    let defaultAddress = currUserFound.address.find(
+      (address) => address.setDefault === true
+    );
+    if (defaultAddress) {
+      address.value = defaultAddress.address;
+      city.value = defaultAddress.city;
+      state.value = defaultAddress.state;
+      zip.value = defaultAddress.zip;
+      mobile.value = defaultAddress.mobile;
+      deliveryInfo.value = defaultAddress.deliveryInfo;
+      checkDefault.checked = defaultAddress.setDefault;
+    }
+  }
 
   addressForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -342,7 +357,25 @@ document.addEventListener("DOMContentLoaded", () => {
       mobile: mobile.value,
       deliveryInfo: deliveryInfo.value,
       setDefault: checkDefault.checked,
+      saveAddress: saveAddress.checked,
     };
-    console.log(addressData);
+    if (addressData.saveAddress) {
+      if (currUserFound.address) {
+        console.log("inside avl address");
+        if (addressData.setDefault === true) {
+          currUserFound.address.map((add) => {
+            add.setDefault = false;
+          });
+        }
+        currUserFound.address.push(addressData);
+      } else {
+        currUserFound["address"] = [addressData];
+      }
+      let index = allusers.findIndex(
+        (user) => user.email === currUserFound.email
+      );
+      allusers[index] = currUserFound;
+      localStorage.setItem("users", JSON.stringify(allusers));
+    }
   });
 });
