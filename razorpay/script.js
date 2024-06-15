@@ -245,7 +245,6 @@ function saveUserInLocalStorage(user_data) {
 }
 
 function formatAddress(addressInput) {
-  // console.log(addressInput);
   const addressRegex = /^(.+),\s(.+),\s(.+),\sPIN-(\d{6}),\sMobile-(\d{10})$/;
   const matchResult = addressInput.match(addressRegex);
   if (!matchResult) {
@@ -255,35 +254,9 @@ function formatAddress(addressInput) {
   const formattedAddress = `Full Name: ${fullName.trim()}, Address: ${address.trim()}, State: ${state.trim()}, PIN: ${zip.trim()}, Mobile: ${mobile.trim()}`;
   return formattedAddress;
 }
-// document.getElementById("rzp-button1").onclick = function (e) {
-//   var options = {
-//     key: "rzp_test_PV1oQ0oMtgXOsq", // Enter the Key ID generated from the Dashboard
-//     amount: 300 * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-//     currency: "USD",
-//     name: "MyShop Checkout",
-//     description: "This is your order", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-//     theme: {
-//       color: "#0000FF",
-//     },
-//     image:
-//       "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
-//   };
-
-//   var rzpy1 = new Razorpay(options);
-//   rzpy1.open();
-//   // clear mycart - localStorage
-//   e.preventDefault();
-// };
 
 function proceedToPay(event, price) {
-  if (
-    nameIp.value !== "" &&
-    address.value !== "" &&
-    city.value !== "" &&
-    state.value !== "" &&
-    zip.value !== "" &&
-    mobile.value !== ""
-  ) {
+  if (currUserFound.address !== "") {
     console.log("here");
     if (price < 50) {
       price = price + 20;
@@ -294,8 +267,7 @@ function proceedToPay(event, price) {
       currency: "INR",
       name: "MyShop Checkout",
       description: "This is your order",
-      image:
-        "https://www.mintformations.co.uk/blog/wp-content/uploads/2020/05/shutterstock_583717939.jpg",
+      image: "https://cdn-icons-png.flaticon.com/128/14654/14654310.png",
       prefill: {
         email: "souvikhazra151@gmail.com",
         contact: +918001624449,
@@ -309,7 +281,6 @@ function proceedToPay(event, price) {
       },
     };
     let rzpy = new Razorpay(options);
-    // console.log(rzpy.open());
     rzpy.open();
   } else {
     showAlert(
@@ -318,8 +289,6 @@ function proceedToPay(event, price) {
       "error"
     );
   }
-
-  // event.preventDefault();
 }
 
 function showAlert(title, msg, icon) {
