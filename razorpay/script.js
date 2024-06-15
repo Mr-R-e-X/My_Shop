@@ -175,7 +175,7 @@ orderDetailsUi(productToPay);
 
 function loadAddress() {
   let defaultAddress = currUserFound.address;
-  if (defaultAddress.length > 0) {
+  if (defaultAddress.length !== "") {
     const formattedAddress = formatAddress(defaultAddress);
     document.getElementById("address-text").textContent = formattedAddress;
     document.getElementById("address-display").classList.remove("hidden");
