@@ -1,8 +1,8 @@
+// Controlling Responsiveness
 document.addEventListener("DOMContentLoaded", function () {
   const toggleButton = document.getElementById("toggleButton");
   const iconPath = document.getElementById("iconPath");
   const nav = document.getElementById("rspn-nav");
-  const header = document.getElementById("header");
   let isOpen = false;
 
   toggleButton.addEventListener("click", function () {

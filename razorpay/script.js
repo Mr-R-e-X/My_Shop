@@ -63,7 +63,8 @@ function orderDetailsUi(products) {
                           product.count
                         }
                 <p class="font-medium text-base text-gray-900">&#8377;${Math.round(
-                  product?.price * 80 + product?.price * 80 * 0.01
+                  (product?.price * 80 + product?.price * 80 * 0.01) *
+                    product?.count
                 ).toFixed(2)} </p>
             </div>
             `
@@ -89,8 +90,12 @@ function orderDetailsUi(products) {
             <h5 class="font-manrope font-bold text-base text-indigo-600">
                 &#8377;${
                   totalPrice >= 300
-                    ? `${totalPrice}`
-                    : `${totalPrice === 0 ? "0" : `${totalPrice + 51}`}`
+                    ? `${totalPrice.toFixed(2)}`
+                    : `${
+                        totalPrice === 0
+                          ? "0"
+                          : `${(totalPrice + 51).toFixed(2)}`
+                      }`
                 }
             </h5>
         </div>
@@ -150,7 +155,7 @@ function orderDetailsUi(products) {
                     </div>
                     <h6 class="font-medium text-xl text-indigo-600">&#8377;${Math.floor(
                       product.price * product.count * 80
-                    )}</h6>
+                    ).toFixed(2)}</h6>
                 </div>
             </div>
         </div>
@@ -177,7 +182,7 @@ function orderDetailsUi(products) {
 // Load previous payment address
 function loadAddress() {
   let defaultAddress = currUserFound.address;
-  if (defaultAddress.length !== "") {
+  if (defaultAddress.length !== "" || defaultAddress !== undefined) {
     const formattedAddress = formatAddress(defaultAddress);
     document.getElementById("address-text").textContent = formattedAddress;
     document.getElementById("address-display").classList.remove("hidden");
