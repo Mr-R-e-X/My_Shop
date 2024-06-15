@@ -125,7 +125,7 @@ signUpSubmitBtn.addEventListener("click", (e) => {
       email: email,
       password: password,
       cart: [],
-      address: [],
+      address: "",
     };
 
     users.push(newUser);
