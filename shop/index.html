@@ -1,587 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MeShop</title>
-    <link
-      rel="shortcut icon"
-      href="https://cdn-icons-png.flaticon.com/128/14654/14654310.png"
-      type="image/x-icon"
-    />
-    <link rel="stylesheet" href="../style.css" />
-    <link rel="stylesheet" href="custom-style.css" />
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  </head>
 
-  <body
-    class="bg-gradient-to-r from-gray-200 to-gray-50 text-gray-900 overflow-hidden h-screen flex flex-col scrollbar"
-  >
-    <header
-      id="header"
-      class="bg-gray-800 text-white md:px-4 py-5 md:flex md:justify-between md:items-center z-20"
-    >
-      <div class="flex items-center justify-between">
-        <div class="cursor-pointer px-4 md:px-0">
-          <p
-            id="nav-logo"
-            class="text-xl font-bold text-blue-400 hover:scale-105 transition-all duration-150 ease-in-out hover:text-blue-300"
-          >
-            Souvik's Shop
-          </p>
-        </div>
-        <div class="md:hidden px-4 md:px-0">
-          <button
-            id="toggleButton"
-            class="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
-            type="button"
-          >
-            <svg id="icon" class="h-6 w-6 fill-current" viewBox="0 0 24 24">
-              <path
-                id="iconPath"
-                fill-rule="evenodd"
-                d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2z"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <nav
-        id="rspn-nav"
-        class="bg-gray-800 w-full md:w-max md:relative md:flex px-4 md:mt-0 md:px-2 transition-all duration-500 ease-in-out hidden py-4 md:py-0 space-y-2 md:space-y-0"
-      >
-        <p
-          id="nav-home"
-          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
-        >
-          Home
-        </p>
-        <p
-          id="nav-signin"
-          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
-        >
-          Sign in
-        </p>
-        <p
-          id="nav-signup"
-          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
-        >
-          Sign up
-        </p>
-        <p
-          id="nav-my-cart"
-          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
-        >
-          My Cart <span class="bg-red-600 text-xs text-center text-white relative px-[6px] py-[3px] rounded-full w-max" id="my-cart" style="top: -8px; left: -3px;">z</span>
-        </p>
-        <p
-          id="nav-profile"
-          class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100"
-        >
-          Profile
-        </p>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeShop</title>
+  <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/14654/14654310.png" type="image/x-icon" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="custom-style.css" />
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
 
-    <main class="h-screen flex-grow flex flex-row">
-      <div
-        id="sidebar"
-        class="min-w-max w-[15%] h-full bg-gray-800 text-white hidden md:block"
-      >
-        <hr class="border-gray-200" />
-
-        <form
-          action="#"
-          method="post"
-          class="space-y-1 w-full flex flex-col justify-evenly items-stretch my-2"
-        >
-          <div class="px-6">
-            <h2 class="text-base font-semibold mb-1">Colors</h2>
-            <div class="space-y-1">
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="colors[]"
-                  id="red"
-                  value="red"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="red" class="text-gray-50">Red</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="colors[]"
-                  id="blue"
-                  value="blue"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="blue" class="text-gray-50">Blue</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="colors[]"
-                  id="green"
-                  value="green"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="green" class="text-gray-50">Green</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="colors[]"
-                  id="black"
-                  value="black"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="black" class="text-gray-50">Black</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="colors[]"
-                  id="white"
-                  value="white"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="white" class="text-gray-50">White</label>
-              </div>
-            </div>
-          </div>
-          <hr class="border-gray-200" />
-          <div class="px-6">
-            <h2 class="text-base font-semibold mb-1">Sizes</h2>
-            <div class="space-y-1">
-              <div class="flex items-center text-sm">
-                <input
-                  type="radio"
-                  name="sizes"
-                  id="s"
-                  value="s"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="s" class="text-gray-50">S</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="radio"
-                  name="sizes"
-                  id="m"
-                  value="m"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="m" class="text-gray-50">M</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="radio"
-                  name="sizes"
-                  id="l"
-                  value="l"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="l" class="text-gray-50">L</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="radio"
-                  name="sizes"
-                  id="xl"
-                  value="xl"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="xl" class="text-gray-50">XL</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="radio"
-                  name="sizes"
-                  id="xxl"
-                  value="xxl"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="xxl" class="text-gray-50">XXL</label>
-              </div>
-            </div>
-          </div>
-          <hr class="border-gray-200" />
-          <div class="px-6">
-            <h2 class="text-base font-semibold mb-1">Rating</h2>
-            <div class="flex items-center flex-col space-x-2">
-              <input
-                type="range"
-                name="rating"
-                id="rating"
-                min="0"
-                max="5"
-                value="0"
-                step="1"
-                class="custom-range my-2"
-              />
-              <div class="flex flex-row justify-between space-x-2 w-full pr-2">
-                <span class="text-gray-50 text-sm">0</span>
-                <span class="text-gray-50 text-sm">5</span>
-              </div>
-            </div>
-          </div>
-          <hr class="border-gray-200" />
-          <div class="px-6">
-            <h2 class="text-lg font-semibold mb-1">Price Range</h2>
-            <div class="space-y-1">
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="price-range"
-                  id="firstQuatar"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="firstQuatar" class="text-gray-50">0$ - 25$</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="price-range"
-                  id="secondQuatar"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="secondQuatar" class="text-gray-50">26$ - 50$</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="price-range"
-                  id="thirdQuatar"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="thirdQuatar" class="text-gray-50">51$ - 75$</label>
-              </div>
-              <div class="flex items-center text-sm">
-                <input
-                  type="checkbox"
-                  name="price-range"
-                  id="fourthQuatar"
-                  class="mr-2 rounded scale-105"
-                />
-                <label for="fourthQuatar" class="text-gray-50"
-                  >76$ - 100$</label
-                >
-              </div>
-            </div>
-          </div>
-          <hr class="border-gray-200" />
-          <div class="w-full px-6 py-2">
-            <button
-              type="submit"
-              class="mx-auto text-base px-6 py-3 w-max border border-gray-700 shadow-md shadow-black font-semibold"
-            >
-              Apply Filter
-            </button>
-          </div>
-        </form>
+<body class="bg-gradient-to-r from-gray-200 to-gray-50 text-gray-900 overflow-hidden h-screen flex flex-col scrollbar">
+  <!-- NAVBAR -->
+  <header id="header" class="bg-gray-800 text-white md:px-4 py-5 md:flex md:justify-between md:items-center z-20">
+    <div class="flex items-center justify-between">
+      <div class="cursor-pointer px-4 md:px-0">
+        <p id="nav-logo"
+          class="text-xl font-bold text-blue-400 hover:scale-105 transition-all duration-150 ease-in-out hover:text-blue-300">
+          Souvik's Shop
+        </p>
       </div>
-      <div
-        id="main-content"
-        class="w-full md:w-[85%] px-6 py-3 h-full overflow-scroll scrollbar"
-      >
-        <div id="searchbar" class="w-full mb-3">
-          <form class="w-full">
-            <div class="relative">
-              <div
-                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-              >
-                <svg
-                  class="w-4 h-4 text-gray-500"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="search"
-                id="default-search"
-                class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Search ..."
-              />
-            </div>
-          </form>
-        </div>
-        <div
-  id="categories"
-  class="container w-full mx-auto mb-2 overflow-x-scroll scrollbar flex justify-between space-x-2"
->
-  <button
-    id="all-cat"
-    class="px-6 py-2 w-[160px] font-normal border border-black bg-black text-white rounded-lg text-center category my-2 category-btns"
-  >
-    All
-  </button>       
-  <button
-    id="mens-cat"
-    class="px-6 py-2 w-[160px] font-normal border border-black bg-white rounded-lg text-center category my-2 category-btns"
-  >
-    Mens
-  </button>
-  <button
-    id="womens-cat"
-    class="px-4 py-2 w-[160px] font-normal border border-black bg-white rounded-lg text-center category my-2 category-btns"
-  >
-    Womens
-  </button>
-  <button
-    id="jwel-cat"
-    class="px-6 py-2 w-[160px] font-normal border border-black bg-white rounded-lg text-center category my-2 category-btns"
-  >
-    Jewellery
-  </button>
-  <button
-    id="elect-cat"
-    class="px-6 py-2 w-[160px] font-normal border border-black bg-white rounded-lg text-center category my-2 category-btns"
-  >
-    Electronics
-  </button>
-</div> 
-        <div id="shoping-item" class="pb-16 mb-10">
-          <div
-            id="man-cloth"
-            class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"
-          ></div>
-          <div
-            id="women-cloth"
-            class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"
-          ></div>
-          <div
-            id="jewellery"
-            class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"
-          ></div>
-          <div
-            id="electronics"
-            class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"
-          ></div>
-        </div>
+      <div class="md:hidden px-4 md:px-0">
+        <button id="toggleButton" class="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
+          type="button">
+          <svg id="icon" class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+            <path id="iconPath" fill-rule="evenodd"
+              d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2z" />
+          </svg>
+        </button>
       </div>
-    </main>
-    <div class="absolute border w-full border-black shadow-slate-700 rounded-md shadow-md hidden bg-gray-800" id="filter">
-      <div class="px-6 w-[90%]">
-          <h2 class="text-base font-semibold mb-1 text-white">Colors</h2>
-          <div class="space-y-1 flex justify-between w-full items-center mx-auto flex-wrap">
+    </div>
+    <nav id="rspn-nav"
+      class="bg-gray-800 w-full md:w-max md:relative md:flex px-4 md:mt-0 md:px-2 transition-all duration-500 ease-in-out hidden py-4 md:py-0 space-y-2 md:space-y-0">
+      <p id="nav-home"
+        class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100">
+        Home
+      </p>
+      <p id="nav-signin"
+        class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100">
+        Sign in
+      </p>
+      <p id="nav-signup"
+        class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100">
+        Sign up
+      </p>
+      <p id="nav-my-cart"
+        class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100">
+        My Cart <span class="bg-red-600 text-xs text-center text-white relative px-[6px] py-[3px] rounded-full w-max"
+          id="my-cart" style="top: -8px; left: -3px;">z</span>
+      </p>
+      <p id="nav-profile"
+        class="md:mx-2 md:px-2 cursor-pointer text-base font-semibold text-white md:text-blue-300 transition-all duration-150 ease-in-out hover:text-blue-100">
+        Profile
+      </p>
+    </nav>
+  </header>
+  <!-- MAIN CONTENT -->
+  <main class="h-screen flex-grow flex flex-row">
+    <!-- SIDE FILTER ITEMS -->
+    <div id="sidebar" class="min-w-max w-[15%] h-full bg-gray-800 text-white hidden md:block">
+      <hr class="border-gray-200" />
+      <!-- FILTER FORM -->
+      <form action="#" method="post" class="space-y-1 w-full flex flex-col justify-evenly items-stretch my-2">
+        <!-- FILTER COLORS -->
+        <div class="px-6">
+          <h2 class="text-base font-semibold mb-1">Colors</h2>
+          <div class="space-y-1">
             <div class="flex items-center text-sm">
-              <input
-                type="checkbox"
-                name="colors[]"
-                id="red"
-                value="red"
-                class="mr-2 rounded"
-              />
+              <input type="checkbox" name="colors[]" id="red" value="red" class="mr-2 rounded scale-105" />
               <label for="red" class="text-gray-50">Red</label>
             </div>
             <div class="flex items-center text-sm">
-              <input
-                type="checkbox"
-                name="colors[]"
-                id="blue"
-                value="blue"
-                class="mr-2 rounded"
-              />
+              <input type="checkbox" name="colors[]" id="blue" value="blue" class="mr-2 rounded scale-105" />
               <label for="blue" class="text-gray-50">Blue</label>
             </div>
             <div class="flex items-center text-sm">
-              <input
-                type="checkbox"
-                name="colors[]"
-                id="green"
-                value="green"
-                class="mr-2 rounded"
-              />
+              <input type="checkbox" name="colors[]" id="green" value="green" class="mr-2 rounded scale-105" />
               <label for="green" class="text-gray-50">Green</label>
             </div>
             <div class="flex items-center text-sm">
-              <input
-                type="checkbox"
-                name="colors[]"
-                id="black"
-                value="black"
-                class="mr-2 rounded"
-              />
+              <input type="checkbox" name="colors[]" id="black" value="black" class="mr-2 rounded scale-105" />
               <label for="black" class="text-gray-50">Black</label>
             </div>
             <div class="flex items-center text-sm">
-              <input
-                type="checkbox"
-                name="colors[]"
-                id="white"
-                value="white"
-                class="mr-2 rounded"
-              />
+              <input type="checkbox" name="colors[]" id="white" value="white" class="mr-2 rounded scale-105" />
               <label for="white" class="text-gray-50">White</label>
             </div>
           </div>
         </div>
-        <hr class="border-gray-200 my-2" />
+        <hr class="border-gray-200" />
+        <!-- FILTER SIZES -->
         <div class="px-6">
-          <h2 class="text-base font-semibold mb-1 text-white">Sizes</h2>
-          <div class="space-y-1 flex justify-between items-center w-full mx-auto flex-wrap">
+          <h2 class="text-base font-semibold mb-1">Sizes</h2>
+          <div class="space-y-1">
             <div class="flex items-center text-sm">
-              <input
-                type="radio"
-                name="sizes"
-                id="s"
-                value="s"
-                class="mr-2 rounded"
-              />
+              <input type="radio" name="sizes" id="s" value="s" class="mr-2 rounded scale-105" />
               <label for="s" class="text-gray-50">S</label>
             </div>
             <div class="flex items-center text-sm">
-              <input
-                type="radio"
-                name="sizes"
-                id="m"
-                value="m"
-                class="mr-2 rounded"
-              />
+              <input type="radio" name="sizes" id="m" value="m" class="mr-2 rounded scale-105" />
               <label for="m" class="text-gray-50">M</label>
             </div>
             <div class="flex items-center text-sm">
-              <input
-                type="radio"
-                name="sizes"
-                id="l"
-                value="l"
-                class="mr-2 rounded"
-              />
+              <input type="radio" name="sizes" id="l" value="l" class="mr-2 rounded scale-105" />
               <label for="l" class="text-gray-50">L</label>
             </div>
             <div class="flex items-center text-sm">
-              <input
-                type="radio"
-                name="sizes"
-                id="xl"
-                value="xl"
-                class="mr-2 rounded"
-              />
+              <input type="radio" name="sizes" id="xl" value="xl" class="mr-2 rounded scale-105" />
               <label for="xl" class="text-gray-50">XL</label>
             </div>
             <div class="flex items-center text-sm">
-              <input
-                type="radio"
-                name="sizes"
-                id="xxl"
-                value="xxl"
-                class="mr-2 rounded"
-              />
+              <input type="radio" name="sizes" id="xxl" value="xxl" class="mr-2 rounded scale-105" />
               <label for="xxl" class="text-gray-50">XXL</label>
             </div>
           </div>
         </div>
-        <hr class="border-gray-200 my-2" />
+        <hr class="border-gray-200" />
+        <!-- FILTER RATING -->
         <div class="px-6">
-          <h2 class="text-base font-semibold mb-1 text-white">Rating</h2>
-          <div class="flex items-center flex-col space-x-2 w-full mx-auto">
-            <input
-              type="range"
-              name="rating"
-              id="rating"
-              min="0"
-              max="5"
-              value="0"
-              step="1"
-              class="custom-range my-2"
-            />
+          <h2 class="text-base font-semibold mb-1">Rating</h2>
+          <div class="flex items-center flex-col space-x-2">
+            <input type="range" name="rating" id="rating" min="0" max="5" value="0" step="1"
+              class="custom-range my-2" />
             <div class="flex flex-row justify-between space-x-2 w-full pr-2">
               <span class="text-gray-50 text-sm">0</span>
               <span class="text-gray-50 text-sm">5</span>
             </div>
           </div>
         </div>
-        <hr class="border-gray-200 my-2" />
+        <hr class="border-gray-200" />
+        <!-- FILTER PRICE RANGE -->
         <div class="px-6">
-          <h2 class="text-lg font-semibold mb-1 text-white">Price Range</h2>
-          <div class="space-y-1 flex justify-between items-center w-full mx-auto flex-wrap">
-            <div class="flex items-center text-sm mx-2">
-              <input
-                type="checkbox"
-                name="price-range"
-                id="firstQuatar"
-                class="mr-2 rounded "
-              />
+          <h2 class="text-lg font-semibold mb-1">Price Range</h2>
+          <div class="space-y-1">
+            <div class="flex items-center text-sm">
+              <input type="checkbox" name="price-range" id="firstQuatar" class="mr-2 rounded scale-105" />
               <label for="firstQuatar" class="text-gray-50">0$ - 25$</label>
             </div>
-            <div class="flex items-center text-sm mx-2">
-              <input
-                type="checkbox"
-                name="price-range"
-                id="secondQuatar"
-                class="mr-2 rounded "
-              />
+            <div class="flex items-center text-sm">
+              <input type="checkbox" name="price-range" id="secondQuatar" class="mr-2 rounded scale-105" />
               <label for="secondQuatar" class="text-gray-50">26$ - 50$</label>
             </div>
-            <div class="flex items-center text-sm mx-2">
-              <input
-                type="checkbox"
-                name="price-range"
-                id="thirdQuatar"
-                class="mr-2 rounded "
-              />
+            <div class="flex items-center text-sm">
+              <input type="checkbox" name="price-range" id="thirdQuatar" class="mr-2 rounded scale-105" />
               <label for="thirdQuatar" class="text-gray-50">51$ - 75$</label>
             </div>
-            <div class="flex items-center text-sm mx-2">
-              <input
-                type="checkbox"
-                name="price-range"
-                id="fourthQuatar"
-                class="mr-2 rounded "
-              />
-              <label for="fourthQuatar" class="text-gray-50"
-                >76$ - 100$</label
-              >
+            <div class="flex items-center text-sm">
+              <input type="checkbox" name="price-range" id="fourthQuatar" class="mr-2 rounded scale-105" />
+              <label for="fourthQuatar" class="text-gray-50">76$ - 100$</label>
             </div>
           </div>
         </div>
-        <hr class="border-gray-200 mt-2" />
-        <div class="flex items-center justify-center py-2 ">
-          <button
-            type="submit"
-            class="mx-auto text-base px-6 py-3 w-max border border-gray-100 shadow-md text-gray-50 shadow-black font-semibold"
-          >
+        <hr class="border-gray-200" />
+        <!-- APPLY FILTER BTN -->
+        <div class="w-full px-6 py-2">
+          <button type="submit"
+            class="mx-auto text-base px-6 py-3 w-max border border-gray-700 shadow-md shadow-black font-semibold">
             Apply Filter
           </button>
         </div>
       </form>
     </div>
-  </div>
-    <div class="fixed bottom-2 right-2 cursor-pointer md:hidden">
-      <img src="../Assets/filter.svg" alt="" height="35px" width="35px" id="sm-filter-btn"/>
+    <!-- PRODUCTS -->
+    <div id="main-content" class="w-full md:w-[85%] px-6 py-3 h-full overflow-scroll scrollbar">
+      <!-- SEARCHBAR -->
+      <div id="searchbar" class="w-full mb-3">
+        <form class="w-full">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+              </svg>
+            </div>
+            <input type="search" id="default-search"
+              class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Search ..." />
+          </div>
+        </form>
+      </div>
+      <!-- SORT BY  CATEGORIES -->
+      <div id="categories"
+        class="container w-full mx-auto mb-2 overflow-x-scroll scrollbar flex justify-between space-x-2">
+        <button id="all-cat"
+          class="px-6 py-2 w-[160px] font-normal border border-black bg-black text-white rounded-lg text-center category my-2 category-btns">
+          All
+        </button>
+        <button id="mens-cat"
+          class="px-6 py-2 w-[160px] font-normal border border-black bg-white rounded-lg text-center category my-2 category-btns">
+          Mens
+        </button>
+        <button id="womens-cat"
+          class="px-4 py-2 w-[160px] font-normal border border-black bg-white rounded-lg text-center category my-2 category-btns">
+          Womens
+        </button>
+        <button id="jwel-cat"
+          class="px-6 py-2 w-[160px] font-normal border border-black bg-white rounded-lg text-center category my-2 category-btns">
+          Jewellery
+        </button>
+        <button id="elect-cat"
+          class="px-6 py-2 w-[160px] font-normal border border-black bg-white rounded-lg text-center category my-2 category-btns">
+          Electronics
+        </button>
+      </div>
+      <!-- SHOPPING ITEMS -->
+      <div id="shoping-item" class="pb-16 mb-10">
+        <!-- MENS -->
+        <div id="man-cloth" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+        <!-- WOMENS -->
+        <div id="women-cloth" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+        <!-- JEWELLERRY -->
+        <div id="jewellery" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+        <!-- ELECTRONICS -->
+        <div id="electronics" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+      </div>
     </div>
-    <script src="../rspnNav-script.js"></script>
-    <script src="script-shop.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-       
-        let filterSmBtn = document.getElementById("sm-filter-btn");
-        let smFilterOpen = false;
+  </main>
+  <!-- FILTER FOR SMALL DEVICES -->
+  <div class="absolute border w-full border-black shadow-slate-700 rounded-md shadow-md hidden bg-gray-800" id="filter">
+    <div class="px-6 w-[90%]">
+      <h2 class="text-base font-semibold mb-1 text-white">Colors</h2>
+      <div class="space-y-1 flex justify-between w-full items-center mx-auto flex-wrap">
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="colors[]" id="red" value="red" class="mr-2 rounded" />
+          <label for="red" class="text-gray-50">Red</label>
+        </div>
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="colors[]" id="blue" value="blue" class="mr-2 rounded" />
+          <label for="blue" class="text-gray-50">Blue</label>
+        </div>
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="colors[]" id="green" value="green" class="mr-2 rounded" />
+          <label for="green" class="text-gray-50">Green</label>
+        </div>
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="colors[]" id="black" value="black" class="mr-2 rounded" />
+          <label for="black" class="text-gray-50">Black</label>
+        </div>
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="colors[]" id="white" value="white" class="mr-2 rounded" />
+          <label for="white" class="text-gray-50">White</label>
+        </div>
+      </div>
+    </div>
+    <hr class="border-gray-200 my-2" />
+    <div class="px-6">
+      <h2 class="text-base font-semibold mb-1 text-white">Sizes</h2>
+      <div class="space-y-1 flex justify-between items-center w-full mx-auto flex-wrap">
+        <div class="flex items-center text-sm">
+          <input type="radio" name="sizes" id="s" value="s" class="mr-2 rounded" />
+          <label for="s" class="text-gray-50">S</label>
+        </div>
+        <div class="flex items-center text-sm">
+          <input type="radio" name="sizes" id="m" value="m" class="mr-2 rounded" />
+          <label for="m" class="text-gray-50">M</label>
+        </div>
+        <div class="flex items-center text-sm">
+          <input type="radio" name="sizes" id="l" value="l" class="mr-2 rounded" />
+          <label for="l" class="text-gray-50">L</label>
+        </div>
+        <div class="flex items-center text-sm">
+          <input type="radio" name="sizes" id="xl" value="xl" class="mr-2 rounded" />
+          <label for="xl" class="text-gray-50">XL</label>
+        </div>
+        <div class="flex items-center text-sm">
+          <input type="radio" name="sizes" id="xxl" value="xxl" class="mr-2 rounded" />
+          <label for="xxl" class="text-gray-50">XXL</label>
+        </div>
+      </div>
+    </div>
+    <hr class="border-gray-200 my-2" />
+    <div class="px-6">
+      <h2 class="text-base font-semibold mb-1 text-white">Rating</h2>
+      <div class="flex items-center flex-col space-x-2 w-full mx-auto">
+        <input type="range" name="rating" id="rating" min="0" max="5" value="0" step="1" class="custom-range my-2" />
+        <div class="flex flex-row justify-between space-x-2 w-full pr-2">
+          <span class="text-gray-50 text-sm">0</span>
+          <span class="text-gray-50 text-sm">5</span>
+        </div>
+      </div>
+    </div>
+    <hr class="border-gray-200 my-2" />
+    <div class="px-6">
+      <h2 class="text-lg font-semibold mb-1 text-white">Price Range</h2>
+      <div class="space-y-1 flex justify-between items-center w-full mx-auto flex-wrap">
+        <div class="flex items-center text-sm mx-2">
+          <input type="checkbox" name="price-range" id="firstQuatar" class="mr-2 rounded " />
+          <label for="firstQuatar" class="text-gray-50">0$ - 25$</label>
+        </div>
+        <div class="flex items-center text-sm mx-2">
+          <input type="checkbox" name="price-range" id="secondQuatar" class="mr-2 rounded " />
+          <label for="secondQuatar" class="text-gray-50">26$ - 50$</label>
+        </div>
+        <div class="flex items-center text-sm mx-2">
+          <input type="checkbox" name="price-range" id="thirdQuatar" class="mr-2 rounded " />
+          <label for="thirdQuatar" class="text-gray-50">51$ - 75$</label>
+        </div>
+        <div class="flex items-center text-sm mx-2">
+          <input type="checkbox" name="price-range" id="fourthQuatar" class="mr-2 rounded " />
+          <label for="fourthQuatar" class="text-gray-50">76$ - 100$</label>
+        </div>
+      </div>
+    </div>
+    <hr class="border-gray-200 mt-2" />
+    <div class="flex items-center justify-center py-2 ">
+      <button type="submit"
+        class="mx-auto text-base px-6 py-3 w-max border border-gray-100 shadow-md text-gray-50 shadow-black font-semibold">
+        Apply Filter
+      </button>
+    </div>
+    </form>
+  </div>
+  </div>
+  <!-- SHOW FILTER BTN -->
+  <div class="fixed bottom-2 right-2 cursor-pointer md:hidden">
+    <img src="../Assets/filter.svg" alt="" height="35px" width="35px" id="sm-filter-btn" />
+  </div>
+  <script src="../rspnNav-script.js"></script>
+  <script src="script-shop.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-        filterSmBtn.addEventListener("click", function () {
-          if(!smFilterOpen){
-            document.getElementById("filter").classList.toggle("hidden");
-            filterSmBtn.src = "../Assets/cross.svg"
-            smFilterOpen = !smFilterOpen
-          }else{
-            document.getElementById("filter").classList.toggle("hidden");
-            filterSmBtn.src = "../Assets/filter.svg"
-            smFilterOpen = !smFilterOpen
-          }
-        });
+      let filterSmBtn = document.getElementById("sm-filter-btn");
+      let smFilterOpen = false;
+
+      filterSmBtn.addEventListener("click", function () {
+        if (!smFilterOpen) {
+          document.getElementById("filter").classList.toggle("hidden");
+          filterSmBtn.src = "../Assets/cross.svg"
+          smFilterOpen = !smFilterOpen
+        } else {
+          document.getElementById("filter").classList.toggle("hidden");
+          filterSmBtn.src = "../Assets/filter.svg"
+          smFilterOpen = !smFilterOpen
+        }
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

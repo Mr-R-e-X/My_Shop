@@ -1,3 +1,4 @@
+// getting Dom elements
 let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
 let orderSummery = document.querySelector("#order-summery");
 let orderProduct = document.querySelector("#order-product");
@@ -6,12 +7,14 @@ const orderSumBtn = document.getElementById("order-sum-btn");
 const addressDiv = document.getElementById("address-div");
 const orderDetails = document.getElementById("Order-details");
 
+// Checking User
 let allusers = JSON.parse(localStorage.getItem("users"));
-
 let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+// If user is not available in Session Storage redirecting the page to the Landing Page
 if (currUser === null) window.location.href = "../index.html";
 let currUserFound = allusers.find((user) => user.email === currUser.email);
 
+// Updating Orders in the UI
 function orderDetailsUi(products) {
   // console.log(products);
   const filteredProducts = products.filter((product) => product.count > 0);
@@ -171,8 +174,7 @@ function orderDetailsUi(products) {
   document.getElementById("cancel").addEventListener("click", cancelAction);
 }
 
-orderDetailsUi(productToPay);
-
+// Load previous payment address
 function loadAddress() {
   let defaultAddress = currUserFound.address;
   if (defaultAddress.length !== "") {
@@ -187,6 +189,7 @@ function loadAddress() {
   }
 }
 
+// save the current address in localStorage
 function saveAddress() {
   const addressInput = document.getElementById("address").value.trim();
   const addressRegex = /^(.+),\s(.+),\s(.+),\sPIN-(\d{6}),\sMobile-(\d{10})$/;
@@ -212,7 +215,7 @@ function saveAddress() {
   document.getElementById("address").classList.add("hidden");
   document.getElementById("save-cancel-buttons").classList.add("hidden");
 }
-
+// edit the address
 function editAddress() {
   const address = currUserFound.address;
   document.getElementById("address").value = address;
@@ -221,11 +224,12 @@ function editAddress() {
   document.getElementById("address-display").classList.add("hidden");
 }
 
+// cancel editing the address
 function cancelAction() {
   document.getElementById("save-cancel-buttons").classList.add("hidden");
   loadAddress();
 }
-
+// updating the product count
 function updateProductCount(elem, id) {
   console.log(elem);
   console.log(id);
@@ -235,6 +239,7 @@ function updateProductCount(elem, id) {
   // console.log(productToPay[index]);
   orderDetailsUi(productToPay);
 }
+// saving curr user in the users and saving in local storage
 function saveUserInLocalStorage(user_data) {
   let index = allusers.findIndex((user) => user.email === user_data.email);
   if (index !== -1) {
@@ -243,7 +248,7 @@ function saveUserInLocalStorage(user_data) {
   }
   localStorage.setItem("users", JSON.stringify(allusers));
 }
-
+// formating the address showing it in better way in the ui
 function formatAddress(addressInput) {
   const addressRegex = /^(.+),\s(.+),\s(.+),\sPIN-(\d{6}),\sMobile-(\d{10})$/;
   const matchResult = addressInput.match(addressRegex);
@@ -255,6 +260,7 @@ function formatAddress(addressInput) {
   return formattedAddress;
 }
 
+// Razor pay function for proceed to pay
 function proceedToPay(event, price) {
   if (currUserFound.address !== "") {
     console.log("here");
@@ -265,12 +271,35 @@ function proceedToPay(event, price) {
       key: "rzp_test_PV1oQ0oMtgXOsq",
       amount: price * 100,
       currency: "INR",
-      name: "MyShop Checkout",
+      name: "MyShop",
       description: "This is your order",
       image: "https://cdn-icons-png.flaticon.com/128/14654/14654310.png",
-      prefill: {
-        email: "souvikhazra151@gmail.com",
-        contact: +918001624449,
+      config: {
+        display: {
+          blocks: {
+            banks: {
+              name: "All payment methods",
+              instruments: [
+                {
+                  method: "upi",
+                },
+                {
+                  method: "card",
+                },
+                {
+                  method: "wallet",
+                },
+                {
+                  method: "netbanking",
+                },
+              ],
+            },
+          },
+          sequence: ["block.banks"],
+          preferences: {
+            show_default_blocks: false,
+          },
+        },
       },
       handler: function (response) {
         alert(response.razorpay_payment_id);
@@ -291,6 +320,7 @@ function proceedToPay(event, price) {
   }
 }
 
+// showing alert
 function showAlert(title, msg, icon) {
   swal({
     title: title,
@@ -300,4 +330,7 @@ function showAlert(title, msg, icon) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {});
+// calling required functions after dom content loaded
+document.addEventListener("DOMContentLoaded", () => {
+  orderDetailsUi(productToPay);
+});
