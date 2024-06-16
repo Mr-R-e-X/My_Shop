@@ -25,9 +25,8 @@ let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
 // Updating Orders in the UI
 function orderDetailsUi(products) {
   // console.log(products);
-  const filteredProducts = products.filter((product) => product.count > 0);
 
-  if (filteredProducts.length === 0) {
+  if (products.length === 0) {
     // Hide the order summary section or display a message if there are no products
     orderSummery.innerHTML = `
       <div class="p-4 border border-gray-200 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
@@ -46,7 +45,7 @@ function orderDetailsUi(products) {
     return;
   }
 
-  let totalPrice = filteredProducts.reduce(
+  let totalPrice = products.reduce(
     (sum, product) => sum + Math.floor(product.price * product.count * 80),
     0
   );
@@ -57,7 +56,7 @@ function orderDetailsUi(products) {
             Order Summary
         </h2>
         <div class="py-2 border-b border-gray-200">
-        ${filteredProducts
+        ${products
           .map(
             (product) =>
               `
@@ -133,58 +132,55 @@ function orderDetailsUi(products) {
       </div>
     `;
   orderProduct.innerHTML = `
-       <div class="grid grid-cols-1 gap-2 ">
-        ${filteredProducts
+       <div class="grid grid-cols-1 lg:grid-cols-1 gap-2 mx-2">
+        ${products
           .map(
-            (product) =>
+            (product, index) =>
               `
-        <div
-            class="rounded-xl p-2 bg-gray-100 border border-gray-100 flex flex-col md:flex-row items-center gap-1 transition-all duration-500 hover:border-gray-400">
-            <div class="">
-                <img src="${product.image}" alt="${
+        <div class="rounded-xl p-2 bg-gray-100 border border-gray-400 flex flex-col sm:flex-row items-center gap-1 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg mb-2">
+          <div class="">
+            <img src="${product.image}" alt="${
                 product.title
               }" class="order-detail-img mix-blend-multiply" />
+          </div>
+          <div class="grid grid-cols-1 w-full gap-1 sm:gap-8">
+            <div class="flex items-center sm:items-start flex-col justify-between">
+              <h2 class="font-medium text-base text-center sm:text-start text-black mb-1">
+                ${product.title}
+              </h2>
+              <div class="flex items-center">
+                ${
+                  product.color
+                    ? `<button class="w-6 h-6 border border-gray-800 rounded-full mx-2 mr-2 transition-all duration-300 transform hover:scale-110" style="background-color: ${product.color};" data-val-color="${product.color}"></button>`
+                    : ""
+                }
+                ${
+                  product.size
+                    ? `<button class="bg-gray-300 text-gray-700 text-base py-1 px-3 rounded-full font-semibold mr-2 mx-2 transition-all duration-300 transform hover:scale-110">${product.size}</button>`
+                    : ""
+                }
+              </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 w-full gap-1 md:gap-8">
-                <div class="flex items-center md:items-start flex-col justify-between">
-                    <h2 class="font-medium text-base text-center sm:text-start text-black mb-1">
-                        ${product.title}
-                    </h2>
-                    <div class="flex items-center">
-                    ${
-                      product.color
-                        ? `<button class="w-6 h-6 border border-gray-800 rounded-full mx-2 mr-2 transition-all duration-300" style="background-color: ${product.color};" data-val-color="${product.color}"></button>`
-                        : ""
-                    }
-                        ${
-                          product.size
-                            ? ` <button class="bg-gray-300 text-gray-700 text-base py-1 px-3 rounded-full font-semibold mr-2 mx-2 hover:bg-gray-400 transition-all duration-300">${product.size}</button>`
-                            : ""
-                        }
-                        </div>
+            <div class="flex items-center justify-evenly sm:justify-end gap-8">
+            <div class="flex items-center justify-end gap-2">
+            <button class="bg-red-300 rounded-full font-bold px-2 py-1 transition-all duration-300 transform hover:scale-110" onclick="updateProductCount(${index}, -1)"><img src="../Assets/minus_png.png" height="25px" width="25px" /></button>
+            <p class="w-max px-2 py-1 text-base border border-gray-300 rounded-md transition-all duration-300 transform hover:scale-110"> Qty: ${
+              product.count
+            } </p>
+                <button class="bg-green-300 rounded-full px-2 py-1 font-bold transition-all duration-300 transform hover:scale-110" onclick="updateProductCount(${index}, 1)"><img src="../Assets/plus_svg.svg" height="25px" width="25px"/></button>
                 </div>
-                <div class="flex items-center justify-evenly md:justify-between gap-8">
-                    <div class="flex items-center gap-3">
-                        <input type="number"
-                            class="w-14 h-10 px-2 py-1 text-base border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                            value="${
-                              product.count
-                            }" max="10" min="0" onchange="updateProductCount(this, ${
-                product.id
-              })" />
-                    </div>
-                    <h6 class="font-medium text-xl text-indigo-600">&#8377;${Math.round(
-                      (product?.price * 80 + product?.price * 80 * 0.1) *
-                        product?.count
-                    ).toFixed(2)}</h6>
-                </div>
+                <h6 class="font-medium rounded-md bg-white w-max px-2 text-xl text-green-600 transition-all duration-300 transform hover:scale-110 absolute" style="top:2px; right:10px">&#8377;${Math.round(
+                  (product.price * 80 + product.price * 80 * 0.1) *
+                    product.count
+                ).toFixed(2)}</h6>
+              
             </div>
+          </div>
         </div>
-        `
+      `
           )
           .join("")}
-
-    </div>
+  </div>
     `;
 
   loadAddress();
@@ -256,23 +252,49 @@ function cancelAction() {
   loadAddress();
 }
 // updating the product count
-function updateProductCount(elem, id) {
-  console.log(elem);
-  console.log(id);
-  let newCount = parseInt(elem.value);
-  let index = productToPay.findIndex((product) => product.id === id);
-  productToPay[index].count = newCount;
-  // console.log(productToPay[index]);
+function updateProductCount(index, quantity) {
+  let product = productToPay[index];
+  product.count += quantity;
+  if (product.count === 0) {
+    areYouSureAlert(index);
+  } else {
+    productToPay[index] = product;
+    saveInSession(productToPay);
+    orderDetailsUi(productToPay);
+  }
+}
+function remove(index) {
+  productToPay = productToPay.filter((item, idx) => idx !== index);
+
+  saveInSession(productToPay);
   orderDetailsUi(productToPay);
+}
+function areYouSureAlert(index) {
+  swal({
+    title: "Think twice",
+    text: "These are must-haves!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      remove(index);
+      swal("Item successfully bid farewell. 🛍️", {
+        icon: "success",
+      });
+    }
+  });
 }
 // saving curr user in the users and saving in local storage
 function saveUserInLocalStorage(user_data) {
   let index = allusers.findIndex((user) => user.email === user_data.email);
   if (index !== -1) {
     allusers[index] = user_data;
-    // console.log(allusers[index]);
   }
   localStorage.setItem("users", JSON.stringify(allusers));
+}
+function saveInSession(data) {
+  sessionStorage.setItem("productForPayment", JSON.stringify(data));
 }
 // formating the address showing it in better way in the ui
 function formatAddress(addressInput) {
@@ -328,7 +350,7 @@ function proceedToPay(event, price) {
         },
       },
       handler: function (response) {
-        alert(response.razorpay_payment_id);
+        paymentSuccess(response.razorpay_payment_id);
       },
 
       theme: {
@@ -344,6 +366,20 @@ function proceedToPay(event, price) {
       "error"
     );
   }
+}
+function paymentSuccess(paymentId) {
+  let delAddress = formatAddress(currUserFound.address);
+  let paymentAndDelivaryObj = {
+    paymentId: paymentId,
+    shippingAdd: delAddress,
+  };
+  productToPay.push(paymentAndDelivaryObj);
+  console.log(productToPay);
+  if (!currUserFound.orders) {
+    currUserFound.orders = [];
+  }
+  currUserFound.orders.push(productToPay);
+  saveUserInLocalStorage(currUserFound);
 }
 
 // showing alert

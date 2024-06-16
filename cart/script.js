@@ -76,7 +76,7 @@ function updateUi(userCart) {
                 }
             </h5>
         </div>
-        <div class="mt-4" onclick="proceedToPay(event,${totalPrice})">
+        <div class="mt-4" onclick="proceedToCheckout()">
             <button
                 class="w-full py-3 bg-indigo-600 text-white font-manrope font-bold text-lg rounded-lg transition-all duration-500 hover:bg-indigo-700">
                 Proceed To Checkout
@@ -118,13 +118,13 @@ function updateUi(userCart) {
               <h6 class="font-medium bg-white w-max px-2 text-xl text-green-600 transition-all duration-300 transform hover:scale-110 absolute" style="top:2px; right:10px">&#8377;${Math.round(
                 (product.price * 80 + product.price * 80 * 0.1) * product.count
               ).toFixed(2)}</h6>
-               <div class="flex items-center gap-2">
-                <button class="bg-red-300 text-gray-700 rounded-full px-2 py-1 font-bold transition-all duration-300 transform hover:scale-110" onclick="updateProductCount(${index}, -1)">&minus;</button>
-                <p class="w-max px-2 py-1 text-base border border-gray-300 rounded-md transition-all duration-300 transform hover:scale-110"> Qty: ${
-                  product.count
-                } </p>
-                <button class="bg-green-300 text-gray-700 rounded-full px-2 py-1 font-bold transition-all duration-300 transform hover:scale-110" onclick="updateProductCount(${index}, 1)">&plus;</button>
-              </div>
+              <div class="flex items-center justify-end gap-2">
+            <button class="bg-red-300 rounded-full font-bold px-2 py-1 transition-all duration-300 transform hover:scale-110" onclick="updateProductCount(${index}, -1)"><img src="../Assets/minus_png.png" height="25px" width="25px" /></button>
+            <p class="w-max px-2 py-1 text-base border border-gray-300 rounded-md transition-all duration-300 transform hover:scale-110"> Qty: ${
+              product.count
+            } </p>
+                <button class="bg-green-300 rounded-full px-2 py-1 font-bold transition-all duration-300 transform hover:scale-110" onclick="updateProductCount(${index}, 1)"><img src="../Assets/plus_svg.svg" height="25px" width="25px"/></button>
+                </div>
               <button class="bg-red-500 text-white py-1 px-2 rounded-full font-normal flex items-center transition-all duration-300 transform hover:bg-red-700 hover:scale-110" onclick="removeFromCart(${index})">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -154,7 +154,18 @@ function remove(index) {
   updateMyCartNavbarUi(currUserFound.cart);
   updateUi(currUserFound.cart);
 }
-function updateProductCount(index, quantity) {}
+function updateProductCount(index, quantity) {
+  let product = currUserFound.cart[index];
+  product.count += quantity;
+  if (product.count === 0) {
+    removeFromCart(index);
+  } else {
+    currUserFound.cart[index] = product;
+    saveUserInLocalStorage(currUserFound);
+    updateMyCartNavbarUi(currUserFound.cart);
+    updateUi(currUserFound.cart);
+  }
+}
 function areYouSureAlert(index) {
   swal({
     title: "Remove from cart?",
@@ -165,7 +176,7 @@ function areYouSureAlert(index) {
   }).then((willDelete) => {
     if (willDelete) {
       remove(index);
-      swal("Poof! Your imaginary file has been deleted!", {
+      swal("Success! 🛒 Item removed with ease!", {
         icon: "success",
       });
     }
@@ -179,6 +190,13 @@ function saveUserInLocalStorage(user_data) {
   }
   localStorage.setItem("users", JSON.stringify(users));
   sessionStorage.setItem("currentUser", JSON.stringify(user_data));
+}
+function proceedToCheckout() {
+  sessionStorage.setItem(
+    "productForPayment",
+    JSON.stringify(currUserFound.cart)
+  );
+  window.location.href = "../razorpay/index.html";
 }
 
 function updateMyCartNavbarUi(cart) {
