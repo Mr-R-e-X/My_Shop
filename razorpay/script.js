@@ -33,15 +33,10 @@ function orderDetailsUi(products) {
         <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200">
           Order Summary
         </h2>
-        <p class="font-normal text-base text-gray-400">No products in the order.</p>
+        <img src="../Assets/empty.svg" />
       </div>
     `;
-    orderProduct.innerHTML = `
-      <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200">
-        Order Details
-      </h2>
-      <p class="font-normal text-base text-gray-400">No products to display.</p>
-    `;
+    orderProduct.innerHTML = "";
     return;
   }
 
@@ -190,9 +185,6 @@ function orderDetailsUi(products) {
   document
     .getElementById("edit-address")
     .addEventListener("click", editAddress);
-  // document
-  //   .getElementById("change-address")
-  //   .addEventListener("click", changeAddress);
   document.getElementById("cancel").addEventListener("click", cancelAction);
 }
 
@@ -259,14 +251,14 @@ function updateProductCount(index, quantity) {
     areYouSureAlert(index);
   } else {
     productToPay[index] = product;
-    saveInSession(productToPay);
+    saveInSession("productForPayment", productToPay);
     orderDetailsUi(productToPay);
   }
 }
 function remove(index) {
   productToPay = productToPay.filter((item, idx) => idx !== index);
 
-  saveInSession(productToPay);
+  saveInSession("productForPayment", productToPay);
   orderDetailsUi(productToPay);
 }
 function areYouSureAlert(index) {
@@ -279,7 +271,9 @@ function areYouSureAlert(index) {
   }).then((willDelete) => {
     if (willDelete) {
       remove(index);
-      swal("Item successfully bid farewell. 🛍️", {
+      swal({
+        title: "Item successfully bid farewell. 🛍️",
+        text: "",
         icon: "success",
       });
     }
@@ -293,8 +287,8 @@ function saveUserInLocalStorage(user_data) {
   }
   localStorage.setItem("users", JSON.stringify(allusers));
 }
-function saveInSession(data) {
-  sessionStorage.setItem("productForPayment", JSON.stringify(data));
+function saveInSession(storeName, data) {
+  sessionStorage.setItem(storeName, JSON.stringify(data));
 }
 // formating the address showing it in better way in the ui
 function formatAddress(addressInput) {
@@ -368,18 +362,74 @@ function proceedToPay(event, price) {
   }
 }
 function paymentSuccess(paymentId) {
+  let isFromCart = sessionStorage.getItem("fromCart");
+  console.log(isFromCart);
   let delAddress = formatAddress(currUserFound.address);
-  let paymentAndDelivaryObj = {
+  let order = {
     paymentId: paymentId,
     shippingAdd: delAddress,
+    orderDetails: productToPay,
+    timestamp: Date.now(),
   };
-  productToPay.push(paymentAndDelivaryObj);
   console.log(productToPay);
   if (!currUserFound.orders) {
     currUserFound.orders = [];
   }
-  currUserFound.orders.push(productToPay);
+  // if (isFromCart) {
+  //   removeFromCartAfterPayment(productToPay);
+  // }
+  productToPay = [];
+  currUserFound.orders.push(order);
+  saveInSession("productForPayment", productToPay);
+  saveInSession("order", JSON.stringify(order));
+  saveInSession("currentUser", JSON.stringify(currUserFound));
   saveUserInLocalStorage(currUserFound);
+  thanqPageUI(order);
+}
+
+// function removeFromCartAfterPayment(products) {
+//   let filterCart = currUserFound.cart.filter((item) => products.includes(item));
+//   console.log(filterCart);
+// }
+
+function thanqPageUI(order) {
+  const thnqSection = document.getElementById("thankyou-page");
+  const mainSec = document.querySelector("main");
+  mainSec.classList.add("hidden");
+  thnqSection.innerHTML = `
+    <div class="bg-transparent h-screen">
+      <div class="bg-white p-6  md:mx-auto">
+        <svg viewBox="0 0 24 24" class="text-green-600 w-16 h-16 mx-auto my-6">
+            <path fill="currentColor"
+                d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z">
+            </path>
+        </svg>
+        <div class="text-center">
+            <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Done!</h3>
+            <p class="text-gray-600 my-2">Thank you for completing your secure online payment.</p>
+            <p>Your Order Id is ${order.timestamp}</p>
+            <p> Have a great day!  </p>
+            <div class="py-10 text-center flex items-center justify-center">
+                <p class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 mx-3 cursor-pointer" onclick="pageAfterPayControl(this)">
+                    GO BACK 
+               </p>
+               <p class="px-12 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 mx-3 cursor-pointer" onclick="pageAfterPayControl(this)">
+                    VIEW ORDER
+               </p>
+            </div>
+        </div>
+    </div>
+  </div>
+  `;
+}
+
+function pageAfterPayControl(elem) {
+  let innerText = elem.innerText;
+  console.log(innerText);
+  if (innerText === "GO BACK") window.location.href = "../shop/index.html";
+  if (innerText === "VIEW ORDER") {
+    window.location.href = "../profile/orders.html";
+  }
 }
 
 // showing alert

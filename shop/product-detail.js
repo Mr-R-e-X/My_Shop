@@ -12,7 +12,7 @@ let selectedColor = null;
 let selectedSize = null;
 let users = JSON.parse(localStorage.getItem("users"));
 let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
-if (currUser === null) window.location.href = "../index.html";
+if (currUser === undefined) window.location.href = "../index.html";
 let currUserFound = users.find((user) => user.email === currUser.email);
 
 function updateProductUi(productData) {
@@ -127,14 +127,12 @@ function selectColor(color, product) {
   if (color.classList.contains("single-color-selected")) {
     color.classList.remove("single-color-selected");
     selectedColor = null;
-    console.log(selectedColor);
   } else {
     let colors = product.querySelectorAll(".clr-btns");
     colors.forEach((el) => el.classList.remove("single-color-selected"));
     const newColor = color.getAttribute("data-val-color");
     color.classList.add("single-color-selected");
     selectedColor = { productId: product.id.split("-")[1], color: newColor };
-    console.log(selectedColor);
   }
 }
 
@@ -142,21 +140,17 @@ function selectSize(size, product) {
   if (size.classList.contains("single-size-selected")) {
     size.classList.remove("single-size-selected");
     selectedSize = null;
-    console.log(selectedSize);
   } else {
     let sizes = product.querySelectorAll(".size-btns");
-    // console.log(sizes)
     sizes.forEach((el) => el.classList.remove("single-size-selected"));
     const newSize = size.innerText;
     size.classList.add("single-size-selected");
     selectedSize = { productId: product.id.split("-")[1], size: newSize };
-    console.log(selectedSize);
   }
 }
 
 async function addProductToCart(element) {
   let cat = element.getAttribute("data-cat");
-  // console.log(cat)
   if (cat === "men's" || cat === "women's") {
     if (selectedColor !== null && selectedSize !== null) {
       let index = currUserFound.cart.findIndex(
@@ -165,7 +159,6 @@ async function addProductToCart(element) {
           product.color === selectedColor.color &&
           product.size === selectedColor.size
       );
-      console.log(index);
       if (index !== -1) {
         let existingProd = currUserFound.cart[index];
         existingProd.count += 1;
@@ -195,7 +188,6 @@ async function addProductToCart(element) {
     if (index !== -1) {
       let existingProd = currUserFound.cart[index];
       existingProd.count += 1;
-      console.log("curr user car", currUserFound.cart);
       showAlert(
         "Success!",
         `"${currUserFound.cart[index].title}" added to the cart successfully.`,
@@ -226,11 +218,11 @@ function buyNow(elem, id) {
       productData["size"] = selectedSize.size;
       productData["count"] = 1;
       productForPayment.push(productData);
-      console.log(productForPayment);
       sessionStorage.setItem(
         "productForPayment",
         JSON.stringify(productForPayment)
       );
+      sessionStorage.setItem("fromCart", JSON.stringify(false));
       window.location.href = "../razorpay/index.html";
     } else {
       showAlert("Error", "Please select a specific color and size!", "error");
@@ -238,11 +230,11 @@ function buyNow(elem, id) {
   } else {
     productData["count"] = 1;
     productForPayment.push(productData);
-    console.log(productForPayment);
     sessionStorage.setItem(
       "productForPayment",
       JSON.stringify(productForPayment)
     );
+    sessionStorage.setItem("fromCart", JSON.stringify(false));
     window.location.href = "../razorpay/index.html";
   }
 }

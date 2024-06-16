@@ -14,6 +14,15 @@ let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => (user.email = currUser.email));
 console.log(currUserFound.cart);
 function updateUi(userCart) {
+  if (userCart.length === 0) {
+    cartSummery.innerHTML = `
+      <div class="p-4 border border-gray-200 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
+        <img src="../Assets/void.svg" class="mx-auto w-auto h-[70vh]" />
+      </div>
+    `;
+    productDiv.innerHTML = "";
+    return;
+  }
   cartSummery.innerHTML = "";
   productDiv.innerHTML = "";
   let totalPrice = userCart.reduce(
@@ -196,6 +205,7 @@ function proceedToCheckout() {
     "productForPayment",
     JSON.stringify(currUserFound.cart)
   );
+  sessionStorage.setItem("fromCart", JSON.stringify(true));
   window.location.href = "../razorpay/index.html";
 }
 

@@ -259,8 +259,8 @@ async function addProductToCart(element, prodId, event) {
         currUserFound.cart.push(product);
         console.log("curr user cart", currUserFound.cart);
         showAlert(
-          "Success!",
-          `${product.title} added to the cart successfully.`,
+          "Great choice! Added to your cart. 🛒✨",
+          `${product.title}`,
           "success"
         );
       }
@@ -276,8 +276,8 @@ async function addProductToCart(element, prodId, event) {
       existingProd.count += 1;
       console.log("curr user car", currUserFound.cart);
       showAlert(
-        "Success!",
-        `"${currUserFound.cart[index].title}" added to the cart successfully.`,
+        "Great choice! Added to your cart. 🛒✨",
+        `"${currUserFound.cart[index].title}"`,
         "success"
       );
     } else {
@@ -288,8 +288,8 @@ async function addProductToCart(element, prodId, event) {
       currUserFound.cart.push(product);
       console.log("curr user cart", currUserFound.cart);
       showAlert(
-        "Success!",
-        `${product.title} added to the cart successfully.`,
+        "Great choice! Added to your cart. 🛒✨!",
+        `${product.title}`,
         "success"
       );
     }
