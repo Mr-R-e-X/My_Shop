@@ -14,6 +14,8 @@ let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => (user.email = currUser.email));
 console.log(currUserFound.cart);
 function updateUi(userCart) {
+  cartSummery.innerHTML = "";
+  productDiv.innerHTML = "";
   let totalPrice = userCart.reduce(
     (sum, product) => sum + Math.floor(product.price * product.count * 80),
     0
@@ -84,7 +86,7 @@ function updateUi(userCart) {
   `;
 
   productDiv.innerHTML += `
-     <div class="grid grid-cols-1 lg:grid-cols-1 gap-2">
+     <div class="grid grid-cols-1 lg:grid-cols-1 gap-2 mx-2">
     ${userCart
       .map(
         (product, index) => `
@@ -113,7 +115,7 @@ function updateUi(userCart) {
               </div>
             </div>
             <div class="flex items-center justify-evenly sm:justify-between gap-8">
-              <h6 class="font-medium text-xl text-indigo-600 transition-all duration-300 transform hover:scale-110">&#8377;${Math.round(
+              <h6 class="font-medium bg-white w-max px-2 text-xl text-green-600 transition-all duration-300 transform hover:scale-110 absolute" style="top:2px; right:10px">&#8377;${Math.round(
                 (product.price * 80 + product.price * 80 * 0.1) * product.count
               ).toFixed(2)}</h6>
                <div class="flex items-center gap-2">
@@ -137,6 +139,46 @@ function updateUi(userCart) {
       .join("")}
   </div>
   `;
+}
+
+function removeFromCart(index) {
+  areYouSureAlert(index);
+}
+function remove(index) {
+  let filteredUserCart = currUserFound.cart.filter(
+    (item, idx) => idx !== index
+  );
+  currUserFound.cart = filteredUserCart;
+
+  saveUserInLocalStorage(currUserFound);
+  updateMyCartNavbarUi(currUserFound.cart);
+  updateUi(currUserFound.cart);
+}
+function updateProductCount(index, quantity) {}
+function areYouSureAlert(index) {
+  swal({
+    title: "Remove from cart?",
+    text: "Are you sure?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      remove(index);
+      swal("Poof! Your imaginary file has been deleted!", {
+        icon: "success",
+      });
+    }
+  });
+}
+function saveUserInLocalStorage(user_data) {
+  let index = users.findIndex((user) => user.email === user_data.email);
+  if (index !== -1) {
+    users[index] = user_data;
+    // console.log(allusers[index]);
+  }
+  localStorage.setItem("users", JSON.stringify(users));
+  sessionStorage.setItem("currentUser", JSON.stringify(user_data));
 }
 
 function updateMyCartNavbarUi(cart) {
