@@ -63,13 +63,6 @@ navLogo.addEventListener("click", () => {
   if (checkLoggedIn()) {
     window.location.href = "./shop/index.html";
   } else {
-    window.location.href = "./index.html";
-  }
-});
-navLogo.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "./shop/index.html";
-  } else {
     sendingPageAuthVal("login");
   }
 });

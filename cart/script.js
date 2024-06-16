@@ -1,5 +1,249 @@
+const navLogo = document.querySelector("#nav-logo");
+const navHome = document.querySelector("#nav-home");
+const navSignin = document.querySelector("#nav-signin");
+const navSignUp = document.querySelector("#nav-signup");
+const navMyCart = document.querySelector("#nav-my-cart");
+const navProfile = document.querySelector("#nav-profile");
+const navCartItemCount = document.querySelector("#my-cart");
+const navLogout = document.querySelector("#nav-logout");
+const productDiv = document.getElementById("product-div");
+const cartSummery = document.getElementById("cart-summery");
 let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
 let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => (user.email = currUser.email));
-console.log(currUserFound);
+console.log(currUserFound.cart);
+function updateUi(userCart) {
+  let totalPrice = userCart.reduce(
+    (sum, product) => sum + Math.floor(product.price * product.count * 80),
+    0
+  );
+  cartSummery.innerHTML += `
+    <div class="p-4 border border-gray-200 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
+        <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200">
+            Cart Summary
+        </h2>
+        <div class="py-2 border-b border-gray-200">
+        ${userCart
+          .map(
+            (product) =>
+              `
+            <div class="flex items-center justify-between mb-2">
+                <p
+                    class="font-normal text-base text-gray-400 transition-all duration-500 group-hover:text-gray-700 text-nowrap overflow-hidden text-ellipsis w-[50%]">
+                    ${product.title}
+                </p>
+                <p class="font-medium text-base text-gray-900"> <span
+                        class="text-xs text-gray-400 font-semibold">X</span>${
+                          product.count
+                        }
+                <p class="font-medium text-base text-gray-900">&#8377;${Math.round(
+                  (product?.price * 80 + product?.price * 80 * 0.1) *
+                    product?.count
+                ).toFixed(2)} </p>
+            </div>
+            `
+          )
+          .join("")}
+            <div class="flex items-center justify-between gap-4 mb-5">
+                <p class="font-normal text-base text-gray-400 transition-all duration-500 group-hover:text-gray-700">
+                    Shipping
+                </p>
+                <p class="font-medium text-base text-gray-600">${
+                  totalPrice >= 300 ? "Free" : `&#8377; 51`
+                }</p>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+                <p class="font-normal text-base text-gray-400 transition-all duration-500 group-hover:text-gray-700">
+                    Coupon Code
+                </p>
+                <p class="font-medium text-base text-emerald-500">#APPLIED 10% OFF</p>
+            </div>
+        </div>
+        <div class="total flex items-center justify-between pt-1">
+            <p class="font-normal text-lg text-black">Subtotal</p>
+            <h5 class="font-manrope font-bold text-base text-indigo-600">
+                &#8377;${
+                  totalPrice >= 300
+                    ? `${totalPrice.toFixed(2)}`
+                    : `${
+                        totalPrice === 0
+                          ? "0"
+                          : `${(totalPrice + 51).toFixed(2)}`
+                      }`
+                }
+            </h5>
+        </div>
+        <div class="mt-4" onclick="proceedToPay(event,${totalPrice})">
+            <button
+                class="w-full py-3 bg-indigo-600 text-white font-manrope font-bold text-lg rounded-lg transition-all duration-500 hover:bg-indigo-700">
+                Proceed To Checkout
+            </button>
+        </div>
+      </div>
+  `;
+
+  productDiv.innerHTML += `
+     <div class="grid grid-cols-1 lg:grid-cols-1 gap-2">
+    ${userCart
+      .map(
+        (product, index) => `
+        <div class="rounded-xl p-2 bg-gray-100 border border-gray-100 flex flex-col sm:flex-row items-center gap-1 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg mb-2">
+          <div class="">
+            <img src="${product.image}" alt="${
+          product.title
+        }" class="order-detail-img mix-blend-multiply" />
+          </div>
+          <div class="grid grid-cols-1 w-full gap-1 sm:gap-8">
+            <div class="flex items-center sm:items-start flex-col justify-between">
+              <h2 class="font-medium text-base text-center sm:text-start text-black mb-1">
+                ${product.title}
+              </h2>
+              <div class="flex items-center">
+                ${
+                  product.color
+                    ? `<button class="w-6 h-6 border border-gray-800 rounded-full mx-2 mr-2 transition-all duration-300 transform hover:scale-110" style="background-color: ${product.color};" data-val-color="${product.color}"></button>`
+                    : ""
+                }
+                ${
+                  product.size
+                    ? `<button class="bg-gray-300 text-gray-700 text-base py-1 px-3 rounded-full font-semibold mr-2 mx-2 transition-all duration-300 transform hover:scale-110">${product.size}</button>`
+                    : ""
+                }
+              </div>
+            </div>
+            <div class="flex items-center justify-evenly sm:justify-between gap-8">
+              <h6 class="font-medium text-xl text-indigo-600 transition-all duration-300 transform hover:scale-110">&#8377;${Math.round(
+                (product.price * 80 + product.price * 80 * 0.1) * product.count
+              ).toFixed(2)}</h6>
+               <div class="flex items-center gap-2">
+                <button class="bg-red-300 text-gray-700 rounded-full px-2 py-1 font-bold transition-all duration-300 transform hover:scale-110" onclick="updateProductCount(${index}, -1)">&minus;</button>
+                <p class="w-max px-2 py-1 text-base border border-gray-300 rounded-md transition-all duration-300 transform hover:scale-110"> Qty: ${
+                  product.count
+                } </p>
+                <button class="bg-green-300 text-gray-700 rounded-full px-2 py-1 font-bold transition-all duration-300 transform hover:scale-110" onclick="updateProductCount(${index}, 1)">&plus;</button>
+              </div>
+              <button class="bg-red-500 text-white py-1 px-2 rounded-full font-normal flex items-center transition-all duration-300 transform hover:bg-red-700 hover:scale-110" onclick="removeFromCart(${index})">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      `
+      )
+      .join("")}
+  </div>
+  `;
+}
+
+function updateMyCartNavbarUi(cart) {
+  let count = 0;
+  cart.map((item) => {
+    count += item.count;
+  });
+  if (count === 0) navCartItemCount.classList.add("hidden");
+  else {
+    navCartItemCount.classList.remove("hidden");
+    navCartItemCount.innerText = count;
+  }
+}
+
+// NAVBAR CONTROL
+
+// GETTING AUTH VALUE
+let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
+  ? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))
+  : "";
+
+// SENDING AUTH VALUE TO AUTHENTICATION PAGE TO SHOW DATA DRIVEN UI
+function sendingPageAuthVal(val) {
+  landingPageAuthVal = val;
+  sessionStorage.setItem(
+    "landingPageAuthVal",
+    JSON.stringify(landingPageAuthVal)
+  );
+  window.location.href = "../Authentication/sign-in-up.html";
+}
+// NAVBAR BTNS CONTROL
+
+function checkLoggedIn() {
+  return currUser !== null;
+}
+// checking if user is available in the sessions storage and updating the ui
+if (!checkLoggedIn()) {
+  navProfile.classList.add("hidden");
+} else {
+  navProfile.classList.remove("hidden");
+}
+if (!checkLoggedIn()) {
+  navHome.classList.add("hidden");
+} else {
+  navHome.classList.remove("hidden");
+}
+if (!checkLoggedIn()) {
+  navMyCart.classList.add("hidden");
+} else {
+  navMyCart.classList.remove("hidden");
+}
+if (checkLoggedIn()) {
+  navSignin.classList.add("hidden");
+  navSignUp.classList.add("hidden");
+}
+navSignUp.addEventListener("click", () => {
+  sendingPageAuthVal("signup");
+});
+navSignin.addEventListener("click", () => {
+  sendingPageAuthVal("login");
+});
+
+navLogo.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../shop/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+navHome.addEventListener("click", () => {
+  if (checkLoggedIn) {
+    window.location.href = "../shop/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navProfile.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../profile/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navMyCart.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../cart/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navProfile.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../profile/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navLogout.addEventListener("click", () => {
+  sessionStorage.removeItem("currentUser");
+  window.location.href = "../index.html";
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateUi(currUserFound.cart);
+  updateMyCartNavbarUi(currUserFound.cart);
+});

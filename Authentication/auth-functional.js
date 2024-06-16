@@ -1,4 +1,11 @@
 // Dom Elements
+const navLogo = document.querySelector("#nav-logo");
+const navHome = document.querySelector("#nav-home");
+const navSignin = document.querySelector("#nav-signin");
+const navSignUp = document.querySelector("#nav-signup");
+const navMyCart = document.querySelector("#nav-my-cart");
+const navProfile = document.querySelector("#nav-profile");
+
 const signInEmailInput = document.getElementById("signin-email");
 const signInPasswordInput = document.getElementById("signin-password");
 const signInSubmitBtn = document.getElementById("signin-submit");
@@ -14,6 +21,11 @@ let signUpDiv = document.querySelector("#sign-up");
 let signInDiv = document.querySelector("#sign-in");
 // getting users form local storage
 
+let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+// GETTING AUTH VALUE
+let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
+  ? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))
+  : "";
 let users = localStorage.getItem("users")
   ? JSON.parse(localStorage.getItem("users"))
   : [];
@@ -139,5 +151,79 @@ signUpSubmitBtn.addEventListener("click", (e) => {
     document.getElementById("signUpImg").classList.add("hidden");
     document.getElementById("signInImg").classList.remove("hidden");
     signInDiv.classList.remove("hidden");
+  }
+});
+
+// NAVBAR BTNS CONTROL
+function sendingPageAuthVal(val) {
+  landingPageAuthVal = val;
+  sessionStorage.setItem(
+    "landingPageAuthVal",
+    JSON.stringify(landingPageAuthVal)
+  );
+  window.location.href = "./Authentication/sign-in-up.html";
+}
+function checkLoggedIn() {
+  return currUser !== null;
+}
+// checking if user is available in the sessions storage and updating the ui
+if (!checkLoggedIn()) {
+  navProfile.classList.add("hidden");
+} else {
+  navProfile.classList.remove("hidden");
+}
+if (!checkLoggedIn()) {
+  navHome.classList.add("hidden");
+} else {
+  navHome.classList.remove("hidden");
+}
+if (!checkLoggedIn()) {
+  navMyCart.classList.add("hidden");
+} else {
+  navMyCart.classList.remove("hidden");
+}
+navSignUp.addEventListener("click", () => {
+  sendingPageAuthVal("signup");
+});
+navSignin.addEventListener("click", () => {
+  sendingPageAuthVal("login");
+});
+
+navLogo.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../shop/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+navHome.addEventListener("click", () => {
+  if (checkLoggedIn) {
+    window.location.href = "../shop/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navProfile.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../profile/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navMyCart.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../cart/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navProfile.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../profile/index.html";
+  } else {
+    sendingPageAuthVal("login");
   }
 });

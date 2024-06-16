@@ -1,7 +1,14 @@
 // getting Dom elements
-let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
-let orderSummery = document.querySelector("#order-summery");
-let orderProduct = document.querySelector("#order-product");
+const navLogo = document.querySelector("#nav-logo");
+const navHome = document.querySelector("#nav-home");
+const navSignin = document.querySelector("#nav-signin");
+const navSignUp = document.querySelector("#nav-signup");
+const navMyCart = document.querySelector("#nav-my-cart");
+const navProfile = document.querySelector("#nav-profile");
+const navCartItemCount = document.querySelector("#my-cart");
+const navLogout = document.querySelector("#nav-logout");
+const orderSummery = document.querySelector("#order-summery");
+const orderProduct = document.querySelector("#order-product");
 const shippingInfoBtn = document.getElementById("shipping-info-btn");
 const orderSumBtn = document.getElementById("order-sum-btn");
 const addressDiv = document.getElementById("address-div");
@@ -13,7 +20,8 @@ let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
 // If user is not available in Session Storage redirecting the page to the Landing Page
 if (currUser === null) window.location.href = "../index.html";
 let currUserFound = allusers.find((user) => user.email === currUser.email);
-
+// taking product from session storage if  user directly using "buy now btn"
+let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
 // Updating Orders in the UI
 function orderDetailsUi(products) {
   // console.log(products);
@@ -48,11 +56,11 @@ function orderDetailsUi(products) {
         <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200">
             Order Summary
         </h2>
+        <div class="py-2 border-b border-gray-200">
         ${filteredProducts
           .map(
             (product) =>
               `
-        <div class="py-2 border-b border-gray-200">
             <div class="flex items-center justify-between mb-2">
                 <p
                     class="font-normal text-base text-gray-400 transition-all duration-500 group-hover:text-gray-700 text-nowrap overflow-hidden text-ellipsis w-[50%]">
@@ -63,7 +71,7 @@ function orderDetailsUi(products) {
                           product.count
                         }
                 <p class="font-medium text-base text-gray-900">&#8377;${Math.round(
-                  (product?.price * 80 + product?.price * 80 * 0.01) *
+                  (product?.price * 80 + product?.price * 80 * 0.1) *
                     product?.count
                 ).toFixed(2)} </p>
             </div>
@@ -125,7 +133,7 @@ function orderDetailsUi(products) {
       </div>
     `;
   orderProduct.innerHTML = `
-       <div class="grid grid-cols-1 gap-2">
+       <div class="grid grid-cols-1 gap-2 ">
         ${filteredProducts
           .map(
             (product) =>
@@ -142,6 +150,18 @@ function orderDetailsUi(products) {
                     <h2 class="font-medium text-base text-center sm:text-start text-black mb-1">
                         ${product.title}
                     </h2>
+                    <div class="flex items-center">
+                    ${
+                      product.color
+                        ? `<button class="w-6 h-6 border border-gray-800 rounded-full mx-2 mr-2 transition-all duration-300" style="background-color: ${product.color};" data-val-color="${product.color}"></button>`
+                        : ""
+                    }
+                        ${
+                          product.size
+                            ? ` <button class="bg-gray-300 text-gray-700 text-base py-1 px-3 rounded-full font-semibold mr-2 mx-2 hover:bg-gray-400 transition-all duration-300">${product.size}</button>`
+                            : ""
+                        }
+                        </div>
                 </div>
                 <div class="flex items-center justify-evenly md:justify-between gap-8">
                     <div class="flex items-center gap-3">
@@ -153,8 +173,9 @@ function orderDetailsUi(products) {
                 product.id
               })" />
                     </div>
-                    <h6 class="font-medium text-xl text-indigo-600">&#8377;${Math.floor(
-                      product.price * product.count * 80
+                    <h6 class="font-medium text-xl text-indigo-600">&#8377;${Math.round(
+                      (product?.price * 80 + product?.price * 80 * 0.1) *
+                        product?.count
                     ).toFixed(2)}</h6>
                 </div>
             </div>
@@ -335,7 +356,112 @@ function showAlert(title, msg, icon) {
   });
 }
 
+function updateMyCartNavbarUi(cart) {
+  let count = 0;
+  cart.map((item) => {
+    count += item.count;
+  });
+  if (count === 0) navCartItemCount.classList.add("hidden");
+  else {
+    navCartItemCount.classList.remove("hidden");
+    navCartItemCount.innerText = count;
+  }
+}
+
+// NAVBAR CONTROL
+
+// GETTING AUTH VALUE
+let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
+  ? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))
+  : "";
+
+// SENDING AUTH VALUE TO AUTHENTICATION PAGE TO SHOW DATA DRIVEN UI
+function sendingPageAuthVal(val) {
+  landingPageAuthVal = val;
+  sessionStorage.setItem(
+    "landingPageAuthVal",
+    JSON.stringify(landingPageAuthVal)
+  );
+  window.location.href = "../Authentication/sign-in-up.html";
+}
+// NAVBAR BTNS CONTROL
+
+function checkLoggedIn() {
+  return currUser !== null;
+}
+// checking if user is available in the sessions storage and updating the ui
+if (!checkLoggedIn()) {
+  navProfile.classList.add("hidden");
+} else {
+  navProfile.classList.remove("hidden");
+}
+if (!checkLoggedIn()) {
+  navHome.classList.add("hidden");
+} else {
+  navHome.classList.remove("hidden");
+}
+if (!checkLoggedIn()) {
+  navMyCart.classList.add("hidden");
+} else {
+  navMyCart.classList.remove("hidden");
+}
+if (checkLoggedIn()) {
+  navSignin.classList.add("hidden");
+  navSignUp.classList.add("hidden");
+}
+navSignUp.addEventListener("click", () => {
+  sendingPageAuthVal("signup");
+});
+navSignin.addEventListener("click", () => {
+  sendingPageAuthVal("login");
+});
+
+navLogo.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../shop/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+navHome.addEventListener("click", () => {
+  if (checkLoggedIn) {
+    window.location.href = "../shop/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navProfile.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../profile/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navMyCart.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../cart/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navProfile.addEventListener("click", () => {
+  if (checkLoggedIn()) {
+    window.location.href = "../profile/index.html";
+  } else {
+    sendingPageAuthVal("login");
+  }
+});
+
+navLogout.addEventListener("click", () => {
+  sessionStorage.removeItem("currentUser");
+  window.location.href = "../index.html";
+});
+
 // calling required functions after dom content loaded
 document.addEventListener("DOMContentLoaded", () => {
   orderDetailsUi(productToPay);
+  updateMyCartNavbarUi(currUserFound.cart);
 });

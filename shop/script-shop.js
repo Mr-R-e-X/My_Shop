@@ -5,6 +5,7 @@ const navSignUp = document.querySelector("#nav-signup");
 const navMyCart = document.querySelector("#nav-my-cart");
 const navProfile = document.querySelector("#nav-profile");
 const navCartItemCount = document.querySelector("#my-cart");
+const navLogout = document.querySelector("#nav-logout");
 let categories = document.querySelector("#categories");
 let categoyBtns = document.querySelectorAll("#category");
 let manClothDiv = document.querySelector("#man-cloth");
@@ -99,11 +100,11 @@ function updateShopUi(data, divDtls, cat) {
         <p class="product-price">
           <span class="prod-curr-price"> &#8377;${Math.floor(
             product?.price * 80
-          ).toFixed(0)} </span>
+          ).toFixed(2)} </span>
           <del class="text-sm text-gray-600 ">
-            <span class="prev-price"> $${Math.floor(
-              product?.price * 80 + product?.price * 80 * 0.01
-            ).toFixed(0)} </span>
+            <span class="prev-price"> &#8377;${Math.floor(
+              product?.price * 80 + product?.price * 80 * 0.1
+            ).toFixed(2)} </span>
           </del>
         </p>
       </div>
@@ -432,6 +433,10 @@ if (!checkLoggedIn()) {
 } else {
   navMyCart.classList.remove("hidden");
 }
+if (checkLoggedIn()) {
+  navSignin.classList.add("hidden");
+  navSignUp.classList.add("hidden");
+}
 navSignUp.addEventListener("click", () => {
   sendingPageAuthVal("signup");
 });
@@ -439,13 +444,6 @@ navSignin.addEventListener("click", () => {
   sendingPageAuthVal("login");
 });
 
-navLogo.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../shop/index.html";
-  } else {
-    window.location.href = "../index.html";
-  }
-});
 navLogo.addEventListener("click", () => {
   if (checkLoggedIn()) {
     window.location.href = "../shop/index.html";
@@ -483,6 +481,11 @@ navProfile.addEventListener("click", () => {
   } else {
     sendingPageAuthVal("login");
   }
+});
+
+navLogout.addEventListener("click", () => {
+  sessionStorage.removeItem("currentUser");
+  window.location.href = "../index.html";
 });
 
 //Calling required initial functions on DOM load

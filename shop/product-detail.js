@@ -5,6 +5,7 @@ const navSignUp = document.querySelector("#nav-signup");
 const navMyCart = document.querySelector("#nav-my-cart");
 const navProfile = document.querySelector("#nav-profile");
 const navCartItemCount = document.querySelector("#my-cart");
+const navLogout = document.querySelector("#nav-logout");
 const productCardDiv = document.querySelector("#product-card");
 let productData = JSON.parse(localStorage.getItem("product-data"));
 let selectedColor = null;
@@ -15,7 +16,7 @@ if (currUser === null) window.location.href = "../index.html";
 let currUserFound = users.find((user) => user.email === currUser.email);
 
 function updateProductUi(productData) {
-  let { id, category, description, image, price, title } = productData;
+  let { id, category, description, image, price, title, count } = productData;
   let { rate } = productData.rating;
   productCardDiv.innerHTML = `
     <div class="bg-gray-100 py-8" id="product-${id}">
@@ -45,9 +46,9 @@ function updateProductUi(productData) {
                 <div class="flex mb-4">
                     <div class="mr-4">
                         <span class="font-bold text-gray-700">Price:</span>
-                        <span class="text-green-600">&#8377;${Math.floor(
-                          price * 80
-                        )}</span>
+                        <span class="text-green-600">&#8377;${Math.round(
+                          price * 80 + price * 80 * 0.1
+                        ).toFixed(2)}</span>
                     </div>
                     <div>
                         <span class="font-bold text-gray-700">Availability:</span>
@@ -316,13 +317,6 @@ navLogo.addEventListener("click", () => {
   if (checkLoggedIn()) {
     window.location.href = "../shop/index.html";
   } else {
-    window.location.href = "../index.html";
-  }
-});
-navLogo.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../shop/index.html";
-  } else {
     sendingPageAuthVal("login");
   }
 });
@@ -356,6 +350,10 @@ navProfile.addEventListener("click", () => {
   } else {
     sendingPageAuthVal("login");
   }
+});
+navLogout.addEventListener("click", () => {
+  sessionStorage.removeItem("currentUser");
+  window.location.href = "../index.html";
 });
 document.addEventListener("DOMContentLoaded", () => {
   updateProductUi(productData);
