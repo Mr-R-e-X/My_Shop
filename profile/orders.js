@@ -225,8 +225,19 @@ function updateDelivaryStatus(order) {
   if (timeDifference >= oneDayInMS) {
     order.shippingStatus = "success";
   } else {
+    canceled;
     order.shippingStatus = "pending";
   }
+  let orderIndex = currUserFound.orders.findIndex(
+    (order) => order.timestamp === orderID
+  );
+  if (orderIndex !== -1) {
+    currUserFound.orders[orderIndex].shippingStatus = order.shippingStatus;
+  }
+  saveInSession("order", order);
+  saveUserInLocalStorage(currUserFound);
+  saveInSession("currentUser", currUserFound);
+  updateOrderUi(order);
 }
 
 function cancelAfterConfimation(orderID) {
