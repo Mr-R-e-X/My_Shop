@@ -348,6 +348,7 @@ navLogout.addEventListener("click", () => {
   window.location.href = "../index.html";
 });
 document.addEventListener("DOMContentLoaded", () => {
+  
   updateProductUi(productData);
   updateMyCartNavbarUi(currUserFound.cart);
 });

@@ -18,7 +18,7 @@ const orderDetails = document.getElementById("Order-details");
 let allusers = JSON.parse(localStorage.getItem("users"));
 let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
 // If user is not available in Session Storage redirecting the page to the Landing Page
-if (currUser === null) window.location.href = "../index.html";
+if (currUser === undefined) window.location.href = "../index.html";
 let currUserFound = allusers.find((user) => user.email === currUser.email);
 // taking product from session storage if  user directly using "buy now btn"
 let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
@@ -381,8 +381,8 @@ function paymentSuccess(paymentId) {
   productToPay = [];
   currUserFound.orders.push(order);
   saveInSession("productForPayment", productToPay);
-  saveInSession("order", JSON.stringify(order));
-  saveInSession("currentUser", JSON.stringify(currUserFound));
+  saveInSession("order", order);
+  saveInSession("currentUser", currUserFound);
   saveUserInLocalStorage(currUserFound);
   thanqPageUI(order);
 }
