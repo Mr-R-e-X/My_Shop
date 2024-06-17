@@ -1,12 +1,6 @@
 // getting Dom elements
-const navLogo = document.querySelector("#nav-logo");
-const navHome = document.querySelector("#nav-home");
-const navSignin = document.querySelector("#nav-signin");
-const navSignUp = document.querySelector("#nav-signup");
-const navMyCart = document.querySelector("#nav-my-cart");
-const navProfile = document.querySelector("#nav-profile");
+
 const navCartItemCount = document.querySelector("#my-cart");
-const navLogout = document.querySelector("#nav-logout");
 const orderSummery = document.querySelector("#order-summery");
 const orderProduct = document.querySelector("#order-product");
 const shippingInfoBtn = document.getElementById("shipping-info-btn");
@@ -18,7 +12,7 @@ const orderDetails = document.getElementById("Order-details");
 let allusers = JSON.parse(localStorage.getItem("users"));
 let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
 // If user is not available in Session Storage redirecting the page to the Landing Page
-if (currUser === undefined) window.location.href = "../index.html";
+if (currUser === null) window.location.href = "../index.html";
 let currUserFound = allusers.find((user) => user.email === currUser.email);
 // taking product from session storage if  user directly using "buy now btn"
 let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
@@ -375,9 +369,9 @@ function paymentSuccess(paymentId) {
   if (!currUserFound.orders) {
     currUserFound.orders = [];
   }
-  // if (isFromCart) {
-  //   removeFromCartAfterPayment(productToPay);
-  // }
+  if (isFromCart) {
+    removeFromCartAfterPayment(productToPay, currUserFound.cart);
+  }
   productToPay = [];
   currUserFound.orders.push(order);
   saveInSession("productForPayment", productToPay);
@@ -387,10 +381,37 @@ function paymentSuccess(paymentId) {
   thanqPageUI(order);
 }
 
-// function removeFromCartAfterPayment(products) {
-//   let filterCart = currUserFound.cart.filter((item) => products.includes(item));
-//   console.log(filterCart);
-// }
+function removeFromCartAfterPayment(order, cart) {
+  let updatedCart = cart.filter((cartItem) => {
+    let keepItem = true;
+
+    order.forEach((orderItem) => {
+      const isClothing =
+        cartItem.category === "men's clothing" ||
+        cartItem.category === "women's clothing";
+
+      const isSameItem = isClothing
+        ? cartItem.id === orderItem.id &&
+          cartItem.title === orderItem.title &&
+          cartItem.color === orderItem.color &&
+          cartItem.size === orderItem.size
+        : cartItem.id === orderItem.id;
+
+      if (isSameItem) {
+        if (cartItem.count > orderItem.count) {
+          cartItem.count -= orderItem.count;
+        } else {
+          keepItem = false;
+        }
+      }
+    });
+
+    return keepItem;
+  });
+
+  currUserFound.cart = updatedCart;
+  updateMyCartNavbarUi(currUserFound.cart);
+}
 
 function thanqPageUI(order) {
   const thnqSection = document.getElementById("thankyou-page");
@@ -453,98 +474,6 @@ function updateMyCartNavbarUi(cart) {
     navCartItemCount.innerText = count;
   }
 }
-
-// NAVBAR CONTROL
-
-// GETTING AUTH VALUE
-let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
-  ? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))
-  : "";
-
-// SENDING AUTH VALUE TO AUTHENTICATION PAGE TO SHOW DATA DRIVEN UI
-function sendingPageAuthVal(val) {
-  landingPageAuthVal = val;
-  sessionStorage.setItem(
-    "landingPageAuthVal",
-    JSON.stringify(landingPageAuthVal)
-  );
-  window.location.href = "../Authentication/sign-in-up.html";
-}
-// NAVBAR BTNS CONTROL
-
-function checkLoggedIn() {
-  return currUser !== null;
-}
-// checking if user is available in the sessions storage and updating the ui
-if (!checkLoggedIn()) {
-  navProfile.classList.add("hidden");
-} else {
-  navProfile.classList.remove("hidden");
-}
-if (!checkLoggedIn()) {
-  navHome.classList.add("hidden");
-} else {
-  navHome.classList.remove("hidden");
-}
-if (!checkLoggedIn()) {
-  navMyCart.classList.add("hidden");
-} else {
-  navMyCart.classList.remove("hidden");
-}
-if (checkLoggedIn()) {
-  navSignin.classList.add("hidden");
-  navSignUp.classList.add("hidden");
-}
-navSignUp.addEventListener("click", () => {
-  sendingPageAuthVal("signup");
-});
-navSignin.addEventListener("click", () => {
-  sendingPageAuthVal("login");
-});
-
-navLogo.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../shop/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-navHome.addEventListener("click", () => {
-  if (checkLoggedIn) {
-    window.location.href = "../shop/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navProfile.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../profile/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navMyCart.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../cart/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navProfile.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../profile/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navLogout.addEventListener("click", () => {
-  sessionStorage.removeItem("currentUser");
-  window.location.href = "../index.html";
-});
 
 // calling required functions after dom content loaded
 document.addEventListener("DOMContentLoaded", () => {

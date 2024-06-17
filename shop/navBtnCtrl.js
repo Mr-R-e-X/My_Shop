@@ -1,14 +1,13 @@
-// TARGETING DOM ELEMRNTS
 const navLogo = document.querySelector("#nav-logo");
 const navHome = document.querySelector("#nav-home");
 const navSignin = document.querySelector("#nav-signin");
 const navSignUp = document.querySelector("#nav-signup");
 const navMyCart = document.querySelector("#nav-my-cart");
 const navProfile = document.querySelector("#nav-profile");
-const loginBtn = document.querySelector("#login-btn");
-const signupBtn = document.querySelector("#signup-btn");
+const navLogout = document.querySelector("#nav-logout");
 
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+// NAVBAR CONTROL
+
 // GETTING AUTH VALUE
 let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
   ? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))
@@ -21,16 +20,10 @@ function sendingPageAuthVal(val) {
     "landingPageAuthVal",
     JSON.stringify(landingPageAuthVal)
   );
-  window.location.href = "./Authentication/sign-in-up.html";
+  window.location.href = "../Authentication/sign-in-up.html";
 }
-// MAIN PAGE BTN CONTROL
-loginBtn.addEventListener("click", () => {
-  sendingPageAuthVal("login");
-});
-signupBtn.addEventListener("click", () => {
-  sendingPageAuthVal("signup");
-});
 // NAVBAR BTNS CONTROL
+
 function checkLoggedIn() {
   return currUser !== null;
 }
@@ -50,22 +43,25 @@ const updateUIBasedOnLoginStatus = () => {
     navSignUp.classList.add("hidden");
   }
 };
-
-updateUIBasedOnLoginStatus();
 // Add event listeners
-const handleNavigation = (element, path, authValue = null) => {
+const handleNavigation = (element, path, authValue) => {
   element.addEventListener("click", () => {
     if (checkLoggedIn()) {
       window.location.href = path;
     } else if (authValue) {
-      console.log(authValue);
       sendingPageAuthVal(authValue);
     }
   });
 };
 handleNavigation(navSignUp, "../Authentication/sign-in-up.html", "signup");
 handleNavigation(navSignin, "../Authentication/sign-in-up.html", "login");
-handleNavigation(navLogo, "../shop/index.html", "login");
-handleNavigation(navHome, "../shop/index.html", "login");
-handleNavigation(navProfile, "../profile/index.html", "login");
+handleNavigation(navLogo, "./index.html", "login");
+handleNavigation(navHome, "./index.html", "login");
+handleNavigation(navProfile, "./index.html", "login");
 handleNavigation(navMyCart, "../cart/index.html", "login");
+
+navLogout.addEventListener("click", () => {
+  sessionStorage.removeItem("currentUser");
+  window.location.href = "../index.html";
+});
+updateUIBasedOnLoginStatus();

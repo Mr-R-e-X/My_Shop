@@ -1,18 +1,11 @@
-const navLogo = document.querySelector("#nav-logo");
-const navHome = document.querySelector("#nav-home");
-const navSignin = document.querySelector("#nav-signin");
-const navSignUp = document.querySelector("#nav-signup");
-const navMyCart = document.querySelector("#nav-my-cart");
-const navProfile = document.querySelector("#nav-profile");
 const navCartItemCount = document.querySelector("#my-cart");
-const navLogout = document.querySelector("#nav-logout");
 const productCardDiv = document.querySelector("#product-card");
 let productData = JSON.parse(localStorage.getItem("product-data"));
 let selectedColor = null;
 let selectedSize = null;
 let users = JSON.parse(localStorage.getItem("users"));
 let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
-if (currUser === undefined) window.location.href = "../index.html";
+if (currUser === null) window.location.href = "../index.html";
 let currUserFound = users.find((user) => user.email === currUser.email);
 
 function updateProductUi(productData) {
@@ -157,24 +150,25 @@ async function addProductToCart(element) {
         (product) =>
           product.id === productData.id &&
           product.color === selectedColor.color &&
-          product.size === selectedColor.size
+          product.size === selectedSize.size
       );
       if (index !== -1) {
         let existingProd = currUserFound.cart[index];
         existingProd.count += 1;
+        currUserFound.cart[index] = existingProd;
         showAlert(
-          "Success!",
-          `"${currUserFound.cart[index].title}" added to the cart successfully.`,
+          "Great choice! Added to your cart. 🛒✨",
+          `"${currUserFound.cart[index].title}"`,
           "success"
         );
       } else {
         productData["color"] = selectedColor.color;
-        productData["size"] = selectedColor.size;
+        productData["size"] = selectedSize.size;
         productData["count"] = 1;
         currUserFound.cart.push(productData);
         showAlert(
-          "Success!",
-          `${productData.title} added to the cart successfully.`,
+          "Great choice! Added to your cart. 🛒✨",
+          `${productData.title}`,
           "success"
         );
       }
@@ -261,94 +255,7 @@ function showAlert(title, msg, icon) {
   });
 }
 
-// NAVBAR CONTROL
-
-// GETTING AUTH VALUE
-let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
-  ? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))
-  : "";
-
-// SENDING AUTH VALUE TO AUTHENTICATION PAGE TO SHOW DATA DRIVEN UI
-function sendingPageAuthVal(val) {
-  landingPageAuthVal = val;
-  sessionStorage.setItem(
-    "landingPageAuthVal",
-    JSON.stringify(landingPageAuthVal)
-  );
-  window.location.href = "../Authentication/sign-in-up.html";
-}
-// NAVBAR BTNS CONTROL
-
-function checkLoggedIn() {
-  return currUser !== null;
-}
-// checking if user is available in the sessions storage and updating the ui
-if (!checkLoggedIn()) {
-  navProfile.classList.add("hidden");
-} else {
-  navProfile.classList.remove("hidden");
-}
-if (!checkLoggedIn()) {
-  navHome.classList.add("hidden");
-} else {
-  navHome.classList.remove("hidden");
-}
-if (!checkLoggedIn()) {
-  navMyCart.classList.add("hidden");
-} else {
-  navMyCart.classList.remove("hidden");
-}
-navSignUp.addEventListener("click", () => {
-  sendingPageAuthVal("signup");
-});
-navSignin.addEventListener("click", () => {
-  sendingPageAuthVal("login");
-});
-
-navLogo.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../shop/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-navHome.addEventListener("click", () => {
-  if (checkLoggedIn) {
-    window.location.href = "../shop/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navProfile.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../profile/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navMyCart.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../cart/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navProfile.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../profile/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-navLogout.addEventListener("click", () => {
-  sessionStorage.removeItem("currentUser");
-  window.location.href = "../index.html";
-});
 document.addEventListener("DOMContentLoaded", () => {
-  
   updateProductUi(productData);
   updateMyCartNavbarUi(currUserFound.cart);
 });

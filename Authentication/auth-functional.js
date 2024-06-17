@@ -156,74 +156,52 @@ signUpSubmitBtn.addEventListener("click", (e) => {
 
 // NAVBAR BTNS CONTROL
 function sendingPageAuthVal(val) {
+  if (val === "navLogo") {
+    window.location.href = "../index.html";
+    return;
+  }
   landingPageAuthVal = val;
   sessionStorage.setItem(
     "landingPageAuthVal",
     JSON.stringify(landingPageAuthVal)
   );
-  window.location.href = "./Authentication/sign-in-up.html";
+  window.location.href = "../Authentication/sign-in-up.html";
 }
 function checkLoggedIn() {
   return currUser !== null;
 }
 // checking if user is available in the sessions storage and updating the ui
-if (!checkLoggedIn()) {
-  navProfile.classList.add("hidden");
-} else {
-  navProfile.classList.remove("hidden");
-}
-if (!checkLoggedIn()) {
-  navHome.classList.add("hidden");
-} else {
-  navHome.classList.remove("hidden");
-}
-if (!checkLoggedIn()) {
-  navMyCart.classList.add("hidden");
-} else {
-  navMyCart.classList.remove("hidden");
-}
-navSignUp.addEventListener("click", () => {
-  sendingPageAuthVal("signup");
-});
-navSignin.addEventListener("click", () => {
-  sendingPageAuthVal("login");
-});
+const updateUIBasedOnLoginStatus = () => {
+  if (!checkLoggedIn()) {
+    navProfile.classList.add("hidden");
+    navHome.classList.add("hidden");
+    navMyCart.classList.add("hidden");
+    navSignin.classList.remove("hidden");
+    navSignUp.classList.remove("hidden");
+  } else {
+    navProfile.classList.remove("hidden");
+    navHome.classList.remove("hidden");
+    navMyCart.classList.remove("hidden");
+    navSignin.classList.add("hidden");
+    navSignUp.classList.add("hidden");
+  }
+};
 
-navLogo.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../shop/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-navHome.addEventListener("click", () => {
-  if (checkLoggedIn) {
-    window.location.href = "../shop/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navProfile.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../profile/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navMyCart.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../cart/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
-
-navProfile.addEventListener("click", () => {
-  if (checkLoggedIn()) {
-    window.location.href = "../profile/index.html";
-  } else {
-    sendingPageAuthVal("login");
-  }
-});
+updateUIBasedOnLoginStatus();
+// Add event listeners
+const handleNavigation = (element, path, authValue = null) => {
+  element.addEventListener("click", () => {
+    if (checkLoggedIn()) {
+      window.location.href = path;
+    } else if (authValue) {
+      console.log(authValue);
+      sendingPageAuthVal(authValue);
+    }
+  });
+};
+handleNavigation(navSignUp, "../Authentication/sign-in-up.html", "signup");
+handleNavigation(navSignin, "./sign-in-up.html", "login");
+handleNavigation(navLogo, "../index.html", "navLogo");
+handleNavigation(navHome, "../shop/index.html", "login");
+handleNavigation(navProfile, "../profile/index.html", "login");
+handleNavigation(navMyCart, "../cart/index.html", "login");
