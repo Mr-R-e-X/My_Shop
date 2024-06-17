@@ -5,13 +5,16 @@ let orderDetailDiv = document.getElementById("curr-detail");
 let orderSummeryDiv = document.getElementById("curr-summery");
 let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
-
+let users = JSON.parse(localStorage.getItem("users"));
+let currUserFound = users.find((user) => user.email === currUser.email);
 let order = JSON.parse(sessionStorage.getItem("order"));
 console.log(order);
 
 function updateOrderUi(order) {
+  updateDelivaryStatus(order);
   const date = new Date(order.timestamp);
-  const localeDate = formatDate(date);
+  const localeDate = formatDate(date, 0);
+  const localDelivaryDate = formatDate(date, 1);
   let totalPrice = order.orderDetails.reduce(
     (sum, product) => sum + Math.floor(product.price * product.count * 80),
     0
@@ -21,17 +24,41 @@ function updateOrderUi(order) {
     <h1 class="text-3xl font-semibold mb-6 text-center text-black">Thank you for your order.</h1>
     <div class="space-y-4">
       <div class="border-b border-white pb-4">
-        <p class="text-base font-semibold text-black">Order Number : <span class="text-lg text-green-600">${order.timestamp}</span></p>
-        
+        <p class="text-base font-semibold text-black">Order Number : <span class="text-lg text-green-600">${
+          order.timestamp
+        }</span></p>
       </div>
       <div class="border-b border-white pb-4">
-        <p class="text-base font-semibold text-black">Payment Id : <span class="text-lg text-green-600">${order.paymentId}</span></p>
-        
+        <p class="text-base font-semibold text-black">Payment Id : <span class="text-lg text-green-600">${
+          order.paymentId
+        }</span></p>
       </div>
       <div class="border-b border-white pb-4">
         <p class="text-base font-semibold text-black">Order Date : <span class="text-lg">${localeDate}</span></p>
-        
+      </div>  
+      <div class="border-b border-white pb-4">
+        <p class="text-base font-semibold text-black">Order Status : <span class="text-lg ${
+          order.status === "canceled" ? `text-red-600` : `text-green-600`
+        } capitalize">${order.status}</span></p>
       </div>
+      ${
+        order.status === "confirmed"
+          ? `<div class="border-b border-white pb-4">
+        <p class="text-base font-semibold text-black">Order Status : <span class="text-lg capitalize ${
+          order.shippingStatus === "pending"
+            ? "text-orange-500"
+            : "text-green-600"
+        }"> ${
+              order.shippingStatus === "pending"
+                ? `In Transit You will receive the delivery on ${localDelivaryDate}`
+                : order.shippingStatus === "success"
+                ? `Delivered on ${localDelivaryDate}`
+                : ""
+            } </span></p>
+      </div>`
+          : ""
+      }
+      
     </div>
   `;
   orderDiv.innerHTML = `
@@ -128,7 +155,7 @@ function updateOrderUi(order) {
             </div>
         </div>
         <div class="total flex items-center justify-between pt-1 pb-3">
-            <p class="font-normal text-xl text-black">Subtotal</p>
+            <p class="text-xl font-bold text-black">Subtotal</p>
             <h5 class="font-manrope font-bold text-xl text-indigo-600">
                 &#8377;${
                   totalPrice >= 300
@@ -141,7 +168,7 @@ function updateOrderUi(order) {
                 }
             </h5>
         </div>
-          <div class="border-b border-white pb-4">
+          <div class="border-b border-t pt-5 border-gray-500 pb-4">
           <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200 text-center">
             Shipping Address
         </h2>
@@ -149,15 +176,31 @@ function updateOrderUi(order) {
             order.shippingAdd
           }</p>
         </div>
+        ${
+          order.shippingStatus === "pending" && order.status !== "canceled"
+            ? `
+          <div class="mt-4" onclick="cancelOrder(event,${order.timestamp})">
+            <button
+                class="w-full py-3 bg-red-500 text-white font-manrope font-bold text-lg rounded-lg transition-all duration-500 hover:bg-red-700">
+                Cancel Order
+            </button>
+        </div>
+        `
+            : ""
+        }
       </div>
   `;
+}
+function cancelOrder(event, orderId) {
+  event.preventDefault();
+  areYouSureAlert(orderId);
 }
 
 updateOrderUi(order);
 
-function formatDate(date) {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // January is 0!
+function formatDate(date, val) {
+  const day = String(date.getDate() + val).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
 
   return `${day}-${month}-${year}`;
@@ -172,6 +215,64 @@ function updateMyCartNavbarUi(cart) {
     navCartItemCount.classList.remove("hidden");
     navCartItemCount.innerText = count;
   }
+}
+
+function updateDelivaryStatus(order) {
+  let currentTime = Date.now();
+  const orderTime = order.timestamp;
+  const oneDayInMS = 24 * 60 * 60 * 1000;
+  const timeDifference = currentTime - orderTime;
+  if (timeDifference >= oneDayInMS) {
+    order.shippingStatus = "success";
+  } else {
+    order.shippingStatus = "pending";
+  }
+}
+
+function cancelAfterConfimation(orderID) {
+  let orderIndex = currUserFound.orders.findIndex(
+    (order) => order.timestamp === orderID
+  );
+  if (orderIndex !== -1) {
+    let updateOrder = currUserFound.orders[orderIndex];
+    updateOrder.status = "canceled";
+    currUserFound.orders[orderIndex] = updateOrder;
+  }
+  order.status = "canceled";
+  saveUserInLocalStorage(currUserFound);
+  saveInSession("currentUser", currUserFound);
+  saveInSession("order", order);
+  updateOrderUi(order);
+}
+
+function saveUserInLocalStorage(user_data) {
+  let index = users.findIndex((user) => user.email === user_data.email);
+  if (index !== -1) {
+    users[index] = user_data;
+  }
+  localStorage.setItem("users", JSON.stringify(users));
+}
+function saveInSession(storeName, data) {
+  sessionStorage.setItem(storeName, JSON.stringify(data));
+}
+
+function areYouSureAlert(orderID) {
+  swal({
+    title: "Think twice",
+    text: "These are must-haves!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      cancelAfterConfimation(orderID);
+      swal({
+        title: "Order successfully bid farewell. 🛍️",
+        text: "",
+        icon: "success",
+      });
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

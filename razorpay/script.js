@@ -363,6 +363,8 @@ function paymentSuccess(paymentId) {
     paymentId: paymentId,
     shippingAdd: delAddress,
     orderDetails: productToPay,
+    status: "confirmed",
+    shippingStatus: "pending",
     timestamp: Date.now(),
   };
   console.log(productToPay);
