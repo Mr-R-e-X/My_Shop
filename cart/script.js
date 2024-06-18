@@ -1,7 +1,7 @@
 const navCartItemCount = document.querySelector("#my-cart");
 const productDiv = document.getElementById("product-div");
 const cartSummery = document.getElementById("cart-summery");
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
 let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => (user.email = currUser.email));
@@ -191,7 +191,7 @@ function saveUserInLocalStorage(user_data) {
     // console.log(allusers[index]);
   }
   localStorage.setItem("users", JSON.stringify(users));
-  sessionStorage.setItem("currentUser", JSON.stringify(user_data));
+  localStorage.setItem("currentUser", JSON.stringify(user_data));
 }
 function proceedToCheckout() {
   sessionStorage.setItem(

@@ -64,6 +64,6 @@ handleNavigation(navProfile, "../profile/index.html", "login");
 handleNavigation(navMyCart, "./index.html", "login");
 
 navLogout.addEventListener("click", () => {
-  sessionStorage.removeItem("currentUser");
+  localStorage.removeItem("currentUser");
   window.location.href = "../index.html";
 });

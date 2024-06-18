@@ -3,7 +3,7 @@ const navCartItemCount = document.querySelector("#my-cart");
 let orderDiv = document.getElementById("curr-item");
 let orderDetailDiv = document.getElementById("curr-detail");
 let orderSummeryDiv = document.getElementById("curr-summery");
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
 let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => user.email === currUser.email);
@@ -235,7 +235,7 @@ function updateDeliveryStatus(order) {
   }
   saveInSession("order", order);
   saveUserInLocalStorage(currUserFound);
-  saveInSession("currentUser", currUserFound);
+  localStorage.setItem("currentUser", JSON.stringify(currUserFound));
   updateOrderUi(order);
 }
 
@@ -251,7 +251,7 @@ function cancelAfterConfimation(orderID) {
   let order = currUserFound.orders[orderIndex];
   order.status = "canceled";
   saveUserInLocalStorage(currUserFound);
-  saveInSession("currentUser", currUserFound);
+  localStorage.setItem("currentUser", JSON.stringify(currUserFound));
   saveInSession("order", order);
   updateOrderUi(order);
 }
@@ -287,7 +287,7 @@ function areYouSureAlert(orderID) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  updateMyCartNavbarUi(currUser.cart);
+  updateMyCartNavbarUi(currUserFound.cart);
   updateOrderUi(order);
   updateDeliveryStatus(order);
 });
