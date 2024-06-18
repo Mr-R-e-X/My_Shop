@@ -10,7 +10,7 @@ let categoryBtns = document.querySelectorAll(".category-btns");
 let selectedColor = [];
 let selectedSize = [];
 let users = JSON.parse(localStorage.getItem("users"));
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
 let currUserFound = users.find((user) => user.email === currUser.email);
 

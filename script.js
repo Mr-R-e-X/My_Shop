@@ -8,7 +8,7 @@ const navProfile = document.querySelector("#nav-profile");
 const loginBtn = document.querySelector("#login-btn");
 const signupBtn = document.querySelector("#signup-btn");
 
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
 // GETTING AUTH VALUE
 let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
   ? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))

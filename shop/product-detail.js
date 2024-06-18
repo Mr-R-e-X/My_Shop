@@ -4,7 +4,7 @@ let productData = JSON.parse(localStorage.getItem("product-data"));
 let selectedColor = null;
 let selectedSize = null;
 let users = JSON.parse(localStorage.getItem("users"));
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
 let currUserFound = users.find((user) => user.email === currUser.email);
 

@@ -1157,10 +1157,6 @@ video {
   cursor: pointer;
 }
 
-.cursor-text {
-  cursor: text;
-}
-
 .touch-auto {
   touch-action: auto;
 }
@@ -2165,11 +2161,6 @@ video {
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
-}
-
-.border-blue-500 {
-  --tw-border-opacity: 1;
-  border-color: rgb(59 130 246 / var(--tw-border-opacity));
 }
 
 .bg-\[\#3F3D56\] {

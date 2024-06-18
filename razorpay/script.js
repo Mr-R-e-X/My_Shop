@@ -10,7 +10,7 @@ const orderDetails = document.getElementById("Order-details");
 
 // Checking User
 let allusers = JSON.parse(localStorage.getItem("users"));
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
 // If user is not available in Session Storage redirecting the page to the Landing Page
 if (currUser === null) window.location.href = "../index.html";
 let currUserFound = allusers.find((user) => user.email === currUser.email);
@@ -378,7 +378,7 @@ function paymentSuccess(paymentId) {
   currUserFound.orders.push(order);
   saveInSession("productForPayment", productToPay);
   saveInSession("order", order);
-  saveInSession("currentUser", currUserFound);
+  localStorage.setItem("currentUser", JSON.stringify(currUserFound));
   saveUserInLocalStorage(currUserFound);
   thanqPageUI(order);
 }

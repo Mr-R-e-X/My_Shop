@@ -5,11 +5,11 @@ const orderHistory = document.getElementById("prevOrder");
 const passwordDiv = document.getElementById("changePassword");
 
 // If user is not available in Session Storage redirecting the page to the Landing Page
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
 let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => user.email === currUser.email);
-console.log(currUserFound);
+// console.log(currUserFound);
 function updateProfileTitleUi(user) {
   profileTitle.innerHTML = `<h1 class="text-2xl font-semibold italic text-center text-gray-800">Hello, ${user.firstName} ${user.lastName}.</h1>`;
 }
@@ -75,7 +75,7 @@ function updateProfileInfoUi(user) {
       firstNameInput.value = user.firstName;
       lastNameInput.value = user.lastName;
 
-      saveInSession("currentUser", currUserFound);
+      localStorage.setItem("currentUser", JSON.stringify(currUserFound));
       saveUserInLocalStorage(currUserFound);
 
       firstNameInput.disabled = true;
@@ -110,7 +110,7 @@ function updateProfileInfoUi(user) {
       currUserFound.email = changedEmail;
       email.value = currUserFound.email;
 
-      saveInSession("currentUser", currUserFound);
+      localStorage.setItem("currentUser", JSON.stringify(currUserFound));
       saveUserInLocalStorage(currUserFound);
 
       email.disabled = true;
@@ -193,7 +193,7 @@ function updateProfleChangePasswordUi(user) {
     }
     if (oldPass === currUserFound.password && newPass === confPass) {
       currUserFound.password = newPass;
-      saveInSession("currentUser", currUserFound);
+      localStorage.setItem("currentUser", JSON.stringify(currUserFound));
       saveUserInLocalStorage(currUserFound);
       showAlert("Password changed successfully !", "", "success");
       oldPasswordInput.value = "";
@@ -306,7 +306,7 @@ function updateMyCartNavbarUi(cart) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  updateMyCartNavbarUi(currUser.cart);
+  updateMyCartNavbarUi(currUserFound.cart);
   updateProfileTitleUi(currUserFound);
   updateProfileInfoUi(currUserFound);
   updateProfleChangePasswordUi(currUserFound);

@@ -21,7 +21,7 @@ let signUpDiv = document.querySelector("#sign-up");
 let signInDiv = document.querySelector("#sign-in");
 // getting users form local storage
 
-let currUser = JSON.parse(sessionStorage.getItem("currentUser"));
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
 // GETTING AUTH VALUE
 let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
   ? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))
@@ -85,7 +85,7 @@ signInSubmitBtn.addEventListener("click", (e) => {
         username: `${auth.firstName} ${auth.lastName}`,
         email: auth.email,
       };
-      sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
       authSuccessAlert(
         "Success",
         `Welcome ${auth.firstName} ${auth.lastName}`,
