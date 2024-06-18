@@ -4,6 +4,7 @@ const personalInfo = document.getElementById("personalInfo");
 const orderHistory = document.getElementById("prevOrder");
 const passwordDiv = document.getElementById("changePassword");
 
+
 // If user is not available in Session Storage redirecting the page to the Landing Page
 let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";

@@ -1,4 +1,3 @@
-
 const navCartItemCount = document.querySelector("#my-cart");
 let categories = document.querySelector("#categories");
 let categoyBtns = document.querySelectorAll("#category");
@@ -7,6 +6,8 @@ let womenClothDiv = document.querySelector("#women-cloth");
 let jewelleryDiv = document.querySelector("#jewellery");
 let electronicDiv = document.querySelector("#electronics");
 let categoryBtns = document.querySelectorAll(".category-btns");
+let defaultSearch = document.getElementById("default-search");
+let resDiv = document.getElementById("result");
 let selectedColor = [];
 let selectedSize = [];
 let users = JSON.parse(localStorage.getItem("users"));
@@ -309,8 +310,8 @@ function checkChooseProdSizeAndColor(prodId) {
 }
 
 async function detailProduct(id, event) {
-  event.preventDefault(); // Prevent default behavior
-  event.stopPropagation(); // Stop event propagation
+  event.preventDefault();
+  event.stopPropagation();
   let data = await fetchData(`https://fakestoreapi.com/products/${id}`);
   if (
     data.category === "men's clothing" ||
@@ -390,10 +391,13 @@ categoryBtns.forEach((btn) => {
   });
 });
 
-
-
+async function getAllData() {
+  let allData = await fetchData(`https://fakestoreapi.com/products`);
+  sessionStorage.setItem("allItem", JSON.stringify(allData));
+}
 //Calling required initial functions on DOM load
 document.addEventListener("DOMContentLoaded", () => {
+  getAllData();
   getData(
     `https://fakestoreapi.com/products/category/men's%20clothing`,
     "men's clothing",
@@ -415,4 +419,32 @@ document.addEventListener("DOMContentLoaded", () => {
     electronicDiv
   );
   updateMyCartNavbarUi(currUserFound.cart);
+  defaultSearch.addEventListener("input", (e) => {
+    let avlData = JSON.parse(sessionStorage.getItem("allItem"));
+    console.log(avlData);
+    let input = defaultSearch.value;
+    if (defaultSearch.value.trim() !== "") {
+      resDiv.classList.remove("hidden");
+      let result = checkMatch(avlData, input);
+      displaySearchResult(result, resDiv);
+    } else {
+      resDiv.innerHTML = "";
+      resDiv.classList.add("hidden");
+    }
+  });
 });
+function checkMatch(data, searchValue) {
+  if (searchValue.length) {
+    let result = data.filter((item) =>
+      item.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    return result;
+  }
+  return [];
+}
+function displaySearchResult(result, elem) {
+  let content = result
+    .map((item) => `<li class="py-3 px-2 text-base"> ${item.title} </li>`)
+    .join("");
+  elem.innerHTML = `<ul>${content}</ul>`;
+}
