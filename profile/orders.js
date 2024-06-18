@@ -8,10 +8,9 @@ if (currUser === null) window.location.href = "../index.html";
 let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => user.email === currUser.email);
 let order = JSON.parse(sessionStorage.getItem("order"));
-console.log(order);
+// console.log(order);
 
 function updateOrderUi(order) {
-  updateDelivaryStatus(order);
   const date = new Date(order.timestamp);
   const localeDate = formatDate(date, 0);
   const localDelivaryDate = formatDate(date, 1);
@@ -21,29 +20,31 @@ function updateOrderUi(order) {
   );
 
   orderDetailDiv.innerHTML = `
-    <h1 class="text-3xl font-semibold mb-6 text-center text-black">Thank you for your order.</h1>
-    <div class="space-y-4">
-      <div class="border-b border-white pb-4">
+    <h1 class="text-3xl font-semibold mb-4 text-center text-black">Thank you for your order.</h1>
+    <div>
+    <div class="grid grid-cols-1 md:grid-cols-2 items-center">
+      <div class="border-b border-white py-4">
         <p class="text-base font-semibold text-black">Order Number : <span class="text-lg text-green-600">${
           order.timestamp
         }</span></p>
       </div>
-      <div class="border-b border-white pb-4">
+      <div class="border-b border-white py-4">
         <p class="text-base font-semibold text-black">Payment Id : <span class="text-lg text-green-600">${
           order.paymentId
         }</span></p>
       </div>
-      <div class="border-b border-white pb-4">
+      <div class="border-b border-white py-4">
         <p class="text-base font-semibold text-black">Order Date : <span class="text-lg">${localeDate}</span></p>
       </div>  
-      <div class="border-b border-white pb-4">
+      <div class="border-b border-white py-4">
         <p class="text-base font-semibold text-black">Order Status : <span class="text-lg ${
           order.status === "canceled" ? `text-red-600` : `text-green-600`
         } capitalize">${order.status}</span></p>
       </div>
+      </div>
       ${
         order.status === "confirmed"
-          ? `<div class="border-b border-white pb-4">
+          ? `<div class="border-b border-white py-4">
         <p class="text-base font-semibold text-black">Order Status : <span class="text-lg capitalize ${
           order.shippingStatus === "pending"
             ? "text-orange-500"
@@ -62,7 +63,7 @@ function updateOrderUi(order) {
     </div>
   `;
   orderDiv.innerHTML = `
-   <h1 class="text-xl font-semibold mb-6 text-center text-black">Order Details</h1>
+   <h1 class="text-xl font-semibold mb-4 text-center text-black">Order Details</h1>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
     ${order.orderDetails
       .map(
@@ -114,7 +115,7 @@ function updateOrderUi(order) {
 
   orderSummeryDiv.innerHTML = `
   <div class="p-4 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
-        <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200 text-center">
+        <h2 class="font-semibold text-lg text-black pb-1 border-b border-gray-200 text-center">
             Order Summary
         </h2>
         <div class="py-2 border-b border-gray-200">
@@ -156,7 +157,7 @@ function updateOrderUi(order) {
         </div>
         <div class="total flex items-center justify-between pt-1 pb-3">
             <p class="text-xl font-bold text-black">Subtotal</p>
-            <h5 class="font-manrope font-bold text-xl text-indigo-600">
+            <h5 class="font-bold text-xl text-indigo-600">
                 &#8377;${
                   totalPrice >= 300
                     ? `${totalPrice.toFixed(2)}`
@@ -168,8 +169,8 @@ function updateOrderUi(order) {
                 }
             </h5>
         </div>
-          <div class="border-b border-t pt-5 border-gray-500 pb-4">
-          <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200 text-center">
+          <div class="border-b border-t pt-2 border-gray-500 pb-4">
+          <h2 class="font-semibold mb-4 text-lg text-black pb-1 border-b border-gray-200 text-center">
             Shipping Address
         </h2>
           <p class="font-semibold text-gray-700 text-lg">${
@@ -191,12 +192,11 @@ function updateOrderUi(order) {
       </div>
   `;
 }
+
 function cancelOrder(event, orderId) {
   event.preventDefault();
   areYouSureAlert(orderId);
 }
-
-updateOrderUi(order);
 
 function formatDate(date, val) {
   const day = String(date.getDate() + val).padStart(2, "0");
@@ -217,7 +217,7 @@ function updateMyCartNavbarUi(cart) {
   }
 }
 
-function updateDelivaryStatus(order) {
+function updateDeliveryStatus(order) {
   let currentTime = Date.now();
   const orderTime = order.timestamp;
   const oneDayInMS = 24 * 60 * 60 * 1000;
@@ -225,11 +225,10 @@ function updateDelivaryStatus(order) {
   if (timeDifference >= oneDayInMS) {
     order.shippingStatus = "success";
   } else {
-    canceled;
     order.shippingStatus = "pending";
   }
   let orderIndex = currUserFound.orders.findIndex(
-    (order) => order.timestamp === orderID
+    (userOrder) => userOrder.timestamp === order.timestamp
   );
   if (orderIndex !== -1) {
     currUserFound.orders[orderIndex].shippingStatus = order.shippingStatus;
@@ -249,6 +248,7 @@ function cancelAfterConfimation(orderID) {
     updateOrder.status = "canceled";
     currUserFound.orders[orderIndex] = updateOrder;
   }
+  let order = currUserFound.orders[orderIndex];
   order.status = "canceled";
   saveUserInLocalStorage(currUserFound);
   saveInSession("currentUser", currUserFound);
@@ -288,4 +288,6 @@ function areYouSureAlert(orderID) {
 
 document.addEventListener("DOMContentLoaded", () => {
   updateMyCartNavbarUi(currUser.cart);
+  updateOrderUi(order);
+  updateDeliveryStatus(order);
 });

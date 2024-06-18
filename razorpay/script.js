@@ -204,7 +204,7 @@ function saveAddress() {
   if (!addressRegex.test(addressInput)) {
     showAlert(
       "Please enter the address in the correct format",
-      '"Full Name, Address Line(Separated by space), State, PIN-123456, Mobile-1234567890"',
+      "Full Name, Address Line(Separated by space), State, PIN-123456(Don't provide space), Mobile-1234567890(Don't provide space)",
       "error"
     );
     return;
