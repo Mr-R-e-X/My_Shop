@@ -8,6 +8,7 @@ let electronicDiv = document.querySelector("#electronics");
 let categoryBtns = document.querySelectorAll(".category-btns");
 let defaultSearch = document.getElementById("default-search");
 let resDiv = document.getElementById("result");
+let searchForm = document.getElementById("search-form");
 let selectedColor = [];
 let selectedSize = [];
 let users = JSON.parse(localStorage.getItem("users"));
@@ -15,7 +16,6 @@ let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
 let currUserFound = users.find((user) => user.email === currUser.email);
 
-// Data Fetcher Function in will return a data in JSON object format
 async function fetchData(url) {
   let response = await fetch(url);
   let data = await response.json();
@@ -393,8 +393,25 @@ categoryBtns.forEach((btn) => {
 
 async function getAllData() {
   let allData = await fetchData(`https://fakestoreapi.com/products`);
-  sessionStorage.setItem("allItem", JSON.stringify(allData));
+  let structuredData = restructureAllData(allData);
+  sessionStorage.setItem("allItem", JSON.stringify(structuredData));
 }
+
+function restructureAllData(data) {
+  let add_colors = ["red", "green", "blue", "black", "white"];
+  let add_sizes = ["S", "M", "L", "XL", "XXL"];
+  data.map((data) => {
+    if (
+      data.category === "men's clothing" ||
+      data.category === "women's clothing"
+    ) {
+      data["colors"] = add_colors;
+      data["sizes"] = add_sizes;
+    }
+  });
+  return data;
+}
+
 //Calling required initial functions on DOM load
 document.addEventListener("DOMContentLoaded", () => {
   getAllData();
@@ -432,6 +449,20 @@ document.addEventListener("DOMContentLoaded", () => {
       resDiv.classList.add("hidden");
     }
   });
+  searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let avlData = JSON.parse(sessionStorage.getItem("allItem"));
+    let inputValue = defaultSearch.value;
+    let result = avlData.filter((item) =>
+      item.title.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    if (result.length === 0) {
+      showAlert("Product Not Found", "", "error");
+      return;
+    }
+    sessionStorage.setItem("search-result", JSON.stringify(result));
+    window.location.href = "./searchResult.html";
+  });
 });
 function checkMatch(data, searchValue) {
   if (searchValue.length) {
@@ -444,7 +475,65 @@ function checkMatch(data, searchValue) {
 }
 function displaySearchResult(result, elem) {
   let content = result
-    .map((item) => `<li class="py-3 px-2 text-base"> ${item.title} </li>`)
+    .map(
+      (item) =>
+        `<li class="py-3 px-2 text-base cursor-pointer transition-all duration-150 flex items-center justify-start"> 
+        <div class="pl-1 pr-2" onclick="fillTheSearch('${item.title}')">
+          <img src="https://cdn-icons-png.flaticon.com/128/2267/2267904.png" alt="arrow" height="20px" width="20px" class="searchProd(${item.id})"/>
+        </div>
+        <p onclick="searchProd(${item.id})">${item.title}</p>
+        </li>
+      `
+    )
     .join("");
   elem.innerHTML = `<ul>${content}</ul>`;
+  if (result.length === 0) {
+    elem.classList.add("hidden");
+  }
 }
+
+function fillTheSearch(title) {
+  defaultSearch.value = title;
+  defaultSearch.focus();
+  resDiv.classList.add("hidden");
+}
+
+function searchProd(id) {
+  let avlData = JSON.parse(sessionStorage.getItem("allItem"));
+  let item = avlData.filter((item) => item.id === id);
+  if (
+    item.category === "men's clothing" ||
+    item.category === "women's clothing"
+  ) {
+    item = restructureSingleData(item);
+  }
+  console.log(JSON.stringify(item));
+  localStorage.setItem("product-data", JSON.stringify(...item));
+  window.location.href = "./product-detail.html";
+}
+
+const form = document.getElementById("filterForm");
+
+form.addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the form from submitting
+  let avlData = JSON.parse(sessionStorage.getItem("allItem"));
+  const formData = new FormData(form);
+
+  // console.log('Form Data:', formData); // Log FormData object for debugging
+
+  const filterData = {};
+
+  for (const [key, value] of formData.entries()) {
+    if (filterData[key]) {
+      if (Array.isArray(filterData[key])) {
+        filterData[key].push(value);
+      } else {
+        filterData[key] = [filterData[key], value];
+      }
+    } else {
+      filterData[key] = value;
+    }
+  }
+
+  
+});

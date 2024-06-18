@@ -430,7 +430,7 @@ function thanqPageUI(order) {
         <div class="text-center">
             <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Done!</h3>
             <p class="text-gray-600 my-2">Thank you for completing your secure online payment.</p>
-            <p>Your Order Id is ${order.timestamp}</p>
+            <p>Your Order Id is <span class="text-orange-600 font-medium"> ${order.timestamp} </span></p>
             <p> Have a great day!  </p>
             <div class="py-10 text-center flex items-center justify-center">
                 <p class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 mx-3 cursor-pointer" onclick="pageAfterPayControl(this)">

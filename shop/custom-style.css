@@ -99,6 +99,7 @@ input[type="radio"] {
 .product > div {
   height: 200px !important;
   width: 100% !important;
+  min-width: 255px;
   margin: auto;
   padding: 0px 10px;
 }
@@ -251,4 +252,7 @@ input[type="radio"] {
   border: 1px solid black;
   transform: scale(1.2);
   transition: all 0.3s ease-in-out;
+}
+li:hover {
+  background-color: rgb(147, 197, 253);
 }

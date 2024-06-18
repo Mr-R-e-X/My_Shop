@@ -7,7 +7,7 @@ let users = JSON.parse(localStorage.getItem("users"));
 let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
 let currUserFound = users.find((user) => user.email === currUser.email);
-
+console.log(productData);
 function updateProductUi(productData) {
   let { id, category, description, image, price, title, count } = productData;
   let { rate } = productData.rating;
