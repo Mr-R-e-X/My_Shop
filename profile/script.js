@@ -155,13 +155,61 @@ function updateProfleChangePasswordUi(user) {
       <input id="confirmPassword" type="password" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-500">
     </div>
     <div class="flex justify-end">
-      <button class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+      <button id="changePasswordBtn" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
         Change Password
       </button>
     </div>
   </div>
 </div>
 `;
+
+  let oldPasswordInput = document.getElementById("oldPassword");
+  let newPasswordInput = document.getElementById("newPassword");
+  let confirmPasswordInput = document.getElementById("confirmPassword");
+  let changePasswordBtn = document.getElementById("changePasswordBtn");
+
+  changePasswordBtn.addEventListener("click", () => {
+    let oldPass = oldPasswordInput.value;
+    let newPass = newPasswordInput.value;
+    let confPass = confirmPasswordInput.value;
+    if (oldPass === "" || newPass === "" || confPass === "") {
+      showAlert("Please fill all the details", "", "error");
+      return;
+    }
+    if (oldPass !== currUserFound.password) {
+      showAlert("Old Password doesn't match", "", "error");
+      return;
+    }
+    if (newPass !== confPass) {
+      showAlert(
+        "New Password and Confirm Password have to be same!",
+        "",
+        "error"
+      );
+      return;
+    }
+    if (oldPass === newPass) {
+      showAlert("Old Password and New Password san not be same !", "", "error");
+    }
+    if (oldPass === currUserFound.password && newPass === confPass) {
+      currUserFound.password = newPass;
+      saveInSession("currentUser", currUserFound);
+      saveUserInLocalStorage(currUserFound);
+      showAlert("Password changed successfully !", "", "success");
+      oldPasswordInput.value = "";
+      newPasswordInput.value = "";
+      confirmPasswordInput.value = "";
+    }
+  });
+}
+
+function showAlert(title, msg, icon) {
+  swal({
+    title: title,
+    text: msg,
+    icon: icon,
+    button: "Okay",
+  });
 }
 
 function updateOrderListUi(orderList) {
@@ -183,8 +231,10 @@ function OrderUi(order) {
   let shippingStatus;
   if (order.shippingStatus === "pending") {
     shippingStatus = "In Transit";
+    statusColor = "text-orange-500"; // Orange color for pending
   } else {
     shippingStatus = `Delivered on ${deliveryDate}`;
+    statusColor = "text-green-600"; // Green color for delivered
   }
   let totalAmount = order.orderDetails.reduce(
     (sum, item) => sum + Math.round(item.price * 80),
@@ -194,20 +244,20 @@ function OrderUi(order) {
     <div class="p-4 border border-gray-300 rounded-lg shadow-sm cursor-pointer" onclick="detailOrder(${orderId})">
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div class="flex flex-col justify-center items-center">
-          <p class="text-gray-600">Order Number</p>
-          <p class="text-gray-800 font-semibold">${orderId}</p>
+          <p class="text-gray-600 font-medium">Order Number</p>
+          <p class="text-blue-600 font-semibold">${orderId}</p>
         </div>
         <div class="flex flex-col justify-center items-center">
-          <p class="text-gray-600">Order Date</p>
-          <p class="text-gray-800 font-semibold">${orderDate}</p>
+          <p class="text-gray-600 font-medium">Order Date</p>
+          <p class="text-green-600 font-semibold">${orderDate}</p>
         </div>
         <div class="flex flex-col justify-center items-center">
-          <p class="text-gray-600">Status</p>
-          <p class="text-gray-800 font-semibold">${shippingStatus}</p>
+          <p class="text-gray-600 font-medium">Status</p>
+          <p class="${statusColor} font-semibold">${shippingStatus}</p>
         </div>
         <div class="flex flex-col justify-center items-center">
-          <p class="text-gray-600">Total Amount</p>
-          <p class="text-gray-800 font-semibold">&#8377;${totalAmount.toFixed(
+          <p class="text-gray-600 font-medium">Total Amount</p>
+          <p class="text-green-600 font-semibold">&#8377;${totalAmount.toFixed(
             2
           )}</p>
         </div>

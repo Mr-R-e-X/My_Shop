@@ -57,7 +57,7 @@ handleNavigation(navSignUp, "../Authentication/sign-in-up.html", "signup");
 handleNavigation(navSignin, "../Authentication/sign-in-up.html", "login");
 handleNavigation(navLogo, "./index.html", "login");
 handleNavigation(navHome, "./index.html", "login");
-handleNavigation(navProfile, "./index.html", "login");
+handleNavigation(navProfile, "../profile/index.html", "login");
 handleNavigation(navMyCart, "../cart/index.html", "login");
 
 navLogout.addEventListener("click", () => {
