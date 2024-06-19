@@ -4,7 +4,6 @@ const personalInfo = document.getElementById("personalInfo");
 const orderHistory = document.getElementById("prevOrder");
 const passwordDiv = document.getElementById("changePassword");
 
-
 // If user is not available in Session Storage redirecting the page to the Landing Page
 let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
@@ -214,13 +213,16 @@ function showAlert(title, msg, icon) {
 }
 
 function updateOrderListUi(orderList) {
+  if (!orderList) {
+    return;
+  }
   let sortedOrderList = orderList.sort((a, b) => b.timestamp - a.timestamp);
   orderHistory.innerHTML = `
   <div class="flex justify-between items-center mb-2">
       <p class="text-lg font-semibold text-gray-700">Your Orders</p>
     </div>
     <div class="space-y-4">
-       ${orderList.map((order) => `${OrderUi(order)}`).join("")}
+       ${sortedOrderList.map((order) => `${OrderUi(order)}`).join("")}
     </div>
   `;
 }

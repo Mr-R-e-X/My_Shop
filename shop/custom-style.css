@@ -261,3 +261,23 @@ input[type="radio"] {
 li:hover {
   background-color: rgb(147, 197, 253);
 }
+#sm-filter-btn {
+  height: 50px;
+  width: 50px;
+}
+.sm-filter {
+  border-radius: 17px;
+  background: linear-gradient(145deg, #002c3b, #002532);
+  box-shadow: 15px 15px 30px #001f2a, -15px -15px 30px #003344;
+}
+#filter {
+  transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+
+#filter.openFilter {
+  max-height: 500px;
+  opacity: 1;
+}

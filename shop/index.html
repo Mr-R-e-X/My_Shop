@@ -62,112 +62,8 @@
   </header>
   <!-- MAIN CONTENT -->
   <main class="h-screen flex-grow flex flex-row">
-    <!-- SIDE FILTER ITEMS -->
-    <div id="sidebar" class="min-w-max w-[15%] h-full bg-gray-800 text-white hidden md:block">
-      <hr class="border-gray-200" />
-      <!-- FILTER FORM -->
-      <form id="filterForm" action="#" method="post" class="space-y-1 w-full flex flex-col justify-evenly items-stretch my-2">
-        <!-- FILTER COLORS -->
-        <div class="px-6">
-          <h2 class="text-base font-semibold mb-1 text-white">Colors</h2>
-          <div class="space-y-1">
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="colors[]" id="red" value="red" class="mr-2 rounded scale-105" />
-              <label for="red" class="text-gray-50">Red</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="colors[]" id="blue" value="blue" class="mr-2 rounded scale-105" />
-              <label for="blue" class="text-gray-50">Blue</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="colors[]" id="green" value="green" class="mr-2 rounded scale-105" />
-              <label for="green" class="text-gray-50">Green</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="colors[]" id="black" value="black" class="mr-2 rounded scale-105" />
-              <label for="black" class="text-gray-50">Black</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="colors[]" id="white" value="white" class="mr-2 rounded scale-105" />
-              <label for="white" class="text-gray-50">White</label>
-            </div>
-          </div>
-        </div>
-        <hr class="border-gray-200" />
-        <!-- FILTER SIZES -->
-        <div class="px-6">
-          <h2 class="text-base font-semibold mb-1 text-white">Sizes</h2>
-          <div class="space-y-1">
-            <div class="flex items-center text-sm">
-              <input type="radio" name="sizes" id="s" value="s" class="mr-2 rounded scale-105" />
-              <label for="s" class="text-gray-50">S</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="radio" name="sizes" id="m" value="m" class="mr-2 rounded scale-105" />
-              <label for="m" class="text-gray-50">M</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="radio" name="sizes" id="l" value="l" class="mr-2 rounded scale-105" />
-              <label for="l" class="text-gray-50">L</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="radio" name="sizes" id="xl" value="xl" class="mr-2 rounded scale-105" />
-              <label for="xl" class="text-gray-50">XL</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="radio" name="sizes" id="xxl" value="xxl" class="mr-2 rounded scale-105" />
-              <label for="xxl" class="text-gray-50">XXL</label>
-            </div>
-          </div>
-        </div>
-        <hr class="border-gray-200" />
-        <!-- FILTER RATING -->
-        <div class="px-6">
-          <h2 class="text-base font-semibold mb-1">Rating</h2>
-          <div class="flex items-center flex-col space-x-2">
-            <input type="range" name="rating" id="rating" min="0" max="4" value="0" step="0.5"
-              class="custom-range my-2" />
-            <div class="flex flex-row justify-between space-x-2 w-full pr-2">
-              <span class="text-gray-50 text-sm">0</span>
-              <span class="text-gray-50 text-sm">4+</span>
-            </div>
-          </div>
-        </div>
-        <hr class="border-gray-200" />
-        <!-- FILTER PRICE RANGE -->
-        <div class="px-6">
-          <h2 class="text-lg font-semibold mb-1">Price Range</h2>
-          <div class="space-y-1">
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="price-range[]" id="firstQuatar" value="5000" class="mr-2 rounded scale-105" />
-              <label for="firstQuatar" class="text-gray-50">&#8377;5000</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="price-range[]" id="secondQuatar" value="10000"  class="mr-2 rounded scale-105" />
-              <label for="secondQuatar" class="text-gray-50">&#8377;10000</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="price-range[]" id="thirdQuatar" value="20000"  class="mr-2 rounded scale-105" />
-              <label for="thirdQuatar" class="text-gray-50">&#8377;20000</label>
-            </div>
-            <div class="flex items-center text-sm">
-              <input type="checkbox" name="price-range[]" id="fourthQuatar" value="40000" class="mr-2 rounded scale-105" />
-              <label for="fourthQuatar" class="text-gray-50">&#8377;40000+</label>
-            </div>
-          </div>
-        </div>
-        <hr class="border-gray-200" />
-        <!-- APPLY FILTER BTN -->
-        <div class="w-full px-6 py-2">
-          <button type="submit" id="apply-filter"
-            class="mx-auto text-base px-6 py-3 w-max border border-gray-700 shadow-md shadow-black font-semibold">
-            Apply Filter
-          </button>
-        </div>
-      </form>
-    </div>
     <!-- PRODUCTS -->
-    <div id="main-content" class="w-full md:w-[85%] px-6 py-3 h-full overflow-scroll scrollbar">
+    <div id="main-content" class="w-full px-6 py-3 h-full overflow-scroll scrollbar">
       <!-- SEARCHBAR -->
       <div id="searchbar" class="w-full mb-3 relative">
         <form class="w-full relative" id="search-form">
@@ -186,7 +82,7 @@
       </div>
       <!-- SORT BY  CATEGORIES -->
       <div id="categories"
-        class="container w-full mx-auto mb-2 overflow-x-scroll scrollbar flex justify-between space-x-2">
+        class="w-full mx-auto mb-2 overflow-x-scroll scrollbar flex justify-between space-x-2">
         <button id="all-cat"
           class="px-6 py-2 w-[160px] font-normal border border-black bg-black text-white rounded-lg text-center category my-2 category-btns">
           All
@@ -211,22 +107,23 @@
       <!-- SHOPPING ITEMS -->
       <div id="shoping-item" class="pb-16 mb-10">
         <!-- MENS -->
-        <div id="man-cloth" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+        <div id="man-cloth" class=" mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
         <!-- WOMENS -->
-        <div id="women-cloth" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+        <div id="women-cloth" class=" mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
         <!-- JEWELLERRY -->
-        <div id="jewellery" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+        <div id="jewellery" class=" mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
         <!-- ELECTRONICS -->
-        <div id="electronics" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+        <div id="electronics" class=" mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
         <!-- FILTER RES -->
-        <div id="filterResDiv" class="hidden container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4">
+        <div id="filterResDiv" class="hidden  mx-auto overflow-hidden overflow-x-scroll scrollbar py-4">
           
         </div>
       </div>
     </div>
   </main>
   <!-- FILTER FOR SMALL DEVICES -->
-  <div class="absolute border w-full border-black shadow-slate-700 rounded-md shadow-md hidden bg-gray-800" id="filter">
+   <div class="flex justify-center">
+  <div class="absolute border  min-w-max border-black shadow-slate-700 rounded-md shadow-md bg-gray-800" id="filter">
     <form id="filterForm-sm" action="#" method="post" class="space-y-1 w-full flex flex-col justify-evenly items-stretch my-2">
       <div class="flex items-center justify-evenly">
       <div class="px-6">
@@ -329,42 +226,15 @@
   </form>
   </div>
   </div>
+</div>
   <!-- SHOW FILTER BTN -->
-  <div class="fixed bottom-2 right-2 cursor-pointer md:hidden">
-    <img src="../Assets/filter.svg" alt="" height="35px" width="35px" id="sm-filter-btn" />
+  <div class="fixed bottom-2 right-2 cursor-pointer">
+    <img src="https://cdn-icons-png.flaticon.com/128/16381/16381099.png" alt=""  id="sm-filter-btn" title="add filter" class="object-cover mix-blend-screen" />
   </div>
   <script src="../rspnNav-script.js"></script>
-  <script src="script-shop.js"></script>
-  <script src="navBtnCtrl.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-      let filterSmBtn = document.getElementById("sm-filter-btn");
-      let smFilterOpen = false;
-
-      filterSmBtn.addEventListener("click", function () {
-        if (!smFilterOpen) {
-          document.getElementById("filter").classList.toggle("hidden");
-          filterSmBtn.src = "../Assets/cross.svg"
-          smFilterOpen = !smFilterOpen
-        } else {
-          document.getElementById("filter").classList.toggle("hidden");
-          filterSmBtn.src = "../Assets/filter.svg"
-          smFilterOpen = !smFilterOpen
-        }
-
-        const range = document.getElementById('rating-sm');
-  // Get the span element where we will display the value
-  const ratingValue = document.getElementById('rating-value-sm');
-
-  // Add event listener for input event
-  range.addEventListener('input', function() {
-    // Update the text content of the span with the current value of the range input
-    ratingValue.textContent = range.value;
-  });
-      });
-    });
-  </script>
+  <script src="./script-shop.js"></script>
+  <script src="./filter-script.js"></script>
+  <script src="./navBtnCtrl.js"></script>
 </body>
 
 </html>
