@@ -67,13 +67,13 @@ signInSubmitBtn.addEventListener("click", (e) => {
   let email = signInEmailInput.value;
   let password = signInPasswordInput.value;
   if (email === "" && password === "") {
-    showAlert("Oops!", "Please enter a valid email and password!!", "warning");
+    showAlert("Please enter a valid email and password!!", "", "warning");
     return;
   } else if (email === "") {
-    showAlert("Oops!", "Please enter a valid email!!", "warning");
+    showAlert("Please enter a valid email!!", "", "warning");
     return;
   } else if (password === "") {
-    showAlert("Oops!", "Please enter a valid password!!", "warning");
+    showAlert("Please enter a valid password!!", "", "warning");
     return;
   }
   let user = checkUser(email);
@@ -87,15 +87,15 @@ signInSubmitBtn.addEventListener("click", (e) => {
       };
       localStorage.setItem("currentUser", JSON.stringify(currentUser));
       authSuccessAlert(
-        "Success",
         `Welcome ${auth.firstName} ${auth.lastName}`,
+        "",
         "success"
       );
     } else {
-      showAlert("Oops!", "Authentication failed !!", "error");
+      showAlert("Authentication failed !!", "", "error");
     }
   } else {
-    showAlert("Oops!", "User not found !!", "error");
+    showAlert("User not found !!", "", "error");
   }
 });
 
@@ -113,22 +113,22 @@ signUpSubmitBtn.addEventListener("click", (e) => {
     password == "" ||
     confirmPassword == ""
   ) {
-    showAlert("Oops!", "Please fill all the fields!!", "warning");
+    showAlert("Please fill all the fields!!", "", "warning");
     return;
   } else if (!emailRegex.test(email)) {
-    showAlert("Oops!", "Please provide a valid email address", "warning");
+    showAlert("Please provide a valid email address", "", "warning");
     return;
   } else if (!passRegex.test(password)) {
     showAlert(
-      "Oops!",
       "Password Requirements:\n- Minimum length of 8 characters\n- Must include at least one uppercase letter\n- Must include at least one lowercase letter\n- Must include at least one number\n- Must include at least one special character (e.g., !@#$%^&*)",
+      "",
       "warning"
     );
   } else if (password !== confirmPassword) {
-    showAlert("Oops!", "Passwords do not match!!", "warning");
+    showAlert("Passwords do not match!!", "", "warning");
     return;
   } else if (checkUser(email)) {
-    showAlert("Oops!", "Email has already been registered!", "warning");
+    showAlert("Email has already been registered!", "", "warning");
     return;
   } else {
     let newUser = {
@@ -143,8 +143,8 @@ signUpSubmitBtn.addEventListener("click", (e) => {
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
     showAlert(
-      "Success",
       `Hi ${firstName}. Your account created successfully.`,
+      "",
       "success"
     );
     signUpDiv.classList.add("hidden");

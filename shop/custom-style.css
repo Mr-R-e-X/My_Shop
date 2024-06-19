@@ -35,6 +35,11 @@
   accent-color: rgb(34 197 94) !important;
 }
 
+.sm-dev-range {
+  width: 4px;
+  height: 60px;
+}
+
 .custom-range:hover {
   opacity: 1;
 }

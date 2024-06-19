@@ -69,7 +69,7 @@
       <form id="filterForm" action="#" method="post" class="space-y-1 w-full flex flex-col justify-evenly items-stretch my-2">
         <!-- FILTER COLORS -->
         <div class="px-6">
-          <h2 class="text-base font-semibold mb-1">Colors</h2>
+          <h2 class="text-base font-semibold mb-1 text-white">Colors</h2>
           <div class="space-y-1">
             <div class="flex items-center text-sm">
               <input type="checkbox" name="colors[]" id="red" value="red" class="mr-2 rounded scale-105" />
@@ -96,7 +96,7 @@
         <hr class="border-gray-200" />
         <!-- FILTER SIZES -->
         <div class="px-6">
-          <h2 class="text-base font-semibold mb-1">Sizes</h2>
+          <h2 class="text-base font-semibold mb-1 text-white">Sizes</h2>
           <div class="space-y-1">
             <div class="flex items-center text-sm">
               <input type="radio" name="sizes" id="s" value="s" class="mr-2 rounded scale-105" />
@@ -125,11 +125,11 @@
         <div class="px-6">
           <h2 class="text-base font-semibold mb-1">Rating</h2>
           <div class="flex items-center flex-col space-x-2">
-            <input type="range" name="rating" id="rating" min="0" max="5" value="0" step="0.5"
+            <input type="range" name="rating" id="rating" min="0" max="4" value="0" step="0.5"
               class="custom-range my-2" />
             <div class="flex flex-row justify-between space-x-2 w-full pr-2">
               <span class="text-gray-50 text-sm">0</span>
-              <span class="text-gray-50 text-sm">5</span>
+              <span class="text-gray-50 text-sm">4+</span>
             </div>
           </div>
         </div>
@@ -139,27 +139,27 @@
           <h2 class="text-lg font-semibold mb-1">Price Range</h2>
           <div class="space-y-1">
             <div class="flex items-center text-sm">
-              <input type="checkbox" name="price-range" id="firstQuatar" class="mr-2 rounded scale-105" />
-              <label for="firstQuatar" class="text-gray-50">0$ - 25$</label>
+              <input type="checkbox" name="price-range[]" id="firstQuatar" value="5000" class="mr-2 rounded scale-105" />
+              <label for="firstQuatar" class="text-gray-50">&#8377;5000</label>
             </div>
             <div class="flex items-center text-sm">
-              <input type="checkbox" name="price-range" id="secondQuatar" class="mr-2 rounded scale-105" />
-              <label for="secondQuatar" class="text-gray-50">26$ - 50$</label>
+              <input type="checkbox" name="price-range[]" id="secondQuatar" value="10000"  class="mr-2 rounded scale-105" />
+              <label for="secondQuatar" class="text-gray-50">&#8377;10000</label>
             </div>
             <div class="flex items-center text-sm">
-              <input type="checkbox" name="price-range" id="thirdQuatar" class="mr-2 rounded scale-105" />
-              <label for="thirdQuatar" class="text-gray-50">51$ - 75$</label>
+              <input type="checkbox" name="price-range[]" id="thirdQuatar" value="20000"  class="mr-2 rounded scale-105" />
+              <label for="thirdQuatar" class="text-gray-50">&#8377;20000</label>
             </div>
             <div class="flex items-center text-sm">
-              <input type="checkbox" name="price-range" id="fourthQuatar" class="mr-2 rounded scale-105" />
-              <label for="fourthQuatar" class="text-gray-50">76$ - 100$</label>
+              <input type="checkbox" name="price-range[]" id="fourthQuatar" value="40000" class="mr-2 rounded scale-105" />
+              <label for="fourthQuatar" class="text-gray-50">&#8377;40000+</label>
             </div>
           </div>
         </div>
         <hr class="border-gray-200" />
         <!-- APPLY FILTER BTN -->
         <div class="w-full px-6 py-2">
-          <button type="submit"
+          <button type="submit" id="apply-filter"
             class="mx-auto text-base px-6 py-3 w-max border border-gray-700 shadow-md shadow-black font-semibold">
             Apply Filter
           </button>
@@ -218,103 +218,115 @@
         <div id="jewellery" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
         <!-- ELECTRONICS -->
         <div id="electronics" class="container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4"></div>
+        <!-- FILTER RES -->
+        <div id="filterResDiv" class="hidden container mx-auto overflow-hidden overflow-x-scroll scrollbar py-4">
+          
+        </div>
       </div>
     </div>
   </main>
   <!-- FILTER FOR SMALL DEVICES -->
   <div class="absolute border w-full border-black shadow-slate-700 rounded-md shadow-md hidden bg-gray-800" id="filter">
-    <div class="px-6 w-[90%]">
+    <form id="filterForm-sm" action="#" method="post" class="space-y-1 w-full flex flex-col justify-evenly items-stretch my-2">
+      <div class="flex items-center justify-evenly">
+      <div class="px-6">
       <h2 class="text-base font-semibold mb-1 text-white">Colors</h2>
-      <div class="space-y-1 flex justify-between w-full items-center mx-auto flex-wrap">
+      <div class="space-y-1">
         <div class="flex items-center text-sm">
-          <input type="checkbox" name="colors[]" id="red" value="red" class="mr-2 rounded" />
+          <input type="checkbox" name="colors[]" id="red" value="red" class="mr-2 rounded scale-105" />
           <label for="red" class="text-gray-50">Red</label>
         </div>
         <div class="flex items-center text-sm">
-          <input type="checkbox" name="colors[]" id="blue" value="blue" class="mr-2 rounded" />
+          <input type="checkbox" name="colors[]" id="blue" value="blue" class="mr-2 rounded scale-105" />
           <label for="blue" class="text-gray-50">Blue</label>
         </div>
         <div class="flex items-center text-sm">
-          <input type="checkbox" name="colors[]" id="green" value="green" class="mr-2 rounded" />
+          <input type="checkbox" name="colors[]" id="green" value="green" class="mr-2 rounded scale-105" />
           <label for="green" class="text-gray-50">Green</label>
         </div>
         <div class="flex items-center text-sm">
-          <input type="checkbox" name="colors[]" id="black" value="black" class="mr-2 rounded" />
+          <input type="checkbox" name="colors[]" id="black" value="black" class="mr-2 rounded scale-105" />
           <label for="black" class="text-gray-50">Black</label>
         </div>
         <div class="flex items-center text-sm">
-          <input type="checkbox" name="colors[]" id="white" value="white" class="mr-2 rounded" />
+          <input type="checkbox" name="colors[]" id="white" value="white" class="mr-2 rounded scale-105" />
           <label for="white" class="text-gray-50">White</label>
         </div>
       </div>
     </div>
-    <hr class="border-gray-200 my-2" />
+    <!-- FILTER SIZES -->
     <div class="px-6">
       <h2 class="text-base font-semibold mb-1 text-white">Sizes</h2>
-      <div class="space-y-1 flex justify-between items-center w-full mx-auto flex-wrap">
+      <div class="space-y-1">
         <div class="flex items-center text-sm">
-          <input type="radio" name="sizes" id="s" value="s" class="mr-2 rounded" />
+          <input type="radio" name="sizes" id="s" value="s" class="mr-2 rounded scale-105" />
           <label for="s" class="text-gray-50">S</label>
         </div>
         <div class="flex items-center text-sm">
-          <input type="radio" name="sizes" id="m" value="m" class="mr-2 rounded" />
+          <input type="radio" name="sizes" id="m" value="m" class="mr-2 rounded scale-105" />
           <label for="m" class="text-gray-50">M</label>
         </div>
         <div class="flex items-center text-sm">
-          <input type="radio" name="sizes" id="l" value="l" class="mr-2 rounded" />
+          <input type="radio" name="sizes" id="l" value="l" class="mr-2 rounded scale-105" />
           <label for="l" class="text-gray-50">L</label>
         </div>
         <div class="flex items-center text-sm">
-          <input type="radio" name="sizes" id="xl" value="xl" class="mr-2 rounded" />
+          <input type="radio" name="sizes" id="xl" value="xl" class="mr-2 rounded scale-105" />
           <label for="xl" class="text-gray-50">XL</label>
         </div>
         <div class="flex items-center text-sm">
-          <input type="radio" name="sizes" id="xxl" value="xxl" class="mr-2 rounded" />
+          <input type="radio" name="sizes" id="xxl" value="xxl" class="mr-2 rounded scale-105" />
           <label for="xxl" class="text-gray-50">XXL</label>
         </div>
       </div>
     </div>
-    <hr class="border-gray-200 my-2" />
+  </div>
+    <hr class="border-gray-200" />
+    <div class="flex items-center justify-evenly">
+    <!-- FILTER RATING -->
     <div class="px-6">
-      <h2 class="text-base font-semibold mb-1 text-white">Rating</h2>
-      <div class="flex items-center flex-col space-x-2 w-full mx-auto">
-        <input type="range" name="rating" id="rating" min="0" max="5" value="0" step="1" class="custom-range my-2" />
-        <div class="flex flex-row justify-between space-x-2 w-full pr-2">
-          <span class="text-gray-50 text-sm">0</span>
-          <span class="text-gray-50 text-sm">5</span>
+      <div class="flex items-center flex-col space-x-2">
+        <h2 class="text-lg font-semibold mb-1 text-white">Rating</h2>
+        <div class="flex flex-col items-center">
+          <input type="range" name="rating" id="rating-sm" min="0" max="4" value="0" step="0.5"
+            class="custom-range sm-dev-range my-2 rotate-90" style="writing-mode: vertical-lr; direction: rtl" />
+            <label for="rating-sm" id="rating-value-sm" class="text-gray-50 text-sm">0</label>
         </div>
       </div>
     </div>
-    <hr class="border-gray-200 my-2" />
+    <!-- <hr class="border-gray-200" /> -->
+    <!-- FILTER PRICE RANGE -->
     <div class="px-6">
       <h2 class="text-lg font-semibold mb-1 text-white">Price Range</h2>
-      <div class="space-y-1 flex justify-between items-center w-full mx-auto flex-wrap">
-        <div class="flex items-center text-sm mx-2">
-          <input type="checkbox" name="price-range" id="firstQuatar" class="mr-2 rounded " />
-          <label for="firstQuatar" class="text-gray-50">0$ - 25$</label>
+      <div class="space-y-1">
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="price-range[]" id="firstQuatar" value="5000" class="mr-2 rounded scale-105" />
+          <label for="firstQuatar" class="text-gray-50">&#8377;5000</label>
         </div>
-        <div class="flex items-center text-sm mx-2">
-          <input type="checkbox" name="price-range" id="secondQuatar" class="mr-2 rounded " />
-          <label for="secondQuatar" class="text-gray-50">26$ - 50$</label>
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="price-range[]" id="secondQuatar" value="10000"  class="mr-2 rounded scale-105" />
+          <label for="secondQuatar" class="text-gray-50">&#8377;10000</label>
         </div>
-        <div class="flex items-center text-sm mx-2">
-          <input type="checkbox" name="price-range" id="thirdQuatar" class="mr-2 rounded " />
-          <label for="thirdQuatar" class="text-gray-50">51$ - 75$</label>
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="price-range[]" id="thirdQuatar" value="20000"  class="mr-2 rounded scale-105" />
+          <label for="thirdQuatar" class="text-gray-50">&#8377;20000</label>
         </div>
-        <div class="flex items-center text-sm mx-2">
-          <input type="checkbox" name="price-range" id="fourthQuatar" class="mr-2 rounded " />
-          <label for="fourthQuatar" class="text-gray-50">76$ - 100$</label>
+        <div class="flex items-center text-sm">
+          <input type="checkbox" name="price-range[]" id="fourthQuatar" value="40000" class="mr-2 rounded scale-105" />
+          <label for="fourthQuatar" class="text-gray-50">&#8377;40000+</label>
         </div>
       </div>
     </div>
-    <hr class="border-gray-200 mt-2" />
-    <div class="flex items-center justify-center py-2 ">
-      <button type="submit"
-        class="mx-auto text-base px-6 py-3 w-max border border-gray-100 shadow-md text-gray-50 shadow-black font-semibold">
+  </div>
+    <hr class="border-gray-200" />
+    <!-- APPLY FILTER BTN -->
+    <div class="w-max px-6 py-2 mx-auto">
+      <button type="submit" id="apply-filter-sm"
+        class="text-base px-6 py-3 w-max border border-gray-700 shadow-md text-white shadow-black font-semibold">
         Apply Filter
       </button>
     </div>
-    </form>
+  </form>
   </div>
   </div>
   <!-- SHOW FILTER BTN -->
@@ -340,6 +352,16 @@
           filterSmBtn.src = "../Assets/filter.svg"
           smFilterOpen = !smFilterOpen
         }
+
+        const range = document.getElementById('rating-sm');
+  // Get the span element where we will display the value
+  const ratingValue = document.getElementById('rating-value-sm');
+
+  // Add event listener for input event
+  range.addEventListener('input', function() {
+    // Update the text content of the span with the current value of the range input
+    ratingValue.textContent = range.value;
+  });
       });
     });
   </script>
