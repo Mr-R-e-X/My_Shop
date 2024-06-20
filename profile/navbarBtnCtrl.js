@@ -24,6 +24,7 @@ function sendingPageAuthVal(val) {
 }
 // NAVBAR BTNS CONTROL
 
+// checing user is logged in
 function checkLoggedIn() {
   return currUser !== null;
 }
@@ -53,6 +54,7 @@ const handleNavigation = (element, path, authValue) => {
     }
   });
 };
+// navbar btn routes
 handleNavigation(navSignUp, "../Authentication/sign-in-up.html", "signup");
 handleNavigation(navSignin, "../Authentication/sign-in-up.html", "login");
 handleNavigation(navLogo, "../shop/index.html", "login");
@@ -60,9 +62,10 @@ handleNavigation(navHome, "../shop/index.html", "login");
 handleNavigation(navProfile, "./index.html", "login");
 handleNavigation(navMyCart, "../cart/index.html", "login");
 
+// log out click control
 navLogout.addEventListener("click", () => {
   localStorage.removeItem("currentUser");
   window.location.href = "../index.html";
 });
-
+// calling ui based login function
 updateUIBasedOnLoginStatus();

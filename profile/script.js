@@ -1,19 +1,24 @@
+// If user is not available in Session Storage redirecting the page to the Landing Page
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
+if (currUser === null) window.location.href = "../index.html";
+
+// accessing dom elements
 const navCartItemCount = document.querySelector("#my-cart");
 const profileTitle = document.getElementById("title");
 const personalInfo = document.getElementById("personalInfo");
 const orderHistory = document.getElementById("prevOrder");
 const passwordDiv = document.getElementById("changePassword");
 
-// If user is not available in Session Storage redirecting the page to the Landing Page
-let currUser = JSON.parse(localStorage.getItem("currentUser"));
-if (currUser === null) window.location.href = "../index.html";
+// getting user data from local storage
 let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => user.email === currUser.email);
-// console.log(currUserFound);
+
+// updating profile title
 function updateProfileTitleUi(user) {
   profileTitle.innerHTML = `<h1 class="text-2xl font-semibold italic text-center text-gray-800">Hello, ${user.firstName} ${user.lastName}.</h1>`;
 }
 
+// updating user info
 function updateProfileInfoUi(user) {
   personalInfo.innerHTML = `
   <div>
@@ -43,17 +48,21 @@ function updateProfileInfoUi(user) {
   </div>
 </div>
 `;
-  let editPersonalInfo = document.getElementById("editPersonalInfo");
-  let editEmail = document.getElementById("editEmail");
-  let firstNameInput = document.getElementById("firstName");
-  let lastNameInput = document.getElementById("lastName");
-  let email = document.getElementById("email");
+  // acessing dom elements in the ui
+  let editPersonalInfo = document.getElementById("editPersonalInfo"); //edit btn for name inputs
+  let editEmail = document.getElementById("editEmail"); // edit btn for email input
+  let firstNameInput = document.getElementById("firstName"); //first name input
+  let lastNameInput = document.getElementById("lastName"); // last name input
+  let email = document.getElementById("email"); // email input
 
+  //adding event listener
   editPersonalInfo.addEventListener("click", (e) => {
+    // checking the inner text of the btn and making changes in the ui
     if (editPersonalInfo.innerText === "Edit") {
-      editPersonalInfo.innerText = "Save";
-      firstNameInput.disabled = false;
-      lastNameInput.disabled = false;
+      editPersonalInfo.innerText = "Save"; // changing the inner text to dave
+      firstNameInput.disabled = false; // enabled name input
+      lastNameInput.disabled = false; // enabled name input
+      // calling the the remove class function to remove required styling
       removeClass(firstNameInput, [
         "cursor-not-allowed",
         "disabled:bg-gray-100",
@@ -64,20 +73,23 @@ function updateProfileInfoUi(user) {
         "disabled:bg-gray-100",
         "disabled:text-gray-500",
       ]);
-    } else if (editPersonalInfo.innerText === "Save") {
-      // Perform save action
+    }
+    // if the inner text is "save" then changing the user data
+    else if (editPersonalInfo.innerText === "Save") {
+      // collecting the input data
       let changedFirstName = firstNameInput.value.toUpperCase();
       let changedLastName = lastNameInput.value.toUpperCase();
 
+      //changing the data in current user
       currUserFound.firstName = changedFirstName;
       currUserFound.lastName = changedLastName;
-
+      // changing the data in the input field
       firstNameInput.value = user.firstName;
       lastNameInput.value = user.lastName;
-
+      // saving in local storage
       localStorage.setItem("currentUser", JSON.stringify(currUserFound));
-      saveUserInLocalStorage(currUserFound);
-
+      saveUserInLocalStorage(currUserFound); //saving the current user in the users oarray
+      // reapplying default styling
       firstNameInput.disabled = true;
       lastNameInput.disabled = true;
       addClass(firstNameInput, [
@@ -91,13 +103,16 @@ function updateProfileInfoUi(user) {
         "disabled:text-gray-500",
       ]);
 
-      editPersonalInfo.innerText = "Edit";
+      editPersonalInfo.innerText = "Edit"; //changing the inner text to edit
+      // updating the profile title
       updateProfileTitleUi(currUserFound);
     }
   });
+  // handling edit email btn
   editEmail.addEventListener("click", () => {
+    // if inner text is edit then allow user to edit data
     if (editEmail.innerText === "Edit") {
-      editEmail.innerText = "Save";
+      editEmail.innerText = "Save"; //changing the inner text to save
       email.disabled = false;
       removeClass(email, [
         "cursor-not-allowed",
@@ -105,14 +120,15 @@ function updateProfileInfoUi(user) {
         "disabled:text-gray-500",
       ]);
     } else if (editEmail.innerText === "Save") {
+      // collecting the changed data
       let changedEmail = email.value.toLowerCase();
-
+      // saving in the currnt user
       currUserFound.email = changedEmail;
       email.value = currUserFound.email;
-
+      // saving in local storage
       localStorage.setItem("currentUser", JSON.stringify(currUserFound));
       saveUserInLocalStorage(currUserFound);
-
+      //applying default styling
       email.disabled = true;
       addClass(email, [
         "cursor-not-allowed",
@@ -120,22 +136,25 @@ function updateProfileInfoUi(user) {
         "disabled:text-gray-500",
       ]);
 
-      editEmail.innerText = "Edit";
+      editEmail.innerText = "Edit"; //changing the inner text to edit
     }
   });
 }
 
+// remove class function
 function removeClass(elem, classname) {
   classname.map((name) => {
     elem.classList.remove(name);
   });
 }
+// add class function
 function addClass(elem, classname) {
   classname.map((name) => {
     elem.classList.add(name);
   });
 }
 
+// updating the ui for change password
 function updateProfleChangePasswordUi(user) {
   passwordDiv.innerHTML = `
   <div class="flex justify-between items-center mb-2">
@@ -162,24 +181,29 @@ function updateProfleChangePasswordUi(user) {
   </div>
 </div>
 `;
+  // handling the dom elements
+  let oldPasswordInput = document.getElementById("oldPassword"); //old password
+  let newPasswordInput = document.getElementById("newPassword"); //new password
+  let confirmPasswordInput = document.getElementById("confirmPassword"); //confirm password
+  let changePasswordBtn = document.getElementById("changePasswordBtn"); //change password btn
 
-  let oldPasswordInput = document.getElementById("oldPassword");
-  let newPasswordInput = document.getElementById("newPassword");
-  let confirmPasswordInput = document.getElementById("confirmPassword");
-  let changePasswordBtn = document.getElementById("changePasswordBtn");
-
+  //handing click on change password
   changePasswordBtn.addEventListener("click", () => {
+    // collecting values
     let oldPass = oldPasswordInput.value;
     let newPass = newPasswordInput.value;
     let confPass = confirmPasswordInput.value;
+    // checking empty values
     if (oldPass === "" || newPass === "" || confPass === "") {
       showAlert("Please fill all the details", "", "error");
       return;
     }
+    // checking if old password is correct or not
     if (oldPass !== currUserFound.password) {
       showAlert("Old Password doesn't match", "", "error");
       return;
     }
+    // checking if new password and confirm password are same or not
     if (newPass !== confPass) {
       showAlert(
         "New Password and Confirm Password have to be same!",
@@ -188,14 +212,19 @@ function updateProfleChangePasswordUi(user) {
       );
       return;
     }
+    // if old password or new password both are same then show alert
     if (oldPass === newPass) {
       showAlert("Old Password and New Password san not be same !", "", "error");
+      return;
     }
+    // checking old password and checking the new and confirm password
     if (oldPass === currUserFound.password && newPass === confPass) {
-      currUserFound.password = newPass;
+      currUserFound.password = newPass; //changing old password
+      // updating in local storage
       localStorage.setItem("currentUser", JSON.stringify(currUserFound));
       saveUserInLocalStorage(currUserFound);
       showAlert("Password changed successfully !", "", "success");
+      // making the inputs empty
       oldPasswordInput.value = "";
       newPasswordInput.value = "";
       confirmPasswordInput.value = "";
@@ -203,6 +232,7 @@ function updateProfleChangePasswordUi(user) {
   });
 }
 
+// showing alert
 function showAlert(title, msg, icon) {
   swal({
     title: title,
@@ -211,12 +241,14 @@ function showAlert(title, msg, icon) {
     button: "Okay",
   });
 }
-
+// updating the order
 function updateOrderListUi(orderList) {
+  // if order list is empty then don't update the ui
   if (!orderList) {
     return;
   }
-  let sortedOrderList = orderList.sort((a, b) => b.timestamp - a.timestamp);
+
+  let sortedOrderList = orderList.sort((a, b) => b.timestamp - a.timestamp); // sorting as per ordered time
   orderHistory.innerHTML = `
   <div class="flex justify-between items-center mb-2">
       <p class="text-lg font-semibold text-gray-700">Your Orders</p>
@@ -226,6 +258,8 @@ function updateOrderListUi(orderList) {
     </div>
   `;
 }
+
+// order ui function
 function OrderUi(order) {
   let orderId = order.timestamp;
   let orderDate = new Date(orderId).toLocaleDateString("en-IN");
@@ -280,6 +314,7 @@ function OrderUi(order) {
   `;
 }
 
+// if user click on any order on ohe order list ui it will redirect to the details order page
 function detailOrder(orderId) {
   let order = currUserFound.orders.find((item) => item.timestamp === orderId);
   if (order) {
@@ -288,10 +323,12 @@ function detailOrder(orderId) {
   }
 }
 
+// saving in session function
 function saveInSession(storeName, data) {
   sessionStorage.setItem(storeName, JSON.stringify(data));
 }
 
+// saving in localStorage function
 function saveUserInLocalStorage(user_data) {
   let index = users.findIndex((user) => user.email === user_data.email);
   if (index !== -1) {
@@ -300,6 +337,7 @@ function saveUserInLocalStorage(user_data) {
   localStorage.setItem("users", JSON.stringify(users));
 }
 
+// updating nav cart ui
 function updateMyCartNavbarUi(cart) {
   let count = 0;
   cart.map((item) => {
@@ -312,6 +350,7 @@ function updateMyCartNavbarUi(cart) {
   }
 }
 
+// calling the required function
 document.addEventListener("DOMContentLoaded", () => {
   updateMyCartNavbarUi(currUserFound.cart);
   updateProfileTitleUi(currUserFound);

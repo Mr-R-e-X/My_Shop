@@ -1,111 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Cart</title>
-    <link
-      rel="shortcut icon"
-      href="https://cdn-icons-png.flaticon.com/128/14654/14654310.png"
-      type="image/x-icon"
-    />
-    <link rel="stylesheet" href="../style.css" />
-    <link rel="stylesheet" href="custom.css" />
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  </head>
 
-  <body
-    class="bg-gradient-to-tr from-gray-300 to-gray-2000 text-gray-900 overflow-hidden h-screen flex flex-col scrollbar"
-  >
-    <!-- NAVBAR -->
-    <header
-      id="header"
-      class="bg-gray-800 text-white md:px-4 py-5 md:flex md:justify-between md:items-center z-20"
-    >
-      <div class="flex items-center justify-between">
-        <div class="cursor-pointer px-4 md:px-0">
-          <p
-            id="nav-logo"
-            class="text-xl font-bold text-blue-400 hover:scale-105 transition-all duration-150 ease-in-out hover:text-blue-300"
-          >
-            Souvik's Shop
-          </p>
-        </div>
-        <div class="md:hidden px-4 md:px-0">
-          <button
-            id="toggleButton"
-            class="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
-            type="button"
-          >
-            <svg id="icon" class="h-6 w-6 fill-current" viewBox="0 0 24 24">
-              <path
-                id="iconPath"
-                fill-rule="evenodd"
-                d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2z"
-              />
-            </svg>
-          </button>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Cart</title>
+  <!-- meta img -->
+  <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/14654/14654310.png" type="image/x-icon" />
+  <!-- css links -->
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="custom.css" />
+  <!-- show alert cdn -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+
+<body
+  class="bg-gradient-to-tr from-gray-300 to-gray-2000 text-gray-900 overflow-hidden h-screen flex flex-col scrollbar">
+  <!-- NAVBAR -->
+  <header id="header" class="bg-gray-800 text-white md:px-4 py-5 md:flex md:justify-between md:items-center z-20">
+    <div class="flex items-center justify-between">
+      <div class="cursor-pointer px-4 md:px-0">
+        <p id="nav-logo"
+          class="text-xl font-bold text-blue-400 hover:scale-105 transition-all duration-150 ease-in-out hover:text-blue-300">
+          Souvik's Shop
+        </p>
       </div>
-      <nav
-        id="rspn-nav"
-        class="bg-gray-800 w-full md:w-max md:relative md:flex px-4 md:mt-0 md:px-2 transition-all duration-500 ease-in-out hidden py-4 md:py-0 space-y-2 md:space-y-0"
-      >
-        <p
-          id="nav-home"
-          class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400"
-        >
-          Home
-        </p>
-        <p
-          id="nav-signin"
-          class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400"
-        >
-          Sign in
-        </p>
-        <p
-          id="nav-signup"
-          class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400"
-        >
-          Sign up
-        </p>
-        <p
-          id="nav-my-cart"
-          class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400"
-        >
-          My Cart
-          <span
-            class="bg-red-400 text-xs text-center text-black relative px-[6px] py-[3px] rounded-full"
-            id="my-cart"
-            style="top: -10px; left: -2px"
-          ></span>
-        </p>
-        <p
-          id="nav-profile"
-          class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400"
-        >
-          Profile
-        </p>
-        <p
-          id="nav-logout"
-          class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400"
-        >
-          Logout
-        </p>
-      </nav>
-    </header>
+      <!-- hamburger icon -->
+      <div class="md:hidden px-4 md:px-0">
+        <button id="toggleButton" class="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
+          type="button">
+          <svg id="icon" class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+            <path id="iconPath" fill-rule="evenodd"
+              d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- nav btns -->
+    <nav id="rspn-nav"
+      class="bg-gray-800 w-full md:w-max md:relative md:flex px-4 md:mt-0 md:px-2 transition-all duration-500 ease-in-out hidden py-4 md:py-0 space-y-2 md:space-y-0">
+      <p id="nav-home"
+        class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400">
+        Home
+      </p>
+      <p id="nav-signin"
+        class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400">
+        Sign in
+      </p>
+      <p id="nav-signup"
+        class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400">
+        Sign up
+      </p>
+      <p id="nav-my-cart"
+        class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400">
+        My Cart
+        <span class="bg-red-400 text-xs text-center text-black relative px-[6px] py-[3px] rounded-full" id="my-cart"
+          style="top: -10px; left: -2px"></span>
+      </p>
+      <p id="nav-profile"
+        class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400">
+        Profile
+      </p>
+      <p id="nav-logout"
+        class="md:mx-2 md:px-2 cursor-pointer py-1 text-base font-semibold text-white md:text-blue-300 transition-all duration-200 ease-in-out hover:text-blue-100 hover:border-y hover:border-blue-400">
+        Logout
+      </p>
+    </nav>
+  </header>
+  <!-- main section -->
+  <main class="h-full w-full overflow-scroll scrollbar pb-10">
+    <!-- page title -->
+    <h1 class="text-center text-3xl font-bold text-gray-800 py-4">My Cart</h1>
+    <!-- cart summery -->
+    <div id="cart-summery" class="w-full max-w-4xl flex items-start flex-col gap-8 mx-auto mb-4"></div>
+    <!-- showing products -->
+    <div id="product-div" class="w-full max-w-4xl mx-auto"></div>
+  </main>
+  <!-- scripts -->
+   <!-- responsive nav script -->
+  <script src="../rspnNav-script.js"></script>
+  <!-- main script  -->
+  <script src="script.js"></script>
+  <!-- nav btn ctrl script -->
+  <script src="navBtnCtrl.js"></script>
+</body>
 
-    <main class="h-full w-full overflow-scroll scrollbar pb-10">
-      <h1 class="text-center text-3xl font-bold text-gray-800 py-4">My Cart</h1>
-      <div
-        id="cart-summery"
-        class="w-full max-w-4xl flex items-start flex-col gap-8 mx-auto mb-4"
-      ></div>
-      <div id="product-div" class="w-full max-w-4xl mx-auto"></div>
-    </main>
-
-    <script src="../rspnNav-script.js"></script>
-    <script src="script.js"></script>
-    <script src="navBtnCtrl.js"></script>
-  </body>
 </html>

@@ -1,25 +1,30 @@
 // If user is not available in Session Storage redirecting the page to the Landing Page
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
+if (currUser === null) window.location.href = "../index.html";
+
+// accessing dom elements
 const navCartItemCount = document.querySelector("#my-cart");
 let orderDiv = document.getElementById("curr-item");
 let orderDetailDiv = document.getElementById("curr-detail");
 let orderSummeryDiv = document.getElementById("curr-summery");
-let currUser = JSON.parse(localStorage.getItem("currentUser"));
-if (currUser === null) window.location.href = "../index.html";
+
+// getting all user data from local storage
 let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => user.email === currUser.email);
-let order = JSON.parse(sessionStorage.getItem("order"));
-// console.log(order);
+let order = JSON.parse(sessionStorage.getItem("order")); // order data
 
+// updating order ui
 function updateOrderUi(order) {
-  const localeDate = new Date(order.timestamp).toLocaleDateString("en-IN");
+  const localeDate = new Date(order.timestamp).toLocaleDateString("en-IN"); // getting date from timestamp
   const localDelivaryDate = new Date(
     24 * 60 * 60 * 1000 + order.timestamp
-  ).toLocaleDateString("en-IN");
+  ).toLocaleDateString("en-IN"); // setting delivery date after 24hrs
   let totalPrice = order.orderDetails.reduce(
     (sum, product) => sum + Math.floor(product.price * product.count * 80),
     0
-  );
+  ); // claculating total order proce
 
+  // updating order details ui
   orderDetailDiv.innerHTML = `
     <h1 class="text-3xl font-semibold mb-4 text-center text-black">Thank you for your order.</h1>
     <div>
@@ -60,9 +65,9 @@ function updateOrderUi(order) {
       </div>`
           : ""
       }
-      
     </div>
   `;
+  // order details ui
   orderDiv.innerHTML = `
    <h1 class="text-xl font-semibold mb-4 text-center text-black">Order Details</h1>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -113,7 +118,7 @@ function updateOrderUi(order) {
       .join("")}
   </div>
 `;
-
+  // order summery and shipping address ui
   orderSummeryDiv.innerHTML = `
   <div class="p-4 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
         <h2 class="font-semibold text-lg text-black pb-1 border-b border-gray-200 text-center">
@@ -194,18 +199,13 @@ function updateOrderUi(order) {
   `;
 }
 
+// cancel order btn onclick function
 function cancelOrder(event, orderId) {
   event.preventDefault();
-  areYouSureAlert(orderId);
+  areYouSureAlert(orderId); //showing are you sure alert
 }
 
-function formatDate(date, val) {
-  const day = String(date.getDate() + val).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-
-  return `${day}-${month}-${year}`;
-}
+//updating cart item count in nav bar
 function updateMyCartNavbarUi(cart) {
   let count = 0;
   cart.map((item) => {
@@ -218,6 +218,7 @@ function updateMyCartNavbarUi(cart) {
   }
 }
 
+// after 24hrs making item delivared
 function updateDeliveryStatus(order) {
   let currentTime = Date.now();
   const orderTime = order.timestamp;
@@ -240,6 +241,7 @@ function updateDeliveryStatus(order) {
   updateOrderUi(order);
 }
 
+// cancel order after confirmation
 function cancelAfterConfimation(orderID) {
   let orderIndex = currUserFound.orders.findIndex(
     (order) => order.timestamp === orderID
@@ -257,6 +259,7 @@ function cancelAfterConfimation(orderID) {
   updateOrderUi(order);
 }
 
+// saving user data in local storage
 function saveUserInLocalStorage(user_data) {
   let index = users.findIndex((user) => user.email === user_data.email);
   if (index !== -1) {
@@ -264,10 +267,11 @@ function saveUserInLocalStorage(user_data) {
   }
   localStorage.setItem("users", JSON.stringify(users));
 }
+// saving data in session storage
 function saveInSession(storeName, data) {
   sessionStorage.setItem(storeName, JSON.stringify(data));
 }
-
+// are you sure alert
 function areYouSureAlert(orderID) {
   swal({
     title: "Think twice",
@@ -277,7 +281,7 @@ function areYouSureAlert(orderID) {
     dangerMode: true,
   }).then((willDelete) => {
     if (willDelete) {
-      cancelAfterConfimation(orderID);
+      cancelAfterConfimation(orderID); //if user click ok then caling the cancel function
       swal({
         title: "Order successfully bid farewell. 🛍️",
         text: "",
@@ -287,6 +291,7 @@ function areYouSureAlert(orderID) {
   });
 }
 
+// calling the require function
 document.addEventListener("DOMContentLoaded", () => {
   updateMyCartNavbarUi(currUserFound.cart);
   updateOrderUi(order);

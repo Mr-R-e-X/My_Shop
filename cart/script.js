@@ -1,12 +1,18 @@
+// checking current user in local storage if not avl redirecting to the landing page
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
+if (currUser === null) window.location.href = "../index.html";
+
+// accessing do
 const navCartItemCount = document.querySelector("#my-cart");
 const productDiv = document.getElementById("product-div");
 const cartSummery = document.getElementById("cart-summery");
-let currUser = JSON.parse(localStorage.getItem("currentUser"));
-if (currUser === null) window.location.href = "../index.html";
+// getting users data
 let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => (user.email = currUser.email));
-console.log(currUserFound.cart);
+
+// updating the ui
 function updateUi(userCart) {
+  // if user cart is empty then showing empty ui
   if (userCart.length === 0) {
     cartSummery.innerHTML = `
       <div class="p-4 border border-gray-200 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
@@ -16,12 +22,15 @@ function updateUi(userCart) {
     productDiv.innerHTML = "";
     return;
   }
+  // reseting the ui
   cartSummery.innerHTML = "";
   productDiv.innerHTML = "";
+  // calculating the total price
   let totalPrice = userCart.reduce(
     (sum, product) => sum + Math.floor(product.price * product.count * 80),
     0
   );
+  // cart summery ui
   cartSummery.innerHTML += `
     <div class="p-4 border border-gray-200 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
         <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200">
@@ -87,6 +96,7 @@ function updateUi(userCart) {
       </div>
   `;
 
+  // product details ui
   productDiv.innerHTML += `
      <div class="grid grid-cols-1 lg:grid-cols-1 gap-2 mx-2">
     ${userCart
@@ -142,23 +152,28 @@ function updateUi(userCart) {
   </div>
   `;
 }
-
+// remove from cart function
 function removeFromCart(index) {
-  areYouSureAlert(index);
+  areYouSureAlert(index); //showing sure alert
 }
+// removing item from cart
 function remove(index) {
   let filteredUserCart = currUserFound.cart.filter(
     (item, idx) => idx !== index
   );
+  // saving changed data
   currUserFound.cart = filteredUserCart;
 
   saveUserInLocalStorage(currUserFound);
   updateMyCartNavbarUi(currUserFound.cart);
   updateUi(currUserFound.cart);
 }
+
+// if user adding or decreasing the item increasing count function
 function updateProductCount(index, quantity) {
   let product = currUserFound.cart[index];
   product.count += quantity;
+  // if count 0
   if (product.count === 0) {
     removeFromCart(index);
   } else {
@@ -168,6 +183,7 @@ function updateProductCount(index, quantity) {
     updateUi(currUserFound.cart);
   }
 }
+// are you sure alert
 function areYouSureAlert(index) {
   swal({
     title: "Remove from cart?",
@@ -177,22 +193,24 @@ function areYouSureAlert(index) {
     dangerMode: true,
   }).then((willDelete) => {
     if (willDelete) {
-      remove(index);
+      remove(index); // after confirmation calling remove function
       swal("Success! 🛒 Item removed with ease!", {
         icon: "success",
       });
     }
   });
 }
+
+// saving in local storage
 function saveUserInLocalStorage(user_data) {
   let index = users.findIndex((user) => user.email === user_data.email);
   if (index !== -1) {
     users[index] = user_data;
-    // console.log(allusers[index]);
   }
   localStorage.setItem("users", JSON.stringify(users));
   localStorage.setItem("currentUser", JSON.stringify(user_data));
 }
+// proceed to checkout btn
 function proceedToCheckout() {
   sessionStorage.setItem(
     "productForPayment",
@@ -202,6 +220,7 @@ function proceedToCheckout() {
   window.location.href = "../razorpay/index.html";
 }
 
+// updating nav cart ui
 function updateMyCartNavbarUi(cart) {
   let count = 0;
   cart.map((item) => {
@@ -214,6 +233,7 @@ function updateMyCartNavbarUi(cart) {
   }
 }
 
+// calling required functions
 document.addEventListener("DOMContentLoaded", () => {
   updateUi(currUserFound.cart);
   updateMyCartNavbarUi(currUserFound.cart);

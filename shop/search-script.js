@@ -1,7 +1,11 @@
-let users = JSON.parse(localStorage.getItem("users"));
+// If user is not available in Session Storage redirecting the page to the Landing Page
 let currUser = JSON.parse(localStorage.getItem("currentUser"));
 if (currUser === null) window.location.href = "../index.html";
+// checking user
+let users = JSON.parse(localStorage.getItem("users"));
 let currUserFound = users.find((user) => user.email === currUser.email);
+
+// accessing dom
 let searchData = JSON.parse(sessionStorage.getItem("search-result"));
 let selectedColor = [];
 let selectedSize = [];

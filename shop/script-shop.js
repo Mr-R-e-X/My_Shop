@@ -1,3 +1,8 @@
+// checking current user if not avl rederecting to the landing page
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
+if (currUser === null) window.location.href = "../index.html";
+
+// accessing dom elements
 const navCartItemCount = document.querySelector("#my-cart");
 let categories = document.querySelector("#categories");
 let categoyBtns = document.querySelectorAll("#category");
@@ -12,11 +17,11 @@ let resDiv = document.getElementById("result");
 let searchForm = document.getElementById("search-form");
 let selectedColor = [];
 let selectedSize = [];
+// getting users from local storage
 let users = JSON.parse(localStorage.getItem("users"));
-let currUser = JSON.parse(localStorage.getItem("currentUser"));
-if (currUser === null) window.location.href = "../index.html";
 let currUserFound = users.find((user) => user.email === currUser.email);
 
+// fecth data function
 async function fetchData(url) {
   let response = await fetch(url);
   let data = await response.json();
@@ -152,6 +157,8 @@ function updateShopUi(data, divDtls, cat) {
 </div>
     `;
   });
+
+  // adding event listeners on the  color and size ui
   data.map((product) => {
     if (product?.colors !== undefined) {
       const productElem = document.getElementById(`product-${product.id}`);
@@ -176,6 +183,7 @@ function updateShopUi(data, divDtls, cat) {
   });
 }
 
+// select color function
 function selectColor(element, prodElem) {
   if (element.classList.contains("selected")) {
     element.classList.remove("selected");
@@ -200,6 +208,7 @@ function selectColor(element, prodElem) {
   }
 }
 
+// selectSize function 
 function selectSize(element, prodElem) {
   if (element.classList.contains("selected-size")) {
     element.classList.remove("selected-size");
@@ -223,10 +232,12 @@ function selectSize(element, prodElem) {
   }
 }
 
+// add product to cart function 
 async function addProductToCart(element, prodId, event) {
   event.preventDefault(); // Prevent default behavior
   event.stopPropagation(); // Stop event propagation
   let cat = element.getAttribute("data-cat");
+  // adding product as per category so that clothing items will properly shown  
   if (cat === "men's clothing" || cat === "women's clothing") {
     let colorAndSize = checkChooseProdSizeAndColor(prodId);
     if (colorAndSize !== false) {
@@ -296,6 +307,7 @@ async function addProductToCart(element, prodId, event) {
   updateMyCartNavbarUi(currUserFound.cart);
 }
 
+// checking if user selected a color adn size or not
 function checkChooseProdSizeAndColor(prodId) {
   let isColorSelected = selectedColor.find(
     (color) => color.productId == prodId
@@ -310,6 +322,7 @@ function checkChooseProdSizeAndColor(prodId) {
   return { color: isColorSelected.color, size: isSizeSelected.size };
 }
 
+// detail product function
 async function detailProduct(id, event) {
   event.stopPropagation();
   event.preventDefault();
@@ -324,6 +337,7 @@ async function detailProduct(id, event) {
   window.location.href = "./product-detail.html";
 }
 
+// update nav cart ui
 function updateMyCartNavbarUi(cart) {
   let count = 0;
   cart.map((item) => {
@@ -336,6 +350,7 @@ function updateMyCartNavbarUi(cart) {
   }
 }
 
+// show alert function 
 function showAlert(title, msg, icon) {
   swal({
     title: title,
@@ -345,6 +360,7 @@ function showAlert(title, msg, icon) {
   });
 }
 
+// handeling clicks on category btns
 function categoryButtonUIHandler(element) {
   let parent = document.querySelector("#categories").children;
   Array.from(parent).forEach((catBtn) => {
@@ -355,6 +371,7 @@ function categoryButtonUIHandler(element) {
   element.classList.remove("bg-white", "text-black");
 }
 
+// adding eventlisteners to the category btns
 categoryBtns.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     categoryButtonUIHandler(btn);
@@ -392,12 +409,14 @@ categoryBtns.forEach((btn) => {
   });
 });
 
+// function to get all prduct data
 async function getAllData() {
   let allData = await fetchData(`https://fakestoreapi.com/products`);
   let structuredData = restructureAllData(allData);
   sessionStorage.setItem("allItem", JSON.stringify(structuredData));
 }
 
+// restructure all the data 
 function restructureAllData(data) {
   let add_colors = ["red", "green", "blue", "black", "white"];
   let add_sizes = ["S", "M", "L", "XL", "XXL"];
@@ -437,19 +456,23 @@ document.addEventListener("DOMContentLoaded", () => {
     electronicDiv
   );
   updateMyCartNavbarUi(currUserFound.cart);
+
+  // implementing search 
   defaultSearch.addEventListener("input", (e) => {
-    let avlData = JSON.parse(sessionStorage.getItem("allItem"));
-    console.log(avlData);
-    let input = defaultSearch.value;
+    let avlData = JSON.parse(sessionStorage.getItem("allItem")); // accessing all data from session storage
+   
+    // checking the search value and updating the ui
     if (defaultSearch.value.trim() !== "") {
+      // showin results in the ui 
       resDiv.classList.remove("hidden");
-      let result = checkMatch(avlData, input);
+      let result = checkMatch(avlData, input); //getting resukt as per the input
       displaySearchResult(result, resDiv);
     } else {
       resDiv.innerHTML = "";
       resDiv.classList.add("hidden");
     }
   });
+  // after submit loading the data in search results page
   searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     let avlData = JSON.parse(sessionStorage.getItem("allItem"));
@@ -465,6 +488,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "./searchResult.html";
   });
 });
+
+// check match function for handling the user input match 
 function checkMatch(data, searchValue) {
   if (searchValue.length) {
     let result = data.filter((item) =>
@@ -474,6 +499,7 @@ function checkMatch(data, searchValue) {
   }
   return [];
 }
+// displaying the search result in the ui 
 function displaySearchResult(result, elem) {
   let content = result
     .map(
@@ -493,12 +519,14 @@ function displaySearchResult(result, elem) {
   }
 }
 
+// onclicking on the arrow img the input text will be filled with that value
 function fillTheSearch(title) {
   defaultSearch.value = title;
   defaultSearch.focus();
   resDiv.classList.add("hidden");
 }
 
+// oncling of that search text user will directly redirect to the details page
 function searchProd(id) {
   let avlData = JSON.parse(sessionStorage.getItem("allItem"));
   let item = avlData.filter((item) => item.id === id);

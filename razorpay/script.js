@@ -1,5 +1,15 @@
-// getting Dom elements
+// If user is not available in Session Storage redirecting the page to the Landing Page
+let currUser = JSON.parse(localStorage.getItem("currentUser"));
+if (currUser === null) window.location.href = "../index.html";
 
+// Checking User
+let allusers = JSON.parse(localStorage.getItem("users"));
+let currUserFound = allusers.find((user) => user.email === currUser.email);
+
+// taking product from session storage if  user directly using "buy now btn"
+let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
+
+// getting Dom elements
 const navCartItemCount = document.querySelector("#my-cart");
 const orderSummery = document.querySelector("#order-summery");
 const orderProduct = document.querySelector("#order-product");
@@ -8,14 +18,6 @@ const orderSumBtn = document.getElementById("order-sum-btn");
 const addressDiv = document.getElementById("address-div");
 const orderDetails = document.getElementById("Order-details");
 
-// Checking User
-let allusers = JSON.parse(localStorage.getItem("users"));
-let currUser = JSON.parse(localStorage.getItem("currentUser"));
-// If user is not available in Session Storage redirecting the page to the Landing Page
-if (currUser === null) window.location.href = "../index.html";
-let currUserFound = allusers.find((user) => user.email === currUser.email);
-// taking product from session storage if  user directly using "buy now btn"
-let productToPay = JSON.parse(sessionStorage.getItem("productForPayment"));
 // Updating Orders in the UI
 function orderDetailsUi(products) {
   // console.log(products);
@@ -33,12 +35,12 @@ function orderDetailsUi(products) {
     orderProduct.innerHTML = "";
     return;
   }
-
+// calculating total price
   let totalPrice = products.reduce(
     (sum, product) => sum + Math.floor(product.price * product.count * 80),
     0
   );
-  console.log(totalPrice);
+  // order summery ui
   orderSummery.innerHTML = `
       <div class="p-4 border border-gray-200 rounded-xl w-full group transition-all duration-500 hover:border-gray-400">
         <h2 class="font-manrope font-bold text-lg text-black pb-1 border-b border-gray-200">
@@ -120,6 +122,7 @@ function orderDetailsUi(products) {
             </div>
       </div>
     `;
+    // product detail ui
   orderProduct.innerHTML = `
        <div class="grid grid-cols-1 lg:grid-cols-1 gap-2 mx-2">
         ${products
@@ -172,13 +175,10 @@ function orderDetailsUi(products) {
   </div>
     `;
 
-  loadAddress();
-  document
-    .getElementById("save-address")
-    .addEventListener("click", saveAddress);
-  document
-    .getElementById("edit-address")
-    .addEventListener("click", editAddress);
+  loadAddress(); //calling load address function if user have any address saved
+  // handing events for address
+  document.getElementById("save-address").addEventListener("click", saveAddress);
+  document.getElementById("edit-address").addEventListener("click", editAddress);
   document.getElementById("cancel").addEventListener("click", cancelAction);
 }
 
@@ -249,12 +249,15 @@ function updateProductCount(index, quantity) {
     orderDetailsUi(productToPay);
   }
 }
+// remove the item from orders 
 function remove(index) {
   productToPay = productToPay.filter((item, idx) => idx !== index);
 
   saveInSession("productForPayment", productToPay);
   orderDetailsUi(productToPay);
 }
+
+// are you sure alert
 function areYouSureAlert(index) {
   swal({
     title: "Think twice",
@@ -264,7 +267,7 @@ function areYouSureAlert(index) {
     dangerMode: true,
   }).then((willDelete) => {
     if (willDelete) {
-      remove(index);
+      remove(index); //if ok then calling the remove function
       swal({
         title: "Item successfully bid farewell. 🛍️",
         text: "",
@@ -281,6 +284,7 @@ function saveUserInLocalStorage(user_data) {
   }
   localStorage.setItem("users", JSON.stringify(allusers));
 }
+// saving in session
 function saveInSession(storeName, data) {
   sessionStorage.setItem(storeName, JSON.stringify(data));
 }
@@ -355,10 +359,12 @@ function proceedToPay(event, price) {
     );
   }
 }
+
+// handling after payment succes
 function paymentSuccess(paymentId) {
-  let isFromCart = sessionStorage.getItem("fromCart");
-  console.log(isFromCart);
-  let delAddress = formatAddress(currUserFound.address);
+  let isFromCart = sessionStorage.getItem("fromCart"); // checking if user is orderd from cart 
+  let delAddress = formatAddress(currUserFound.address); 
+  // making a order object
   let order = {
     paymentId: paymentId,
     shippingAdd: delAddress,
@@ -367,14 +373,17 @@ function paymentSuccess(paymentId) {
     shippingStatus: "pending",
     timestamp: Date.now(),
   };
-  console.log(productToPay);
+  // checking if user dont have orders array then adding the orders array 
   if (!currUserFound.orders) {
     currUserFound.orders = [];
   }
+  // if user is orderd from cart then removing the items from cart
   if (isFromCart) {
     removeFromCartAfterPayment(productToPay, currUserFound.cart);
   }
+  // empty the product to pay to an empty array
   productToPay = [];
+  // saving data
   currUserFound.orders.push(order);
   saveInSession("productForPayment", productToPay);
   saveInSession("order", order);
@@ -383,6 +392,7 @@ function paymentSuccess(paymentId) {
   thanqPageUI(order);
 }
 
+// remove from cart function
 function removeFromCartAfterPayment(order, cart) {
   let updatedCart = cart.filter((cartItem) => {
     let keepItem = true;
@@ -415,6 +425,7 @@ function removeFromCartAfterPayment(order, cart) {
   updateMyCartNavbarUi(currUserFound.cart);
 }
 
+// after payment showing thnq
 function thanqPageUI(order) {
   const thnqSection = document.getElementById("thankyou-page");
   const mainSec = document.querySelector("main");
@@ -445,7 +456,7 @@ function thanqPageUI(order) {
   </div>
   `;
 }
-
+// thnq page btns handeler
 function pageAfterPayControl(elem) {
   let innerText = elem.innerText;
   console.log(innerText);
@@ -465,6 +476,7 @@ function showAlert(title, msg, icon) {
   });
 }
 
+// updating navbar cart item count
 function updateMyCartNavbarUi(cart) {
   let count = 0;
   cart.map((item) => {
