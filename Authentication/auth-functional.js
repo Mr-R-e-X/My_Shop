@@ -16,6 +16,10 @@ const signUpEmailInput = document.getElementById("signup-email");
 const signUpPasswordInput = document.getElementById("signup-password");
 const signUpConfirmPasswordInput = document.getElementById("confirm-password");
 const signUpSubmitBtn = document.getElementById("signup-submit");
+const registeredEmailInput = document.getElementById("registered-email");
+const findAccBtn = document.getElementById("find-acc-btn");
+const newPassInput = document.getElementById("new-password");
+const newConfPassInput = document.getElementById("new-confirm-password");
 
 let signUpDiv = document.querySelector("#sign-up");
 let signInDiv = document.querySelector("#sign-in");
@@ -151,6 +155,74 @@ signUpSubmitBtn.addEventListener("click", (e) => {
     document.getElementById("signUpImg").classList.add("hidden");
     document.getElementById("signInImg").classList.remove("hidden");
     signInDiv.classList.remove("hidden");
+  }
+});
+
+findAccBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  let regEmail = registeredEmailInput.value;
+
+  if (regEmail === "" || !emailRegex.test(regEmail)) {
+    showAlert("Please enter a valid email address", "", "error");
+    return;
+  }
+
+  if (findAccBtn.innerText.toLowerCase() === "find account") {
+    let foundUser = users.findIndex((user) => user.email === regEmail);
+
+    if (foundUser === -1) {
+      showAlert("Sorry! Account not found", "", "error");
+      return;
+    }
+
+    showAlert(
+      `Hi ${users[foundUser].firstName}. Please reset your password!`,
+      "",
+      "success"
+    );
+    registeredEmailInput.disabled = true;
+    registeredEmailInput.classList.add("cursor-not-allowed");
+    findAccBtn.innerText = "Change Password";
+    newPassInput.parentElement.classList.remove("hidden");
+    newConfPassInput.parentElement.classList.remove("hidden");
+  } else if (findAccBtn.innerText.toLowerCase() === "change password") {
+    let foundUser = users.findIndex((user) => user.email === regEmail);
+    let newPassword = newPassInput.value;
+    let newConfPassword = newConfPassInput.value;
+
+    if (!passRegex.test(newPassword) || !passRegex.test(newConfPassword)) {
+      showAlert(
+        "Password Requirements:\n- Minimum length of 8 characters\n- Must include at least one uppercase letter\n- Must include at least one lowercase letter\n- Must include at least one number\n- Must include at least one special character (e.g., !@#$%^&*)",
+        "",
+        "warning"
+      );
+      return;
+    }
+
+    if (newPassword !== newConfPassword) {
+      showAlert("Passwords do not match!", "", "warning");
+      return;
+    }
+
+    if (foundUser !== undefined) {
+      users[foundUser].password = newPassword;
+      localStorage.setItem("users", JSON.stringify(users));
+      showAlert(
+        `Hi ${users[foundUser].firstName}. Your password changed successfully.`,
+        "",
+        "success"
+      );
+
+      registeredEmailInput.disabled = false;
+      registeredEmailInput.classList.remove("cursor-not-allowed");
+      findAccBtn.innerText = "Find Account";
+      newPassInput.parentElement.classList.add("hidden");
+      newConfPassInput.parentElement.classList.add("hidden");
+      forgotPassDiv.classList.add("hidden");
+      forgotPassDiv.classList.remove("flex");
+      signInDiv_auth.classList.remove("hidden");
+      signInDiv_auth.classList.add("flex");
+    }
   }
 });
 

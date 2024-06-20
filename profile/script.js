@@ -228,8 +228,10 @@ function updateOrderListUi(orderList) {
 }
 function OrderUi(order) {
   let orderId = order.timestamp;
-  let orderDate = formatDate(new Date(orderId), 0);
-  let deliveryDate = formatDate(new Date(orderId), 1);
+  let orderDate = new Date(orderId).toLocaleDateString("en-IN");
+  let deliveryDate = new Date(24 * 60 * 60 * 1000 + orderId).toLocaleDateString(
+    "en-IN"
+  );
   let orderStatus = order.status;
   let shippingStatus;
   if (order.shippingStatus === "pending") {
@@ -254,9 +256,18 @@ function OrderUi(order) {
           <p class="text-gray-600 font-medium">Order Date</p>
           <p class="text-green-600 font-semibold">${orderDate}</p>
         </div>
+        
         <div class="flex flex-col justify-center items-center">
           <p class="text-gray-600 font-medium">Status</p>
-          <p class="${statusColor} font-semibold">${shippingStatus}</p>
+          ${
+            orderStatus === "confirmed"
+              ? `
+            <p class="${statusColor} font-semibold">${shippingStatus}</p>
+          `
+              : `
+            <p class="text-red-600 font-semibold capitalize">${orderStatus}</p>
+          `
+          }
         </div>
         <div class="flex flex-col justify-center items-center">
           <p class="text-gray-600 font-medium">Total Amount</p>
@@ -267,13 +278,6 @@ function OrderUi(order) {
       </div>
     </div>
   `;
-}
-function formatDate(date, val) {
-  const day = String(date.getDate() + val).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-
-  return `${day}-${month}-${year}`;
 }
 
 function detailOrder(orderId) {

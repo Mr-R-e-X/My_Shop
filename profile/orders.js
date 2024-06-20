@@ -11,9 +11,10 @@ let order = JSON.parse(sessionStorage.getItem("order"));
 // console.log(order);
 
 function updateOrderUi(order) {
-  const date = new Date(order.timestamp);
-  const localeDate = formatDate(date, 0);
-  const localDelivaryDate = formatDate(date, 1);
+  const localeDate = new Date(order.timestamp).toLocaleDateString("en-IN");
+  const localDelivaryDate = new Date(
+    24 * 60 * 60 * 1000 + order.timestamp
+  ).toLocaleDateString("en-IN");
   let totalPrice = order.orderDetails.reduce(
     (sum, product) => sum + Math.floor(product.price * product.count * 80),
     0
@@ -45,7 +46,7 @@ function updateOrderUi(order) {
       ${
         order.status === "confirmed"
           ? `<div class="border-b border-white py-4">
-        <p class="text-base font-semibold text-black">Order Status : <span class="text-lg capitalize ${
+        <p class="text-base font-semibold text-black">Shipping Status : <span class="text-lg capitalize ${
           order.shippingStatus === "pending"
             ? "text-orange-500"
             : "text-green-600"

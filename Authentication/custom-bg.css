@@ -1,0 +1,24 @@
+#sign-in {
+  background-image: url("../Assets/signIn.svg");
+  background-repeat: no-repeat;
+  background-size: 45%;
+  background-position-x: center;
+  background-position-y: calc(20px);
+}
+
+#sign-up {
+  background-image: url("../Assets/signup.svg");
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-size: 80%;
+  background-position-y: bottom;
+  background-clip: content-box;
+}
+#forgot-password-div {
+  background-image: url("../Assets/forgotPass.svg");
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-size: 80%;
+  background-position-y: bottom;
+  background-clip: content-box;
+}

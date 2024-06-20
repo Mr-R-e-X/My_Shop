@@ -10,6 +10,7 @@
       type="image/x-icon"
     />
     <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="custom-bg.css" />
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   </head>
 
@@ -84,11 +85,6 @@
     </header>
 
     <div class="flex-grow w-full flex flex-col items-center justify-center">
-      <img
-        src="../Assets/signIn.svg"
-        class="top-[9%] min-w-24 px-4 max-w-[400px] hidden object-fill fixed sm:scale-90"
-        id="signInImg"
-      />
       <div
         id="sign-in"
         class="hidden justify-center items-center w-full h-full z-10 bg-transparent"
@@ -125,9 +121,12 @@
                 />
               </div>
               <div class="flex items-end justify-center">
-                <a href="#" class="text-sm text-blue-700 hover:underline"
-                  >Forgot Password?</a
+                <p
+                  id="forgot-password"
+                  class="text-sm text-blue-700 hover:underline cursor-pointer"
                 >
+                  Forgot Password?
+                </p>
               </div>
               <button
                 id="signin-submit"
@@ -139,8 +138,7 @@
               <div class="text-sm font-medium text-gray-500 text-center">
                 Not registered?
                 <span
-                  id="create-acc-btn"
-                  class="text-blue-700 hover:underline cursor-pointer"
+                  class="text-blue-700 hover:underline cursor-pointer create-acc-btn"
                 >
                   Create account
                 </span>
@@ -241,8 +239,8 @@
               <div class="text-sm font-medium text-gray-500 text-center">
                 Already have an account?
                 <span
-                  id="login-acc-btn"
-                  class="text-blue-700 hover:underline cursor-pointer"
+                  id=""
+                  class="text-blue-700 hover:underline cursor-pointer login-acc-btn"
                   >Sign In</span
                 >
               </div>
@@ -250,12 +248,92 @@
           </div>
         </div>
       </div>
+      <div
+        id="forgot-password-div"
+        class="hidden justify-center items-center w-full h-full z-10 bg-transparent"
+      >
+        <div class="w-full max-w-3xl px-4 md:px-10">
+          <div
+            class="w-max mx-auto px-4 py-3 bg-blue-300 rounded-md flex items-center flex-col mb-3"
+          >
+            <h1 class="text-center text-4xl py-2 text-red-500 font-extrabold">
+              Forgot Password ?
+            </h1>
+            <p class="text-base font-semibold text-gray-600 py-2">
+              Enter your registered email to reset password
+            </p>
+          </div>
+          <div class="shadow-lg border border-gray-200 rounded-lg p-4 sm:p-6">
+            <form class="space-y-4" action="#">
+              <div>
+                <label
+                  for="registered-email"
+                  class="text-sm font-medium text-gray-900 block mb-2"
+                  >Registered email</label
+                >
+                <input
+                  type="email"
+                  name="email"
+                  id="registered-email"
+                  class="bg-transparent placeholder-gray-600 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  placeholder="name@company.com"
+                />
+              </div>
+              <div class="hidden">
+                <label
+                  for="new-password"
+                  class="text-sm font-medium text-gray-900 block mb-1"
+                  >Enter new password</label
+                >
+                <input
+                  type="password"
+                  name="password"
+                  id="new-password"
+                  placeholder="********"
+                  class="bg-transparent placeholder-gray-600 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                />
+              </div>
+              <div class="hidden">
+                <label
+                  for="new-confirm-password"
+                  class="text-sm font-medium text-gray-900 block mb-1"
+                  >Enter confirmed password</label
+                >
+                <input
+                  type="password"
+                  id="new-confirm-password"
+                  name="confirm-password"
+                  placeholder="********"
+                  class="bg-transparent placeholder-gray-600 mb-2 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                />
+              </div>
+              <button
+                id="find-acc-btn"
+                type="submit"
+                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              >
+                Find Account
+              </button>
+              <div class="text-sm font-medium text-gray-500 text-center">
+                Already have an account?
+                <span
+                  class="text-blue-700 hover:underline cursor-pointer login-acc-btn"
+                  >Sign In</span
+                >
+              </div>
+              <div class="text-sm font-medium text-gray-500 text-center">
+                Not registered?
+                <span
+                  class="text-blue-700 hover:underline cursor-pointer create-acc-btn"
+                >
+                  Create account
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <img
-      src="../Assets/signup.svg"
-      class="min-w-24 max-w-[400px] right-0 bottom-1 hidden object-fill fixed"
-      id="signUpImg"
-    />
 
     <script src="../rspnNav-script.js"></script>
     <script src="auth-dom.js"></script>
