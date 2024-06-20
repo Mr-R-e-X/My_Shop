@@ -267,7 +267,7 @@ function restructureSingleData(data) {
 
   return data;
 }
-
+// showing detail product
 async function detailProduct(id, event) {
   event.preventDefault();
   event.stopPropagation();
@@ -282,6 +282,7 @@ async function detailProduct(id, event) {
   window.location.href = "./product-detail.html";
 }
 
+// update nav bar cart
 function updateMyCartNavbarUi(cart) {
   let count = 0;
   cart.map((item) => {
@@ -294,6 +295,7 @@ function updateMyCartNavbarUi(cart) {
   }
 }
 
+// showAlert
 function showAlert(title, msg, icon) {
   swal({
     title: title,
