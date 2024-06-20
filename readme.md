@@ -1,94 +1,47 @@
-const navLogo = document.querySelector("#nav-logo");
-const navHome = document.querySelector("#nav-home");
-const navSignin = document.querySelector("#nav-signin");
-const navSignUp = document.querySelector("#nav-signup");
-const navMyCart = document.querySelector("#nav-my-cart");
-const navProfile = document.querySelector("#nav-profile");
+# Shopping Cart Dummy App
 
-// GETTING AUTH VALUE
-let landingPageAuthVal = sessionStorage.getItem("landingPageAuthVal")
-? JSON.parse(sessionStorage.getItem("landingPageAuthVal"))
-: "";
+Welcome to the Shopping Cart Dummy App! This project is a feature-rich shopping cart application that showcases a complete e-commerce experience. It integrates with the Fake Store API to provide product data and includes Razorpay for demo payments. Users can browse products, add them to the cart, view detailed product information, track their orders, and much more.
 
-// SENDING AUTH VALUE TO AUTHENTICATION PAGE TO SHOW DATA DRIVEN UI
-function sendingPageAuthVal(val) {
-landingPageAuthVal = val;
-sessionStorage.setItem(
-"landingPageAuthVal",
-JSON.stringify(landingPageAuthVal)
-);
-window.location.href = "./Authentication/sign-in-up.html";
-}
-// NAVBAR BTNS CONTROL
+## Deployed Application
 
-function checkLoggedIn() {
-return currUser !== null;
-}
-// checking if user is available in the sessions storage and updating the ui
-if (!checkLoggedIn()) {
-navProfile.classList.add("hidden");
-} else {
-navProfile.classList.remove("hidden");
-}
-if (!checkLoggedIn()) {
-navHome.classList.add("hidden");
-} else {
-navHome.classList.remove("hidden");
-}
-if (!checkLoggedIn()) {
-navMyCart.classList.add("hidden");
-} else {
-navMyCart.classList.remove("hidden");
-}
-navSignUp.addEventListener("click", () => {
-sendingPageAuthVal("signup");
-});
-navSignin.addEventListener("click", () => {
-sendingPageAuthVal("login");
-});
+Check out the live demo [here](https://my-shop-zeta-one.vercel.app/).
 
-navLogo.addEventListener("click", () => {
-if (checkLoggedIn()) {
-window.location.href = "./shop/index.html";
-} else {
-window.location.href = "./index.html";
-}
-});
-navLogo.addEventListener("click", () => {
-if (checkLoggedIn()) {
-window.location.href = "./shop/index.html";
-} else {
-sendingPageAuthVal("login");
-}
-});
-navHome.addEventListener("click", () => {
-if (checkLoggedIn) {
-window.location.href = "./shop/index.html";
-} else {
-sendingPageAuthVal("login");
-}
-});
+## Features
 
-navProfile.addEventListener("click", () => {
-if (checkLoggedIn()) {
-window.location.href = "./profile/index.html";
-} else {
-sendingPageAuthVal("login");
-}
-});
+- **Full Responsive Design:** Optimized for both desktop and mobile devices.
+- **User Authentication:** Secure login and signup functionality.
+- **Product Search & Filter:** Easily search and filter products to find exactly what you're looking for.
+- **Detailed Product View:** View comprehensive details for each product.
+- **Add to Cart:** Seamlessly add products to your shopping cart.
+- **User Profile:** View and edit user profile information.
+- **Order Tracking:** Track your current orders and view order history.
+- **Demo Payments:** Integrated Razorpay for processing demo payments.
+- **Local Storage:** User data is saved locally for a smooth and persistent experience.
+- **Beautiful Alerts:** User-friendly alerts using SweetAlert for better user interaction.
 
-navMyCart.addEventListener("click", () => {
-if (checkLoggedIn()) {
-window.location.href = "./cart/index.html";
-} else {
-sendingPageAuthVal("login");
-}
-});
+## Tech Stack
 
-navProfile.addEventListener("click", () => {
-if (checkLoggedIn()) {
-window.location.href = "./profile/index.html";
-} else {
-sendingPageAuthVal("login");
-}
-});
+- **HTML**
+- **CSS**
+- **Tailwind CSS**
+- **JavaScript**
+- **SweetAlert**
+
+## Getting Started
+
+To get a local copy up and running, follow these simple steps:
+
+### Prerequisites
+
+Ensure you have npm installed:
+
+```bash
+npm install npm@latest -g
+
+```
+
+Clone the repo
+
+```bash
+git clone https://github.com/Mr-R-e-X/My_Shop.git
+```
