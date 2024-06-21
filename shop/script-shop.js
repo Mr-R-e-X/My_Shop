@@ -208,7 +208,7 @@ function selectColor(element, prodElem) {
   }
 }
 
-// selectSize function 
+// selectSize function
 function selectSize(element, prodElem) {
   if (element.classList.contains("selected-size")) {
     element.classList.remove("selected-size");
@@ -232,12 +232,12 @@ function selectSize(element, prodElem) {
   }
 }
 
-// add product to cart function 
+// add product to cart function
 async function addProductToCart(element, prodId, event) {
   event.preventDefault(); // Prevent default behavior
   event.stopPropagation(); // Stop event propagation
   let cat = element.getAttribute("data-cat");
-  // adding product as per category so that clothing items will properly shown  
+  // adding product as per category so that clothing items will properly shown
   if (cat === "men's clothing" || cat === "women's clothing") {
     let colorAndSize = checkChooseProdSizeAndColor(prodId);
     if (colorAndSize !== false) {
@@ -350,7 +350,7 @@ function updateMyCartNavbarUi(cart) {
   }
 }
 
-// show alert function 
+// show alert function
 function showAlert(title, msg, icon) {
   swal({
     title: title,
@@ -416,7 +416,7 @@ async function getAllData() {
   sessionStorage.setItem("allItem", JSON.stringify(structuredData));
 }
 
-// restructure all the data 
+// restructure all the data
 function restructureAllData(data) {
   let add_colors = ["red", "green", "blue", "black", "white"];
   let add_sizes = ["S", "M", "L", "XL", "XXL"];
@@ -457,13 +457,13 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   updateMyCartNavbarUi(currUserFound.cart);
 
-  // implementing search 
+  // implementing search
   defaultSearch.addEventListener("input", (e) => {
     let avlData = JSON.parse(sessionStorage.getItem("allItem")); // accessing all data from session storage
-   
+    let input = defaultSearch.value.trim();
     // checking the search value and updating the ui
-    if (defaultSearch.value.trim() !== "") {
-      // showin results in the ui 
+    if (input !== "") {
+      // showin results in the ui
       resDiv.classList.remove("hidden");
       let result = checkMatch(avlData, input); //getting resukt as per the input
       displaySearchResult(result, resDiv);
@@ -489,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// check match function for handling the user input match 
+// check match function for handling the user input match
 function checkMatch(data, searchValue) {
   if (searchValue.length) {
     let result = data.filter((item) =>
@@ -499,7 +499,7 @@ function checkMatch(data, searchValue) {
   }
   return [];
 }
-// displaying the search result in the ui 
+// displaying the search result in the ui
 function displaySearchResult(result, elem) {
   let content = result
     .map(

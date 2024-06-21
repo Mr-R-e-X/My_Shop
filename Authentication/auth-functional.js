@@ -183,8 +183,6 @@ signUpSubmitBtn.addEventListener("click", (e) => {
     );
     // hiding the sign up ui and shoing log in ui
     signUpDiv.classList.add("hidden");
-    document.getElementById("signUpImg").classList.add("hidden");
-    document.getElementById("signInImg").classList.remove("hidden");
     signInDiv.classList.remove("hidden");
   }
 });
