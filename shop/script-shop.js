@@ -31,8 +31,12 @@ async function fetchData(url) {
 // Get Data for Page, Document onload it will initially render the page with the data
 async function getData(url, cat, divDtls) {
   let data = await fetchData(url);
+
   if (cat === "men's clothing" || cat === "women's clothing") {
-    let restructuredData = restructureData(data);
+    let restructuredData = [];
+    data.forEach((item) => {
+      restructuredData.push(restructureSingleData(item));
+    });
     let shuffledData = shuffleArray(restructuredData);
     updateShopUi(shuffledData, divDtls, cat);
   } else {
@@ -42,15 +46,6 @@ async function getData(url, cat, divDtls) {
 }
 
 // Resture Data for adding Colors and Sizes to the Men and Woman Clothings
-function restructureData(data) {
-  let add_colors = ["red", "green", "blue", "black", "white"];
-  let add_sizes = ["S", "M", "L", "XL", "XXL"];
-  data.map((data) => {
-    data["colors"] = add_colors;
-    data["sizes"] = add_sizes;
-  });
-  return data;
-}
 function restructureSingleData(data) {
   let add_colors = ["red", "green", "blue", "black", "white"];
   let add_sizes = ["S", "M", "L", "XL", "XXL"];
@@ -516,7 +511,7 @@ function displaySearchResult(result, elem) {
   elem.innerHTML = `<ul>${content}</ul>`;
   if (result.length === 0) {
     elem.classList.add("hidden");
-  }
+  } 
 }
 
 // onclicking on the arrow img the input text will be filled with that value
